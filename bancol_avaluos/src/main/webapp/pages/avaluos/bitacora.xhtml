@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+		<ui:define name="metadata">
+			<f:metadata>
+			</f:metadata>
+		</ui:define>
+		<ui:define name="content">
+			<h1 style="width: 90% !important; margin: 0px auto !important;">
+				Bitacora Avalúo Nª:
+				<h:outputText value="#{bitacoraBean.avaluo.codigoExterno}" />
+			</h1>
+			<h:form id="form">
+				<p:growl id="growl" autoUpdate="true" showDetail="true"
+					sticky="true" />
+				<p:panel id="bitacoraPanel" header="Resúmen">
+					<p:dataTable id="ent" var="bitacora"
+						value="#{bitacoraBean.bitacoras}" style="margin-bottom:15px">
+						<p:column headerText="Estado" width="10%">
+							<h:outputText value="#{bitacora.estado.value()}" />
+						</p:column>
+						<p:column headerText="Fecha" width="12%">
+							<h:outputText value="#{bitacora.fecha}">
+								<f:convertDateTime type="date" pattern="yyyy-MM-dd HH:mm:ss"
+									locale="es_CO" timeZone="GMT-5" />
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Usuario" width="10%">
+							<h:outputText
+								value="#{bitacora.usuario.nombres} #{bitacora.usuario.apellidos}" />
+						</p:column>
+						<p:column headerText="Rol" width="10%">
+							<h:outputText value="#{bitacora.usuario.rol.nombre}" />
+						</p:column>
+						<p:column headerText="Observaciones" width="40%">
+							<h:outputText id="observaciones"
+								value="#{bitacora.observaciones}" />
+							<p:tooltip id="toolTipContent" for="observaciones"
+								showEffect="clip" hideEffect="explode">
+								<p:inputTextarea value="#{bitacora.observaciones}"
+									autoResize="true" />
+							</p:tooltip>
+						</p:column>
+						<p:column id="cr" headerText="Cr" width="3%"  styleClass="columna">
+							<p:selectBooleanCheckbox value="#{bitacora.notificacionCreador}"
+								disabled="true" />
+						</p:column>
+						
+						<p:column id="pe" headerText="Pe" width="3%" styleClass="columna">
+							<p:selectBooleanCheckbox value="#{bitacora.notificacionPerito}"
+								disabled="true" />
+						</p:column>
+						<p:column id="re" headerText="Re" width="3%" styleClass="columna">
+							<p:selectBooleanCheckbox value="#{bitacora.notificacionRevisor}"
+								disabled="true" />
+						</p:column>
+						<p:column id="cl" headerText="Cl" width="3%" styleClass="columna">
+							<p:selectBooleanCheckbox value="#{bitacora.notificacionCliente}"
+								disabled="true" />
+						</p:column>
+						<p:column id="pre" headerText="P.Re" width="3%" styleClass="columna">
+							<p:selectBooleanCheckbox
+								value="#{bitacora.notificacionPersonaRecibePerito}"
+								disabled="true" />
+						</p:column>
+						<p:column id="as" headerText="As" width="3%" styleClass="columna">
+							<p:selectBooleanCheckbox value="#{bitacora.notificacionAsesor}"
+								disabled="true" />
+						</p:column>
+						<p:column id="seg" headerText="Seg" width="3%" styleClass="columna">
+							<p:selectBooleanCheckbox value="#{bitacora.notificacionSeguidor}"
+								disabled="true" />
+						</p:column>
+					</p:dataTable>
+					<p:tooltip id="toolTipFade1" for="form:ent:cr" value="Creador" />
+					<p:tooltip id="toolTipFade2" for="form:ent:pe" value="Perito" />
+					<p:tooltip id="toolTipFade3" for="form:ent:re" value="Revisor" />
+					<p:tooltip id="toolTipFade4" for="form:ent:cl" value="Cliente" />
+					<p:tooltip id="toolTipFade5" for="form:ent:pre" value="Persona que Recibe a Perito" />
+					<p:tooltip id="toolTipFade6" for="form:ent:as" value="Asesor" />
+					<p:tooltip id="toolTipFade7" for="form:ent:seg" value="Seguidor" />
+				</p:panel>
+
+				<p:commandButton process="ent"
+					update=":formCreateEntidad:panelCrearNota" icon="ui-icon-star"
+					value="Crear" oncomplete="PF('entCrearDialog').show()" 
+					styleClass="button_green btnIzquierda"/>
+				<p:commandButton icon="ui-icon-circle-close" value="Cerrar"
+					actionListener="#{bitacoraBean.cancelar}" 
+					styleClass="button_red"/>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			</h:form>
+
+			<p:dialog header="Nuevo registro" widgetVar="entCrearDialog"
+				modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+				<h:form id="formCreateEntidad">
+					<p:outputPanel id="panelCrearNota" style="text-align:center;">
+						<p:panelGrid id="panelGridCrearNota" columns="3" columnClasses="label,value">
+
+							<h:outputText value="Observación:" />
+							<p:inputTextarea value="#{bitacoraBean.observaciones}"
+								maxlength="255" />
+							<p:panelGrid columns="2">
+								<h:outputText value="Abogado: " />
+								<p:selectBooleanCheckbox
+									value="#{bitacoraBean.notificacionCreador}" />
+								<h:outputText value="Perito: " />
+								<p:selectBooleanCheckbox
+									value="#{bitacoraBean.notificacionPerito}" />
+								<h:outputText value="Revisor: " />
+								<p:selectBooleanCheckbox
+									value="#{bitacoraBean.notificacionRevisor}" />
+								<h:outputText value="Cliente: " />
+								<p:selectBooleanCheckbox
+									value="#{bitacoraBean.notificacionCliente}" />
+								<h:outputText value="Persona que recibe al perito: " />
+								<p:selectBooleanCheckbox
+									value="#{bitacoraBean.notificacionPersonaRecibePerito}" />
+								<h:outputText value="Asesor: " />
+								<p:selectBooleanCheckbox
+									value="#{bitacoraBean.notificacionAsesor}" />
+								<h:outputText value="Seguidor: " />
+								<p:selectBooleanCheckbox
+									value="#{bitacoraBean.notificacionSeguidor}" />
+							</p:panelGrid>
+							<p:column>
+							</p:column>
+							<p:column>
+								<p:commandButton id="botonAgregarNota" widgetVar="btnGuardar" icon="ui-icon-plusthick"
+									value="Guardar" update=":form:ent"
+									actionListener="#{bitacoraBean.agregarAnotacion}" 
+									oncomplete="PF('entCrearDialog').hide()"
+									styleClass="button_green" />
+								<p:commandButton value="Cancelar" icon="ui-icon-close"
+									oncomplete="PF('entCrearDialog').hide()"
+									styleClass="button_red" />
+							</p:column>
+
+						</p:panelGrid>
+                        <p:blockUI block="panelGridCrearNota" trigger="botonAgregarNota" />
+					</p:outputPanel>
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+				</h:form>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

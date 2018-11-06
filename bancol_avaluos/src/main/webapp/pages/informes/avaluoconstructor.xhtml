@@ -1,0 +1,3830 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet name="grid/grid.css" library="primefaces" />
+</h:head>
+
+<body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+		<ui:define name="content">
+            <!--script async="true" defer="true" src="http://maps.google.com/maps/api/js?client=AIzaSyBk_T1aF3u4MVbKcP_OKsGnqK1YDO2K5t8&amp;v=3.21&amp;callback=initMap" type="text/javascript"></script-->
+            <script async="true" defer="true" src="http://maps.google.com/maps/api/js?sensor=false" ></script>
+			<h1>
+				Avalúo Constructor
+				<h:outputLabel
+					value="#{avaluoConstructorBean.avaluoConstructorDTO.entidad.prefijo}-#{avaluoConstructorBean.avaluoConstructorDTO.codigoExterno}" />
+			</h1>
+
+			<h:form id="form">
+				<p:growl id="msgs" showDetail="false" sticky="false"
+					autoUpdate="true" />
+				<p:accordionPanel id="accordionPanel" activeIndex="-1">
+
+					<p:tab id="tabInformacionBasica" title="Información Básica">
+
+						<p:panel id="pnlDatosPersonales" header="Información del Cliente"
+							style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="tipoDocumentoId"
+											value="Tipo de documento de identificación: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="tipoDocumentoId"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.tipoDocumentoIdentificacion}"
+											style="width:300px;">
+											<p:ajax update="pnlDatosPersonales" />
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="C.C." itemValue="21" />
+											<f:selectItem itemLabel="C.Ext." itemValue="22" />
+											<f:selectItem itemLabel="NIT." itemValue="23" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="false">
+										<p:message for="tipoDocumentoId" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="numeroDocumento"
+											value="Número de documento: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="numeroDocumento"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.numeroDocumento}"
+											label="Número de documento"
+											required="#{not empty param[enviar.clientId]}"
+											style="width: 99%">
+											<p:ajax event="change" update="pnlDatosPersonales" />
+										</p:inputText>
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="false">
+										<p:message for="numeroDocumento" />
+									</p:column>
+								</p:row>
+								<p:row
+									rendered="#{not empty avaluoConstructorBean.avaluosAnteriores}">
+									<p:column styleClass="ui-widget-header">
+										<p:spacer height="0" />
+									</p:column>
+									<p:column colspan="3" styleClass="ui-widget-header">
+										<h:outputText value="Cliente presenta avaluos" />
+										<p:spacer height="0px" width="30px" />
+										<p:commandButton icon="ui-icon-search"
+											oncomplete="PF('avaluosAnteriores').show()" />
+									</p:column>
+								</p:row>
+								<p:row
+									rendered="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.tipoDocumentoIdentificacion eq '23'}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="razonSocial" value="Razón social: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<p:inputText id="razonSocial"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.razonSocial}"
+											required="" label="Razón social" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="false">
+										<p:message for="razonSocial" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="primerNombre" value="Primer nombre: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<p:inputText id="primerNombre"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.primerNombre}"
+											required="" label="Primer nombre" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="false">
+										<p:message for="primerNombre" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="segundoNombre" value="Segundo nombre: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<p:inputText id="segundoNombre"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.segundoNombre}"
+											required="false" label="Segundo nombre" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="false">
+										<p:message for="segundoNombre" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="primerApellido" value="Primer apellido: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<p:inputText id="primerApellido"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.primerApellido}"
+											required="" label="Primer apellido" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="false">
+										<p:message for="primerApellido" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="segundoApellido"
+											value="Segundo apellido: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<p:inputText id="segundoApellido"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.segundoApellido}"
+											required="false" label="Segundo apellido" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="false">
+										<p:message for="segundoApellido" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="paisOrigen" value="País de origen: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="paisOrigen"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.paisOrigen}"
+											style="width:99%">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItems value="#{avaluoConstructorBean.listPaisesOrg}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="false">
+										<p:message for="paisOrigen" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="celular" value="Celular: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="celular" mask="999-999-9999"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.celularSolicitante}"
+											label="Celular" style="width:99%"
+											required="#{not empty param[enviar.clientId]}" 
+											validatorMessage="Celular debe tener 10 digitos">
+											<f:validateRegex pattern="\d{3}[\-]\d{3}[\-]\d{4}" />
+											<p:ajax update="messageCelular" event="keyup" global="false"/>
+										</p:inputMask>
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="false">
+										<p:message id="messageCelular" for="celular" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="telefono" value="(Cod. Area)+Teléfono: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="telefono"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.telefonoSolicitante}"
+											required="#{not empty param[enviar.clientId]}"
+											label="Teléfonos" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="correoElectronico"
+											value="Correo Electrónico: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<p:inputText id="correoElectronico"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.correoElectronicoSolicitante}"
+											required="#{not empty param[enviar.clientId]}"
+											label="Correo Electrónico" style="width:99%">
+											<p:ajax event="change" update="messageCorreoElectronico"></p:ajax>
+											<f:validateRegex
+												pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+										</p:inputText>
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="false">
+										<p:message id="messageCorreoElectronico"
+											for="correoElectronico" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="departamentoSolicitante"
+											value="Departamento del solicitante: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="departamentoSolicitante"
+											value="#{avaluoConstructorBean.departamentoCliente}"
+											style="width:99%">
+											<p:ajax
+												listener="#{avaluoConstructorBean.listarCiudadesPorDepartamentoOrg}"
+												update="ciudadSolicitante" />
+											<f:selectItem itemLabel="Seleccione Departamento"
+												itemValue="" noSelectionOption="true" />
+											<f:selectItems
+												value="#{avaluoConstructorBean.listDepartamentosOrg}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="ciudadSolicitante"
+											value="Ciudad del solicitante: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="ciudadSolicitante"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.divipola}"
+											style="width:99%">
+											<f:selectItem itemLabel="Seleccione..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItems
+												value="#{avaluoConstructorBean.listCiudadesOrg}"
+												var="ciudad" itemLabel="#{ciudad.centroPoblado}"
+												itemValue="#{ciudad}" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel id="informacionEntidad"
+							header="Información de la entidad" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="entidad" value="Entidad: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="entidad"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.entidad}"
+											converter="omnifaces.SelectItemsConverter" disabled="true"
+											style="width: 99%">
+											<!-- <p:ajax update="datosPersonales"/>  -->
+											<f:selectItems value="#{avaluoConstructorBean.listEntidades}"
+												var="entidad" itemLabel="#{entidad.nombre}"
+												itemValue="#{entidad}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="segmento" value="Segmento: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="segmento"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.segmento}"
+											label="Segmento"
+                                            converter="omnifaces.SelectItemsConverter"
+											style="width:99%">
+											<f:selectItem itemLabel="Seleccione ..." itemValue="null"
+												noSelectionOption="true" />
+											<f:selectItems value="#{avaluoConstructorBean.listSegmentos}"
+												var="segmento" itemLabel="#{segmento.nombre}"
+												itemValue="#{segmento}" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row
+									rendered="#{avaluoConstructorBean.avaluoConstructorDTO.entidad eq 'Bancolombia'}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="empleadoEntidad"
+											value="Empleado de Entidad: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="empleadoEntidad"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.empleadoEntidad}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="clienteExterior"
+											value="Cliente en el exterior: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="clienteExterior"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cliente.clienteExterior}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="tabTitulacion" title="Titulación">
+						<p:panel id="pnlInmueble" header="Ubicación del Inmueble">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Departamento" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="departamentoPredio"
+											value="#{avaluoConstructorBean.departamentoInmueble}"
+											style="width:99%">
+											<p:ajax
+												listener="#{avaluoConstructorBean.listarCiudadesPorDepartamentoPre}"
+												update="municipioPredio" />
+											<f:selectItem itemLabel="Seleccione Departamento"
+												itemValue="" noSelectionOption="true" />
+											<f:selectItems
+												value="#{avaluoConstructorBean.listDepartamentosPre}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Municipio" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="municipioPredio"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.divipola}"
+											style="width:99%">
+											<f:selectItem itemLabel="Seleccionar Ciudad" itemValue=""
+												noSelectionOption="true" />
+											<f:selectItems
+												value="#{avaluoConstructorBean.listCiudadesPre}"
+												var="ciudad" itemLabel="#{ciudad.centroPoblado}"
+												itemValue="#{ciudad}" />
+											<p:ajax event="change" process="municipioPredio" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Sector" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="sectorPredio"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.sector}">
+											<f:selectItem itemLabel="Seleccionar Sector" itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Urbano" itemValue="1" />
+											<f:selectItem itemLabel="Rural" itemValue="2" />
+											<p:ajax event="change" process="sectorPredio" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Barrio" />
+									</p:column>
+									<p:column colspan="5" styleClass="ui-widget-header">
+										<p:inputText
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.barrio}"
+											style="width:99%">
+											<p:ajax event="change" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="direccionPredio" value="Dirección: " />
+										<p:spacer width="10px" />
+										<p:commandButton icon="ui-icon-help"
+											oncomplete="PF('ayudaDireccion').show()" process="@this" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<p:panelGrid id="direccionPredio">
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<p:outputLabel value="Tipo via" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:outputLabel value="Número via" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:outputLabel value="Complemento via" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:outputLabel value="Núm. Via Generadora" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:outputLabel value="Complemento Via Generadora" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:outputLabel value="Placa" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:outputLabel value="Complemento Placa" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:outputLabel value="Adicional" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:selectOneMenu id="tipoViaPredio"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.tipoVia}"
+														style="width:100px;">
+														<f:selectItem itemLabel="Calle" itemValue="CL" />
+														<f:selectItem itemLabel="Carrera" itemValue="KR" />
+														<f:selectItem itemLabel="Diagonal" itemValue="DG" />
+														<f:selectItem itemLabel="Transversal" itemValue="TV" />
+														<f:selectItem itemLabel="Avenida" itemValue="AV" />
+														<f:selectItem itemLabel="Avenida calle" itemValue="AC" />
+														<f:selectItem itemLabel="Avenida carrera" itemValue="AK" />
+														<f:selectItem itemLabel="Avenida autopista" itemValue="AU" />
+														<f:selectItem itemLabel="Carretera" itemValue="CT" />
+														<f:selectItem itemLabel="Circular" itemValue="CQ" />
+														<f:selectItem itemLabel="Camino" itemValue="CN" />
+													</h:selectOneMenu>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputMask id="numeroViaPredio" mask="9?99"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroVia}"
+														style="width:30px;" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:autoComplete id="complementoViaPredio"
+														value="#{avaluoConstructorBean.listComplementoViaSolicitante}"
+														label="Complemento Via" style="width:30px;"
+														multiple="true" forceSelection="true"
+														completeMethod="#{avaluoConstructorBean.completarComplemento}" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputMask id="numeroViaGeneradoraPredio" mask="9?99"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroViaGeneradora}"
+														style="width:30px;" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:autoComplete id="complementoViaGeneradoraPredio"
+														value="#{avaluoConstructorBean.listComplementoViaGeneradoraSolicitante}"
+														label="Complemento Via Generadora" style="width:30px;"
+														multiple="true" forceSelection="true"
+														completeMethod="#{avaluoConstructorBean.completarComplemento}" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="placaPredio"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.placa}"
+														style="width:30px;" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="complementoPlacaPredio"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.complementoPlaca}"
+														style="width:150px;">
+														<f:validateRegex
+															pattern="^$|^[A-Za-z]{4,11} [a-zA-Z0-9]{1,}( [A-Za-z]{4,11} [a-zA-Z0-9]{1,})*$" />
+													</p:inputText>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="adicionalDireccionPredio"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.adicionalDireccion}"
+														label="Complemento Via" style="width:150px;" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column colspan="2" styleClass="ui-widget-header">
+													<p:spacer height="0" />
+												</p:column>
+												<p:column styleClass="ui-widget-header" rendered="false">
+													<p:message id="messageComplementoViaPredio"
+														for="complementoViaPredio" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:spacer height="0" />
+												</p:column>
+												<p:column styleClass="ui-widget-header" rendered="false">
+													<p:message id="messageComplementoViaGeneradoraPredio"
+														for="complementoViaGeneradoraPredio" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:spacer height="0" />
+												</p:column>
+												<p:column styleClass="ui-widget-header" colspan="2"
+													rendered="false">
+													<p:message id="messageComplementoPlacaPredio"
+														for="complementoPlacaPredio" />
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Vereda" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.vereda}"
+											style="width:99%">
+											<p:ajax event="change" />
+										</p:inputText>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Nombre del Predio" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.nombreDePredio}"
+											style="width:99%">
+											<p:ajax event="change" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Localización" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="5">
+										<p:inputTextarea
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.localizacion}"
+											rows="2" cols="30" maxlength="300" style="width:99%"
+											counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Escrituras">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Matrícula Inmobiliaria Principal" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText
+											value="#{avaluoConstructorBean.inmuebleDTO.matriculaInmobiliaria}"
+											style="width:99%">
+											<p:ajax event="change" />
+										</p:inputText>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="Número de escritura" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText
+											value="#{avaluoConstructorBean.inmuebleDTO.numeroDeEscritura}"
+											style="width:99%">
+											<p:ajax event="change" />
+										</p:inputText>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="Número de Notaria Escritura" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText
+											value="#{avaluoConstructorBean.inmuebleDTO.numeroDeNotariaEscritura}"
+											style="width:99%">
+											<p:ajax event="change" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="Fecha escritura" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:calendar id="cldFechaEscritura"
+											value="#{avaluoConstructorBean.inmuebleDTO.fechaEscritura}">
+											<p:ajax event="dateSelect" process="cldFechaEscritura" />
+										</p:calendar>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="Departamento" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="departamentoPropietario"
+											value="#{avaluoConstructorBean.inmuebleDTO.departamentoEscritura}"
+											style="width:99%">
+											<p:ajax
+												listener="#{avaluoConstructorBean.listarCiudadesPorDepartamentoPro}"
+												update="ciudadPropietario" />
+											<f:selectItem itemLabel="Seleccione..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItems
+												value="#{avaluoConstructorBean.listDepartamentosPro}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="Municipio" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="ciudadPropietario"
+											value="#{avaluoConstructorBean.inmuebleDTO.municipioEscritura}"
+											style="width:99%">
+											<f:selectItem itemLabel="Seleccione..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItems
+												value="#{avaluoConstructorBean.listCiudadesPro}" />
+											<p:ajax event="change" process="ciudadPropietario" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Coordenadas de Georreferenciación">
+							<p:panelGrid style="width: 99%">
+								<!-- Google map -->
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="6">
+										<p:gmap center="#{avaluoConstructorBean.centroMapa}" zoom="13"
+											type="HYBRID" style="width:99%;height:400px">
+											<p:ajax event="markerDrag"
+												listener="#{avaluoConstructorBean.onMarkerDrag}"
+												update="longitud,latitud" />
+										</p:gmap>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="latitud" value="Latitud: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="latitud"
+											value="#{avaluoConstructorBean.inmuebleDTO.latitud}"
+											label="Latitud" style="width:99" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="false">
+										<p:message for="latitud" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="longitud" value="Longitud: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="longitud"
+											value="#{avaluoConstructorBean.inmuebleDTO.longitud}"
+											label="Longitud" style="width:99" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="false">
+										<p:message for="longitud" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel id="documentosConsultadosPanel"
+							header="Documentos consultados" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<h:outputLabel value="Documentos consultados: " />
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<p:selectManyMenu id="documentosConsultados"
+											showCheckbox="true" filter="true" filterMatchMode="contains"
+											value="#{avaluoConstructorBean.documentosConsultados}"
+											style="width:99%">
+											<f:selectItem itemLabel="Certificado Catastral" itemValue="1" />
+											<f:selectItem itemLabel="Impuesto Predial" itemValue="2" />
+											<f:selectItem itemLabel="Certificado de Libertad y Tradición"
+												itemValue="3" />
+											<f:selectItem itemLabel="Escritura" itemValue="4" />
+										</p:selectManyMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="fechaAporteDeDocumentos"
+											value="Fecha aporte de documentos: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:calendar id="fechaAporteDeDocumentos"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.fechaAporteDeDocumentos}"
+											showOn="button" timeZone="GMT-5" pattern="dd-MMM-yyyy"
+											locale="es" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanCheckbox
+											value="#{avaluoConstructorBean.otrosDocumentos}">
+											<p:ajax />
+										</p:selectBooleanCheckbox>
+										<h:outputLabel value="Otros documentos: " />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{avaluoConstructorBean.otrosDocumentos}">
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="otrosDocumentos"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.otrosDocumentos}"
+											style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="4">
+										<h:outputLabel for="observacionesDeTitulacion"
+											value="Observaciones de titulación: " />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="4">
+										<p:inputText id="observacionesDeTitulacion"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.observacionesDeTitulacion}"
+											style="width: 99%" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="tabInformacionSector" title="Información del Sector">
+						<p:panel header="Descripción General del Sector">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.descripcionGeneralDelSector}"
+											rows="2" cols="30" maxlength="300" style="width:99%"
+											counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Servicios Públicos">
+							<p:panelGrid>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:panelGrid style="width: 99%">
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputText value="Alcantarillado" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="alcantarilladoSector"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.alcantarilladoSector}"
+														onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputText value="Acueducto" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="acueductoSector"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.aguaSector}"
+														onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputText value="Energia" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="energiaSector"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.energiaSector}"
+														onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputText value="Gas" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="gasSector"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.gasSector}"
+														onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputText value="Teléfono" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="telefonoSector"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.telefonoSector}"
+														onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+										</h:panelGrid>
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="4">
+										<h:outputText value="Observaciones Servicios Públicos" />
+										<p:inputTextarea
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.observacionesServiviosPublicos}"
+											rows="3" cols="30" maxlength="300" style="width:99%"
+											counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Estrato " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="somEstrato"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.estrato}"
+											style="width:300px;">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="1" itemValue="1" />
+											<f:selectItem itemLabel="2" itemValue="2" />
+											<f:selectItem itemLabel="3" itemValue="3" />
+											<f:selectItem itemLabel="4" itemValue="4" />
+											<f:selectItem itemLabel="5" itemValue="5" />
+											<f:selectItem itemLabel="6" itemValue="6" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header"
+										rendered="#{avaluoConstructorBean.usuRevisor}">
+										<h:outputText value="Zona Objetivo" />
+									</p:column>
+									<p:column styleClass="ui-widget-header"
+										rendered="#{avaluoConstructorBean.usuRevisor}">
+										<p:selectBooleanButton id="zonaObjetivoSector"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.zonaObjetivo}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+							<p:panel header="Amenaza de Riesgo">
+								<p:panelGrid>
+									<p:row>
+										<p:column styleClass="ui-widget-header">
+											<h:outputText value="Existe Amenaza de Riesgo" />
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<p:selectBooleanButton id="sbbAmenzaRiesgo"
+												value="#{avaluoConstructorBean.amenzaRiesgo}" onLabel="Si"
+												offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"
+												style="width:100px" converter="javax.faces.Boolean">
+												<p:ajax event="change" update="pngAmenazaRiesgoOpt" />
+											</p:selectBooleanButton>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+								<p:panelGrid>
+									<p:row>
+										<p:column styleClass="ui-widget-header" colspan="2">
+											<h:panelGroup id="pngAmenazaRiesgoOpt">
+												<p:panelGrid
+													rendered="#{avaluoConstructorBean.amenzaRiesgo eq true}">
+													<p:row>
+														<p:column styleClass="ui-widget-header">
+															<h:outputText value="Remosión de Masas" />
+														</p:column>
+														<p:column styleClass="ui-widget-header">
+															<p:selectBooleanButton id="sbbRemosionMasas"
+																value="#{avaluoConstructorBean.avaluoConstructorDTO.remosionMasas}"
+																onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+																offIcon="ui-icon-close" style="width:100px"
+																converter="javax.faces.Boolean">
+																<p:ajax event="change" update="pngTextRm" />
+															</p:selectBooleanButton>
+														</p:column>
+														<p:column styleClass="ui-widget-header">
+															<h:panelGroup id="pngTextRm">
+																<p:inputText
+																	rendered="#{avaluoConstructorBean.avaluoConstructorDTO.remosionMasas eq true}"
+																	value="#{avaluoConstructorBean.avaluoConstructorDTO.obsRemosionMasas}"
+																	style="width: 99%">
+																	<p:ajax event="change" />
+																</p:inputText>
+															</h:panelGroup>
+														</p:column>
+													</p:row>
+													<p:row>
+														<p:column styleClass="ui-widget-header">
+															<h:outputText value="Inundación" />
+														</p:column>
+														<p:column styleClass="ui-widget-header">
+															<p:selectBooleanButton id="sbbInundacion"
+																value="#{avaluoConstructorBean.avaluoConstructorDTO.inundacion}"
+																onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+																offIcon="ui-icon-close" style="width:100px"
+																converter="javax.faces.Boolean">
+																<p:ajax event="change" update="pngTextI" />
+															</p:selectBooleanButton>
+														</p:column>
+														<p:column styleClass="ui-widget-header">
+															<h:panelGroup id="pngTextI">
+																<p:inputText
+																	rendered="#{avaluoConstructorBean.avaluoConstructorDTO.inundacion eq true}"
+																	value="#{avaluoConstructorBean.avaluoConstructorDTO.obsInundacion}"
+																	style="width: 99%">
+																	<p:ajax event="change" />
+																</p:inputText>
+															</h:panelGroup>
+														</p:column>
+													</p:row>
+													<p:row>
+														<p:column styleClass="ui-widget-header">
+															<h:outputText value="Orden Publico" />
+														</p:column>
+														<p:column styleClass="ui-widget-header">
+															<p:selectBooleanButton id="sbbOrdenPublico"
+																value="#{avaluoConstructorBean.avaluoConstructorDTO.ordenPublico}"
+																onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+																offIcon="ui-icon-close" style="width:100px"
+																converter="javax.faces.Boolean">
+																<p:ajax event="change" update="pngTextOP" />
+															</p:selectBooleanButton>
+														</p:column>
+														<p:column styleClass="ui-widget-header">
+															<h:panelGroup id="pngTextOP">
+																<p:inputText
+																	rendered="#{avaluoConstructorBean.avaluoConstructorDTO.ordenPublico eq true}"
+																	value="#{avaluoConstructorBean.avaluoConstructorDTO.obsOrdenPublico}"
+																	style="width: 99%">
+																	<p:ajax event="change" />
+																</p:inputText>
+															</h:panelGroup>
+														</p:column>
+													</p:row>
+													<p:row>
+														<p:column styleClass="ui-widget-header">
+															<h:outputText value="Otros" />
+														</p:column>
+														<p:column styleClass="ui-widget-header">
+															<p:selectBooleanButton id="sbbOtro"
+																value="#{avaluoConstructorBean.avaluoConstructorDTO.otro}"
+																onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+																offIcon="ui-icon-close" style="width:100px"
+																converter="javax.faces.Boolean">
+																<p:ajax event="change" update="pngTextO" />
+															</p:selectBooleanButton>
+														</p:column>
+														<p:column styleClass="ui-widget-header">
+															<h:panelGroup id="pngTextO">
+																<p:inputText
+																	rendered="#{avaluoConstructorBean.avaluoConstructorDTO.otro eq true}"
+																	value="#{avaluoConstructorBean.avaluoConstructorDTO.obsOtro}"
+																	style="width: 99%">
+																	<p:ajax event="change" />
+																</p:inputText>
+															</h:panelGroup>
+														</p:column>
+													</p:row>
+												</p:panelGrid>
+											</h:panelGroup>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</p:panel>
+						</p:panel>
+
+						<p:panel header="Uso Predóminante del Sector">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="usoPredSector"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.usoPredominanteDelSector}"
+											style="width:200px">
+											<f:selectItem itemLabel="-- Seleccionar --"
+												itemValue="#{null}" noSelectionOption="true" />
+											<f:selectItem itemLabel="Vivienda" itemValue="1" />
+											<f:selectItem itemLabel="Comercio" itemValue="2" />
+											<f:selectItem itemLabel="Bodega" itemValue="3" />
+											<f:selectItem itemLabel="Oficina" itemValue="4" />
+											<f:selectItem itemLabel="V. Multihabitacional" itemValue="5" />
+											<f:selectItem itemLabel="Otro" itemValue="6" />
+											<f:selectItem itemLabel="Educación" itemValue="80" />
+											<f:selectItem itemLabel="Salud" itemValue="81" />
+											<f:selectItem itemLabel="Hotelero" itemValue="82" />
+											<f:selectItem itemLabel="Industrial" itemValue="83" />
+											<f:selectItem itemLabel="Iglesia" itemValue="84" />
+											<f:selectItem itemLabel="Parqueadero" itemValue="85" />
+											<f:selectItem itemLabel="Auditorio" itemValue="86" />
+											<f:selectItem itemLabel="Instalación Deportiva"
+												itemValue="87" />
+											<p:ajax event="change" process="usoPredSector" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText
+											value="Observaciones Uso Predominante del Sector" />
+										<p:inputTextarea
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.observacionesUsoPredominanteDelSector}"
+											rows="2" cols="30" maxlength="300" style="width:99%"
+											counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Perspectivas de Valorización">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="persValorizacion"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.perspectivasDeValorizacion}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione..." itemValue="#{null}"
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+											<p:ajax event="change" process="persValorizacion" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText
+											value="Observaciones Perspectivas de Valorización" />
+										<p:inputTextarea
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.observacionesPerspectivasDeValorizacion}"
+											rows="2" cols="30" maxlength="300" style="width:99%"
+											counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="tabInformacionGeneralInmueble"
+						title="Información General del Inmueble">
+						<p:panel header="Descripción del Inmueble">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.descripcionInmueble}"
+											rows="2" cols="30" maxlength="300" style="width:99%"
+											counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Linderos y Particulares del Inmueble">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.linderosParticularesDelInmueble}"
+											rows="2" cols="30" maxlength="300" style="width:99%"
+											counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<!-- 
+							<p:panel header="Fuente">
+								<p:panelGrid style="width: 99%">
+									<p:row>
+										<p:column styleClass="ui-widget-header">						
+		    								<p:inputTextarea value="#{avaluoConstructorBean.avaluoConstructorDTO.fuente}" rows="2" cols="30" 
+		    									maxlength="300" style="width:99%" counterTemplate="{0} characters remaining.">
+		    									<p:ajax event="change"/>
+		    								</p:inputTextarea>
+		    							</p:column>
+		    						</p:row>
+								</p:panelGrid>
+							</p:panel>
+							-->
+
+						<p:panel header="Normatividad Vigente">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.normatividadVigente}"
+											rows="2" cols="30" maxlength="300" style="width:99%"
+											counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Ubicación">
+							<p:panelGrid style="width:99%;">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Ubicación Inmediata del Inmueble" />
+										<h:selectOneMenu id="ubicInmediInmueble"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.ubicacionInmediataDelInmueble}"
+											style="width:99%;">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Central" itemValue="1" />
+											<f:selectItem itemLabel="Interior" itemValue="2" />
+											<f:selectItem itemLabel="Exterior" itemValue="3" />
+											<p:ajax event="change" process="ubicInmediInmueble" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column colspan="3" styleClass="ui-widget-header">
+										<h:outputText
+											value="Observaciones Ubicación Inmediata del Inmueble" />
+										<p:inputTextarea
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.observacionesUbicacionInmediataDelInmueble}"
+											rows="2" cols="30" maxlength="300" style="width:800px;"
+											counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Caracteristicas Fisica">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Relieve" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="somRelieve"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.relieve}"
+											style="width:99%">
+											<f:selectItem itemLabel="Seleccione..." itemValue="#{null}"
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Plano" itemValue="1" />
+											<f:selectItem itemLabel="Rocoso" itemValue="2" />
+											<p:ajax event="change" process="somRelieve" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Forma Geométrica" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.formaGeometrica}"
+											style="width:99%">
+											<p:ajax event="change" />
+										</p:inputText>
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<p:selectOneRadio id="console"
+											value="#{avaluoConstructorBean.opcionRegIrreg}"
+											style="width:99%">
+											<f:selectItem itemLabel="Regular" itemValue="Regular" />
+											<f:selectItem itemLabel="Irregular" itemValue="Irregular" />
+											<p:ajax event="change"
+												listener="#{avaluoConstructorBean.opcionRegIrreg}" />
+										</p:selectOneRadio>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Frente (Metros)" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.frente}"
+											style="width:99%">
+											<p:ajax event="change" />
+										</p:inputText>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Fondo (Metros)" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.fondo}"
+											style="width:99%">
+											<p:ajax event="change" />
+										</p:inputText>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Relación Frente/Fondo" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.relacionFrente}"
+											style="width:99%">
+											<p:ajax event="change" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Clase de Inmueble" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="claseInmueble"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.claseInmueble}"
+											style="width:99%">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Famiiliar" itemValue="1" />
+											<f:selectItem itemLabel="Unifamiliar" itemValue="2" />
+											<p:ajax event="change" process="claseInmueble" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Tipo de Construcción" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="tipoConstruccion"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.tipoDeConstruccion}"
+											style="width:99%">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Construcción" itemValue="1" />
+											<f:selectItem itemLabel="Reforma Menor Igual a 20%"
+												itemValue="2" />
+											<f:selectItem itemLabel="Reforma Mayor a 20%" itemValue="3" />
+											<p:ajax event="change" process="tipoConstruccion" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Estado del Inmueble" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estadoInmueble"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.estadoInmueble}"
+											style="width:99%">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Usado" itemValue="1" />
+											<f:selectItem itemLabel="Nuevo" itemValue="2" />
+											<p:ajax event="change" process="estadoInmueble" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:panelGroup id="pngTipoInmuebleLabel">
+											<h:outputText value="Tipo de Inmueble" />
+										</h:panelGroup>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:panelGroup id="pngTipoInmueble">
+											<h:selectOneMenu id="tipoInmueble"
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.tipoDeInmueble.id}"
+												style="width:99%">
+												<f:selectItem itemLabel="Seleccione ..." itemValue=""
+													noSelectionOption="true" />
+												<f:selectItem itemLabel="Apartamento" itemValue="2" />
+												<f:selectItem itemLabel="Casa" itemValue="4" />
+												<f:selectItem itemLabel="Bodega" itemValue="5" />
+												<f:selectItem itemLabel="Local" itemValue="6" />
+												<f:selectItem itemLabel="Oficina" itemValue="7" />
+												<f:selectItem itemLabel="Lote" itemValue="12" />
+												<f:selectItem itemLabel="Casa Rural" itemValue="13" />
+												<f:selectItem itemLabel="Lote Urbano" itemValue="15" />
+												<p:ajax event="change"
+													update="pglUbicacionLocal pglUbicacionLocalLabel" />
+											</h:selectOneMenu>
+										</h:panelGroup>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:panelGroup id="pglUbicacionLocalLabel">
+											<h:outputText value="Ubicación del Local"
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.tipoDeInmueble.id eq '6'}" />
+										</h:panelGroup>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:panelGroup id="pglUbicacionLocal">
+											<h:selectOneMenu id="ubicacionLocal"
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.ubicacionLocal}"
+												style="width:99%"
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.tipoDeInmueble.id eq '6'}">
+												<f:selectItem itemLabel="Seleccione ..." itemValue=""
+													noSelectionOption="true" />
+												<f:selectItem itemLabel="Pasaje Comercial" itemValue="1" />
+												<f:selectItem itemLabel="Pasaje Residencial" itemValue="2" />
+												<f:selectItem itemLabel="Sotano" itemValue="3" />
+												<p:ajax event="change" process="ubicacionLocal" />
+											</h:selectOneMenu>
+										</h:panelGroup>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Uso de Inmueble" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="usoInmueble"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.usoInmueble}"
+											style="width:99%">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Vivienda" itemValue="1" />
+											<f:selectItem itemLabel="Comercio" itemValue="2" />
+											<f:selectItem itemLabel="Bodega" itemValue="3" />
+											<f:selectItem itemLabel="Oficina" itemValue="4" />
+											<f:selectItem itemLabel="V. Multihabitacional" itemValue="5" />
+											<f:selectItem itemLabel="Mixto" itemValue="6" />
+											<f:selectItem itemLabel="Educación" itemValue="7" />
+											<f:selectItem itemLabel="Salud" itemValue="8" />
+											<f:selectItem itemLabel="Hotelero" itemValue="9" />
+											<f:selectItem itemLabel="Industria" itemValue="10" />
+											<f:selectItem itemLabel="Iglesia" itemValue="11" />
+											<f:selectItem itemLabel="Parqueadeero" itemValue="12" />
+											<f:selectItem itemLabel="Auditorio" itemValue="13" />
+											<f:selectItem itemLabel="Instalación" itemValue="14" />
+											<p:ajax
+												update="pngTipoInmuebleLabel pngTipoInmueble pngCaractFisc" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="2"></p:column>
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<h:panelGroup id="pngCaractFisc">
+											<p:panelGrid
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.usoInmueble eq 6}">
+												<p:row>
+													<p:column styleClass="ui-widget-header">
+														<p:dataTable id="idTableCarFisicas" var="carFisc"
+															widgetVar="carFiscWV"
+															value="#{avaluoConstructorBean.listCaracteristicasFisicas}"
+															style="width:80%">
+
+															<p:column headerText="Tipo Inmueble"
+																style="text-align:center;">
+																<h:outputText value="#{carFisc.tipoInmueble}" />
+															</p:column>
+
+															<p:column headerText="Cantidad"
+																style="text-align:center;">
+																<h:outputText value="#{carFisc.cantidad}" />
+															</p:column>
+
+															<p:column width="10">
+																<p:commandButton id="cmbDelTI" icon="ui-icon-trash"
+																	process="@this"
+																	actionListener="#{avaluoConstructorBean.eliminarTipoInmueble(carFisc)}"
+																	update="idTableCarFisicas" />
+															</p:column>
+														</p:dataTable>
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column styleClass="ui-widget-header">
+														<p:selectBooleanButton id="idAddCarctFisc"
+															value="#{avaluoConstructorBean.addTipoInmueble}"
+															onLabel="Ocultar" offLabel="Agregar Tipo Inmueble"
+															onIcon="ui-icon-check" offIcon="ui-icon-close"
+															style="width:200px" converter="javax.faces.Boolean">
+															<p:ajax event="change" update="pngDatosTipoInmueble" />
+														</p:selectBooleanButton>
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+										</h:panelGroup>
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="2"></p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="2"></p:column>
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<h:panelGroup id="pngDatosTipoInmueble">
+											<p:panelGrid
+												rendered="#{avaluoConstructorBean.addTipoInmueble eq true}">
+												<p:row>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="Tipo Inmueble" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="Cantidad" />
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column styleClass="ui-widget-header">
+														<h:selectOneMenu id="tipoInmuebleCF"
+															value="#{avaluoConstructorBean.caracteristicasFisicasDTO.tipoInmueble}"
+															style="width:100px;">
+															<f:selectItem itemLabel="Seleccione ..." itemValue=""
+																noSelectionOption="true" />
+															<f:selectItem itemLabel="Apartamento"
+																itemValue="Apartamento" />
+															<f:selectItem itemLabel="Casa" itemValue="Casa" />
+															<f:selectItem itemLabel="Bodega" itemValue="Bodega" />
+															<f:selectItem itemLabel="Local" itemValue="Local" />
+															<f:selectItem itemLabel="Oficina" itemValue="Oficina" />
+															<f:selectItem itemLabel="Lote" itemValue="Lote" />
+															<f:selectItem itemLabel="Casa Rural"
+																itemValue="Casa Rural" />
+															<f:selectItem itemLabel="Lote Urbano"
+																itemValue="Lote Urbano" />
+															<p:ajax event="change" process="tipoInmuebleCF"
+																listener="#{avaluoConstructorBean.validarTipoInmuebleRepetido}"
+																update="pngDatosTipoInmueble" />
+														</h:selectOneMenu>
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:inputMask
+															value="#{avaluoConstructorBean.caracteristicasFisicasDTO.cantidad}"
+															mask="9">
+															<p:ajax event="change" />
+														</p:inputMask>
+													</p:column>
+													<p:column style="width:30px;" styleClass="ui-widget-header">
+														<p:commandButton id="cmbAddCF" value="Agregar"
+															icon="ui-icon-plusthick" process="@this"
+															actionListener="#{avaluoConstructorBean.agregarTipoInmuebleCF}"
+															update=":form:msgs idTableCarFisicas pngDatosTipoInmueble" />
+														<p:tooltip id="addCFButtonToolTip" for="cmbAddCF"
+															value="Add Tipo de Inmueble" trackMouse="true" />
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+										</h:panelGroup>
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="2"></p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Reparaciones">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Requiere Reparaciones " />
+										<p:selectBooleanButton id="requiereReparaciones"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.requiereReparaciones}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean">
+											<p:ajax update="cualRepar" />
+										</p:selectBooleanButton>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:panelGroup id="cualRepar">
+											<h:outputText value="Cuales Reparaciones"
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.requiereReparaciones eq true}" />
+											<p:inputTextarea
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.cualesReaparaciones}"
+												rows="2" cols="30" maxlength="300" style="width:99%"
+												counterTemplate="{0} characters remaining."
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.requiereReparaciones eq true}">
+												<p:ajax event="change" />
+											</p:inputTextarea>
+										</h:panelGroup>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Servicios Públicos">
+							<p:panelGrid>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:panelGrid style="width: 99%">
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputText value="Alcantarillado" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="alcantarilladoCF"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.alcantarillado}"
+														onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputText value="Acueducto" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="acueductoCF"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.agua}"
+														onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputText value="Energia" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="energiaCF"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.energia}"
+														onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputText value="Gas" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="gasCF"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.gas}"
+														onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputText value="Teléfono" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="telefonoCF"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.telefono}"
+														onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+										</h:panelGrid>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Concepto de Comercialización">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="conceptoComerci"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.conceptoDeComercializacion}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+											<p:ajax event="change" process="conceptoComerci" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText
+											value="Observaciones Concepto de Comercialización" />
+										<p:inputTextarea
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.observacionesConceptoDeComercializacion}"
+											rows="2" cols="30" maxlength="300" style="width:99%"
+											counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Propiedad Horizontal">
+							<p:panelGrid>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Sometido a Propiedad Horizontal" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="sometidaProHorizontal"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.sometidoAPropiedadHorizontal}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean">
+											<p:ajax update="pgConAgruZonComunes" />
+										</p:selectBooleanButton>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<br />
+
+							<h:panelGroup id="pgConAgruZonComunes">
+								<p:panelGrid id="pnlConjuntoAgrupacion" style="width: 99%"
+									rendered="#{avaluoConstructorBean.avaluoConstructorDTO.sometidoAPropiedadHorizontal eq true}">
+									<p:row>
+										<p:column styleClass="ui-widget-header">
+											<h:outputText value="Conjunto o Agrupación" />
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<p:inputText
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.conjuntoOAgrupacion}"
+												style="width:99%">
+												<p:ajax event="change" />
+											</p:inputText>
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<h:outputText value="N° de Edificios" />
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<p:inputText
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroDeEdificios}"
+												style="width:99%">
+												<p:ajax event="change" />
+											</p:inputText>
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<h:outputText value="Unidad" />
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<p:inputText
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.unidad}"
+												style="width:99%">
+												<p:ajax event="change" />
+											</p:inputText>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column styleClass="ui-widget-header">
+											<h:outputText value="Ubicación" />
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<h:selectOneMenu id="ubicPropiedadHor"
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.ubicacionPropiedadHorizontal}"
+												style="width:200px">
+												<f:selectItem itemLabel="Seleccione ..." itemValue=""
+													noSelectionOption="true" />
+												<f:selectItem itemLabel="Interior" itemValue="1" />
+												<f:selectItem itemLabel="Exterior" itemValue="2" />
+												<p:ajax event="change" process="ubicPropiedadHor" />
+											</h:selectOneMenu>
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<h:outputText value="Total Unidades" />
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<p:inputText
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.totalUnidades}"
+												style="width:99%">
+												<p:ajax event="change" />
+											</p:inputText>
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<h:outputText value="Unidades por Piso" />
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<p:inputText
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.unidadesPorPiso}"
+												style="width:99%">
+												<p:ajax event="change" />
+											</p:inputText>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column styleClass="ui-widget-header">
+											<h:outputText value="Registro Propiedad Horizontal" />
+										</p:column>
+										<p:column styleClass="ui-widget-header" colspan="5">
+											<p:inputText
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.registroDePropiedadHorizontal}"
+												style="width:230px">
+												<p:ajax event="change" />
+											</p:inputText>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+
+								<p:panel header="Zonas Comunes" id="pnlZonasComunes"
+									rendered="#{avaluoConstructorBean.avaluoConstructorDTO.sometidoAPropiedadHorizontal eq true}">
+									<p:panelGrid>
+										<p:row>
+											<p:column styleClass="ui-widget-header" colspan="6">
+												<h:panelGrid style="width: 99%">
+													<p:row>
+														<p:column styleClass="ui-widget-header">
+															<h:outputText value="Zonas Verdes" />
+														</p:column>
+														<p:column styleClass="ui-widget-header">
+															<p:selectBooleanButton id="zonasVerdes"
+																value="#{avaluoConstructorBean.avaluoConstructorDTO.zonasVerdes}"
+																onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+																offIcon="ui-icon-close" style="width:100px"
+																converter="javax.faces.Boolean" />
+														</p:column>
+													</p:row>
+													<p:row>
+														<p:column styleClass="ui-widget-header">
+															<h:outputText value="Piscina" />
+														</p:column>
+														<p:column styleClass="ui-widget-header">
+															<p:selectBooleanButton id="piscina"
+																value="#{avaluoConstructorBean.avaluoConstructorDTO.piscina}"
+																onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+																offIcon="ui-icon-close" style="width:100px"
+																converter="javax.faces.Boolean" />
+														</p:column>
+													</p:row>
+													<p:row>
+														<p:column styleClass="ui-widget-header">
+															<h:outputText value="Salon Social" />
+														</p:column>
+														<p:column styleClass="ui-widget-header">
+															<p:selectBooleanButton id="salonSocial"
+																value="#{avaluoConstructorBean.avaluoConstructorDTO.salonSocial}"
+																onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+																offIcon="ui-icon-close" style="width:100px"
+																converter="javax.faces.Boolean" />
+														</p:column>
+													</p:row>
+													<p:row>
+														<p:column styleClass="ui-widget-header">
+															<h:outputText value="Juegos Infantiles" />
+														</p:column>
+														<p:column styleClass="ui-widget-header">
+															<p:selectBooleanButton id="juegosInfantiles"
+																value="#{avaluoConstructorBean.avaluoConstructorDTO.juegosInfantiles}"
+																onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+																offIcon="ui-icon-close" style="width:100px"
+																converter="javax.faces.Boolean" />
+														</p:column>
+													</p:row>
+													<p:row>
+														<p:column styleClass="ui-widget-header">
+															<h:outputText value="Ascensor" />
+														</p:column>
+														<p:column styleClass="ui-widget-header">
+															<p:selectBooleanButton id="ascensor"
+																value="#{avaluoConstructorBean.avaluoConstructorDTO.ascensor}"
+																onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+																offIcon="ui-icon-close" style="width:100px"
+																converter="javax.faces.Boolean" />
+														</p:column>
+													</p:row>
+												</h:panelGrid>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</p:panel>
+							</h:panelGroup>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="tabAnalisisTecnico" title="Análisis Técnico">
+						<p:panel header="Analisis Sector">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header" style="width:15%;">
+										<h:outputText value="Ubicación en el Sector" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="ubicacionSector"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.ubicacionDelSector}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+											<p:ajax event="change" process="ubicacionSector" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header" style="width:13%;">
+										<h:outputText value="Vecindario" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="somVecindario"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.vecindario}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+											<p:ajax event="change" process="somVecindario" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Desarrollo y Proyección Urbana" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="desProyUrbana"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.desarrolloYProyeccionUrbana}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+											<p:ajax event="change" process="desProyUrbana" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Vias de Acceso" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="viasAcceso"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.viasDeAcceso}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+											<p:ajax event="change" process="viasAcceso" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Transporte Urbano" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="transpUrbano"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.trasporteUrbano}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+											<p:ajax event="change" process="transpUrbano" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Alumbrado y Alcantarillado" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="alumbradoAlcantarillado"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.alumbradoYAlcantarillado}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+											<p:ajax event="change" process="alumbradoAlcantarillado" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Calles y Aceras" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="callesAceras"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.callesYAceras}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+											<p:ajax event="change" process="callesAceras" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Analisis Inmueble">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Proporción Zona Social" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="porcionZonaSocial"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.proporcionZonaSocial}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+											<p:ajax event="change" process="porcionZonaSocial" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Acabados" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="somAcabados"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.acabados}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+											<p:ajax event="change" process="somAcabados" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Diseño y Distribución" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="diseñoDistribucion"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.disenoYDistribucion}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+											<p:ajax event="change" process="diseñoDistribucion" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Proporción Zona Servicios" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="proporZonaServicios"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.proporcionZonaServicios}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+											<p:ajax event="change" process="proporZonaServicios" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Estado Gral. Inmueble" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estadoGralInmueble"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.estadoGeneralDelInmueble}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+											<p:ajax event="change" process="estadoGralInmueble" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Observación de Analisis Técnico">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.observacionesAnalisisTecnico}"
+											rows="2" cols="30" maxlength="300" style="width:99%"
+											counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="tabInformacionConstruccion"
+						title="Información de la Construcción">
+						<p:panel header="Dependencias">
+							<p:panelGrid id="dependencias" style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="habitaciones" value="Habitaciones: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="habitaciones" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.habitaciones}"
+											label="Habitaciones" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="estarHabitacion"
+											value="Estar habitaciones: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="estarHabitacion" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.estarHabitacion}"
+											label="Estar habitación" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="cuartoServicio" value="Cuartos servicio: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="cuartoServicio" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cuartoServicio}"
+											label="Cuarto servicio" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="closet" value="Closets: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="closet" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.closet}"
+											label="Closet" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="sala" value="Salas: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="sala" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.sala}"
+											label="Sala" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="comedor" value="Comedores: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="comedor" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.comedor}"
+											label="Comedor" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="banoPrivado" value="Baños privados: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="banoPrivado" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.banoPrivado}"
+											label="Baño Privado" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="banoSocial" value="Baños sociales: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="banoSocial" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.banoSocial}"
+											label="Baño social" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="banoServicio" value="Baños servicio: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="banoServicio" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.banoServicios}"
+											label="Baño servicio" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="cocina" value="Cocinas: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="cocina" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cocina}"
+											label="Cocina" style="width:99%">
+											<p:ajax event="change" />
+										</p:inputMask>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="estudio" value="Estudios: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="estudio" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.estudio}"
+											label="Estudio" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="balcon" value="Balcones: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="balcon" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.balcon}"
+											label="Balcón" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="terraza" value="Terrazas: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="terraza" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.terraza}"
+											label="Terraza" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="patioInterior" value="Patios internos: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="patioInterior" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.patioInterior}"
+											label="Patio interno" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="jardin" value="Jardines: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="jardin" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.jardin}"
+											label="Jardin" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="zonaDeRopas" value="Zonas de ropas: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="zonaDeRopas" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.zonaDeRopas}"
+											label="Zona de ropas" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="zonaVerdePrivada"
+											value="Zonas verdes privadas: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="zonaVerdePrivada" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.zonaVerdePrivada}"
+											label="Zona verde privada" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="local" value="Locales: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="local" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.local}"
+											label="Local" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="oficina" value="Oficinas: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="oficina" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.oficina}"
+											label="Oficina" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="bodega" value="Bodegas: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="bodega" mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.bodega}"
+											label="Bodega" style="width:99%" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<br />
+
+							<hr align="left" />
+
+							<br />
+
+							<p:panelGrid style="width:99%;">
+								<p:row>
+									<p:column styleClass="ui-widget-header" style="width:12%;">
+										<h:outputText value="Números de Pisos" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroDePisos}"
+											style="width:99%;">
+											<p:ajax event="change" />
+										</p:inputMask>
+									</p:column>
+
+									<p:column styleClass="ui-widget-header" style="width:12%;">
+										<h:outputText value="Números de Sotanos" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroDeSotanos}"
+											style="width:99%;">
+											<p:ajax event="change" />
+										</p:inputMask>
+									</p:column>
+
+									<p:column styleClass="ui-widget-header" style="width:12%;">
+										<h:outputText value="Año de Construcción" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask mask="9?999"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.anoDeConstruccion}"
+											style="width:99%;">
+											<p:ajax event="change" />
+										</p:inputMask>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Acabados">
+							<p:panelGrid>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Pisos" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.pisos}"
+											size="145">
+											<p:ajax event="change" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Muros" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText mask="9?9"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.muros}"
+											size="145">
+											<p:ajax event="change" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Techos" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.techos}"
+											size="145">
+											<p:ajax event="change" />
+										</p:inputMask>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Baños" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.banos}"
+											size="145">
+											<p:ajax event="change" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Cocina" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.cocina}"
+											size="145">
+											<p:ajax event="change" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel id="garajes" header="Garajes" style="margin-bottom:10px">
+							<div class="ui-grid ui-grid-responsive">
+								<p:panelGrid style="width:99%">
+									<p:row>
+										<p:column styleClass="ui-widget-header">
+											<h:outputLabel for="garajePrivado" value="Privado: " />
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<h:outputLabel for="garajeExclusivo" value="Exclusivo: " />
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<h:outputLabel for="bahiaComunal" value="Bahía Comunal: " />
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column styleClass="ui-widget-header">
+											<h:selectOneMenu id="garajePrivado"
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.garajePrivado}"
+												label="Garajes privados" style="width:100px"
+												converter="javax.faces.Integer">
+												<p:ajax event="change"
+													listener="#{avaluoConstructorBean.actualizarGarajes('Privado')}"
+													onstart="$( '#form\\:accordionPanel\\:garajes' ).prop('disabled',true);"
+													oncomplete="$( '#form\\:accordionPanel\\:garajes' ).removeProp('disabled');"
+													update="garajes" global="false" />
+												<f:selectItem itemLabel="Seleccione..." itemValue="#{null}"
+													noSelectionOption="true" />
+												<f:selectItems
+													value="#{avaluoConstructorBean.numerosGarajes}" />
+											</h:selectOneMenu>
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<h:selectOneMenu id="garajeExclusivo"
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeExlusivo}"
+												label="Garajes exclusivos" style="width:100px"
+												converter="javax.faces.Integer">
+												<p:ajax event="change"
+													listener="#{avaluoConstructorBean.actualizarGarajes('Exclusivo')}"
+													onstart="$( '#form\\:accordionPanel\\:garajes' ).prop('disabled',true);"
+													oncomplete="$( '#form\\:accordionPanel\\:garajes' ).removeProp('disabled');"
+													update="garajes" global="false" />
+												<f:selectItem itemLabel="Seleccione..." itemValue="#{null}"
+													noSelectionOption="true" />
+												<f:selectItems
+													value="#{avaluoConstructorBean.numerosGarajes}" />
+											</h:selectOneMenu>
+										</p:column>
+										<p:column styleClass="ui-widget-header">
+											<h:selectOneMenu id="bahiaComunal"
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.bahiaComunal}"
+												label="Bahías comunales" style="width:100px"
+												converter="javax.faces.Integer">
+												<p:ajax event="change"
+													listener="#{avaluoConstructorBean.actualizarGarajes('BahiaComunal')}"
+													onstart="$( '#form\\:accordionPanel\\:garajes' ).prop('disabled',true);"
+													oncomplete="$( '#form\\:accordionPanel\\:garajes' ).removeProp('disabled');"
+													update="garajes" global="false" />
+												<f:selectItem itemLabel="Seleccione..." itemValue="#{null}"
+													noSelectionOption="true" />
+												<f:selectItems
+													value="#{avaluoConstructorBean.numerosGarajes}" />
+											</h:selectOneMenu>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column styleClass="ui-widget-header" colspan="3">
+											<p:selectBooleanButton id="garajeDoble"
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeDoble}"
+												onLabel="Doble" offLabel="Sencillo"
+												onIcon="ui-icon-grip-solid-horizontal"
+												offIcon="ui-icon-minus" style="width:100px"
+												converter="javax.faces.Boolean">
+												<p:ajax
+													listener="#{avaluoConstructorBean.onGarajeDobleClicked()}"
+													process="garajes" update="garajes" />
+											</p:selectBooleanButton>
+											<p:spacer width="100px" height="0" />
+											<p:selectBooleanButton
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajeExlusivo gt '0' and avaluoConstructorBean.avaluoConstructorDTO.garajeDoble}"
+												id="garajeParalelo"
+												value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeParalelo}"
+												onLabel="Paralelo" offLabel="Linea" onIcon="ui-icon-check"
+												offIcon="ui-icon-close" style="width:100px"
+												converter="javax.faces.Boolean" />
+										</p:column>
+										<p:column styleClass="ui-widget-header" colspan="1">
+											<p:spacer height="0" />
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+								<div class="ui-grid-row">
+									<div id="matriculaGarajes" class="ui-grid-col-10">
+										<p:panelGrid id="matriculaGarajesPanel" style="width:99%">
+											<p:row
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajePrivado gt '0'}">
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="No. Parqueadero" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="Matricula Inmobiliaria" />
+												</p:column>
+											</p:row>
+											<p:row
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajePrivado gt '0'}">
+												<p:column styleClass="ui-widget-header">
+													<p:inputMask id="numeroParqueadero1" mask="9?99"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroParqueadero1}"
+														label="Número de parqueadero 1"
+														valueChangeListener="#{avaluoConstructorBean.actualizarNumeroParqueadero1}">
+														<p:ajax update="" />
+													</p:inputMask>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="matriculaInmobiliariaGaraje1"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaGaraje1}"
+														label="Matricula Inmobiliaria Garaje 1"
+														required="#{avaluoConstructorBean.avaluoConstructorDTO.garajePrivado gt '0'  and not empty param[enviar.clientId]}">
+														<p:ajax event="change"
+															listener="#{avaluoConstructorBean.verificarMatriculaDuplicada(component.clientId, avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaGaraje1)}"
+															update="matriculaGarajesPanel"
+															process="matriculaGarajesPanel" global="false"
+															onstart="$( '#form\\:accordionPanel\\:matriculaInmobiliariaGaraje1' ).addClass('loadinggif');"
+															oncomplete="$( '#form\\:accordionPanel\\:matriculaInmobiliariaGaraje1' ).removeClass('loadinggif');" />
+													</p:inputText>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="garajeCubierto1"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeCubierto1}"
+														onLabel="Cubierto" offLabel="Descubierto"
+														onIcon="ui-icon-check" offIcon="ui-icon-close"
+														style="width:100px" converter="javax.faces.Boolean" />
+												</p:column>
+												<p:column styleClass="ui-widget-header"
+													rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajeDoble}">
+													<p:selectBooleanButton id="garajeParalelo1"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeParalelo1}"
+														onLabel="Paralelo" offLabel="Linea" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean">
+														<p:ajax
+															listener="#{avaluoConstructorBean.onParaleloClicked()}"
+															process="garajes" update="garajes" />
+													</p:selectBooleanButton>
+												</p:column>
+												<p:column
+													rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajeDoble and not avaluoConstructorBean.avaluoConstructorDTO.garajeParalelo1}"
+													styleClass="ui-widget-header">
+													<h:outputText value="Servidumbre: " />
+													<p:selectBooleanCheckbox id="garajeServidumbre1"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeServidumbre1}"
+														style="width:100px" converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+											<p:row
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajePrivado gt '1'}">
+												<p:column styleClass="ui-widget-header">
+													<p:inputMask id="numeroParqueadero2" mask="9?99"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroParqueadero2}"
+														label="Número de parqueadero"
+														valueChangeListener="#{avaluoConstructorBean.actualizarNumeroParqueadero2}">
+														<p:ajax update="" />
+													</p:inputMask>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="matriculaInmobiliariaGaraje2"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaGaraje2}"
+														label="Matricula Inmobiliaria Garaje 2"
+														required="#{avaluoConstructorBean.avaluoConstructorDTO.garajePrivado gt '1'  and not empty param[enviar.clientId]}">
+														<p:ajax event="change"
+															listener="#{avaluoConstructorBean.verificarMatriculaDuplicada(component.clientId, avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaGaraje2)}"
+															update="matriculaGarajesPanel"
+															process="matriculaGarajesPanel" global="false"
+															onstart="$( '#form\\:accordionPanel\\:matriculaInmobiliariaGaraje2' ).addClass('loadinggif');"
+															oncomplete="$( '#form\\:accordionPanel\\:matriculaInmobiliariaGaraje2' ).removeClass('loadinggif');" />
+													</p:inputText>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="garajeCubierto2"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeCubierto2}"
+														onLabel="Cubierto" offLabel="Descubierto"
+														onIcon="ui-icon-check" offIcon="ui-icon-close"
+														style="width:100px" converter="javax.faces.Boolean" />
+												</p:column>
+												<p:column styleClass="ui-widget-header"
+													rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajeDoble}">
+													<p:selectBooleanButton id="garajeParalelo2"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeParalelo2}"
+														onLabel="Paralelo" offLabel="Linea" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean">
+														<p:ajax
+															listener="#{avaluoConstructorBean.onParaleloClicked()}"
+															process="garajes" update="garajes" />
+													</p:selectBooleanButton>
+												</p:column>
+												<p:column
+													rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajeDoble and not avaluoConstructorBean.avaluoConstructorDTO.garajeParalelo2}"
+													styleClass="ui-widget-header">
+													<h:outputText value="Servidumbre: " />
+													<p:selectBooleanCheckbox id="garajeServidumbre2"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeServidumbre2}"
+														style="width:100px" converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+											<p:row
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajePrivado gt '2'}">
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="numeroParqueadero3"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroParqueadero3}"
+														label="Número de parqueadero"
+														valueChangeListener="#{avaluoConstructorBean.actualizarNumeroParqueadero3}">
+														<p:ajax update="" />
+													</p:inputText>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="matriculaInmobiliariaGaraje3"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaGaraje3}"
+														label="Matricula Inmobiliaria Garaje 3"
+														required="#{avaluoConstructorBean.avaluoConstructorDTO.garajePrivado gt '2'  and not empty param[enviar.clientId]}">
+														<p:ajax event="change"
+															listener="#{avaluoConstructorBean.verificarMatriculaDuplicada(component.clientId, avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaGaraje3)}"
+															update="matriculaGarajesPanel"
+															process="matriculaGarajesPanel" global="false"
+															onstart="$( '#form\\:accordionPanel\\:matriculaInmobiliariaGaraje3' ).addClass('loadinggif');"
+															oncomplete="$( '#form\\:accordionPanel\\:matriculaInmobiliariaGaraje3' ).removeClass('loadinggif');" />
+													</p:inputText>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="garajeCubierto3"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeCubierto3}"
+														onLabel="Cubierto" offLabel="Descubierto"
+														onIcon="ui-icon-check" offIcon="ui-icon-close"
+														style="width:100px" converter="javax.faces.Boolean" />
+												</p:column>
+												<p:column styleClass="ui-widget-header"
+													rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajeDoble}">
+													<p:selectBooleanButton id="garajeParalelo3"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeParalelo3}"
+														onLabel="Paralelo" offLabel="Linea" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean">
+														<p:ajax
+															listener="#{avaluoConstructorBean.onParaleloClicked()}"
+															process="garajes" update="garajes" />
+													</p:selectBooleanButton>
+												</p:column>
+												<p:column
+													rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajeDoble and not avaluoConstructorBean.avaluoConstructorDTO.garajeParalelo3}"
+													styleClass="ui-widget-header">
+													<h:outputText value="Servidumbre: " />
+													<p:selectBooleanCheckbox id="garajeServidumbre3"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeServidumbre3}"
+														style="width:100px" converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+											<p:row
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajePrivado gt '3'}">
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="numeroParqueadero4"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroParqueadero4}"
+														label="Número de parqueadero"
+														valueChangeListener="#{avaluoConstructorBean.actualizarNumeroParqueadero4}">
+														<p:ajax update="" />
+													</p:inputText>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="matriculaInmobiliariaGaraje4"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaGaraje4}"
+														label="Matricula Inmobiliaria Garaje 4"
+														required="#{avaluoConstructorBean.avaluoConstructorDTO.garajePrivado gt '3'  and not empty param[enviar.clientId]}">
+														<p:ajax event="change"
+															listener="#{avaluoConstructorBean.verificarMatriculaDuplicada(component.clientId, avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaGaraje4)}"
+															update="matriculaGarajesPanel"
+															process="matriculaGarajesPanel" global="false"
+															onstart="$( '#form\\:accordionPanel\\:matriculaInmobiliariaGaraje4' ).addClass('loadinggif');"
+															oncomplete="$( '#form\\:accordionPanel\\:matriculaInmobiliariaGaraje4' ).removeClass('loadinggif');" />
+													</p:inputText>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="garajeCubierto4"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeCubierto4}"
+														onLabel="Cubierto" offLabel="Descubierto"
+														onIcon="ui-icon-check" offIcon="ui-icon-close"
+														style="width:100px" converter="javax.faces.Boolean" />
+												</p:column>
+												<p:column styleClass="ui-widget-header"
+													rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajeDoble}">
+													<p:selectBooleanButton id="garajeParalelo4"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeParalelo4}"
+														onLabel="Paralelo" offLabel="Linea" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean">
+														<p:ajax
+															listener="#{avaluoConstructorBean.onParaleloClicked()}"
+															process="garajes" update="garajes" />
+													</p:selectBooleanButton>
+												</p:column>
+												<p:column
+													rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajeDoble and not avaluoConstructorBean.avaluoConstructorDTO.garajeParalelo4}"
+													styleClass="ui-widget-header">
+													<h:outputText value="Servidumbre: " />
+													<p:selectBooleanCheckbox id="garajeServidumbre4"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeServidumbre4}"
+														style="width:100px" converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+											<p:row
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajePrivado gt '4'}">
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="numeroParqueadero5"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroParqueadero5}"
+														label="Número de parqueadero"
+														valueChangeListener="#{avaluoConstructorBean.actualizarNumeroParqueadero5}">
+														<p:ajax update="" />
+													</p:inputText>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="matriculaInmobiliariaGaraje5"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaGaraje5}"
+														label="Matricula Inmobiliaria Garaje 5"
+														required="#{avaluoConstructorBean.avaluoConstructorDTO.garajePrivado gt '4'  and not empty param[enviar.clientId]}">
+														<p:ajax event="change"
+															listener="#{avaluoConstructorBean.verificarMatriculaDuplicada(component.clientId, avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaGaraje5)}"
+															update="matriculaGarajesPanel"
+															process="matriculaGarajesPanel" global="false"
+															onstart="$( '#form\\:accordionPanel\\:matriculaInmobiliariaGaraje5' ).addClass('loadinggif');"
+															oncomplete="$( '#form\\:accordionPanel\\:matriculaInmobiliariaGaraje5' ).removeClass('loadinggif');" />
+													</p:inputText>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:selectBooleanButton id="garajeCubierto5"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeCubierto5}"
+														onLabel="Cubierto" offLabel="Descubierto"
+														onIcon="ui-icon-check" offIcon="ui-icon-close"
+														style="width:100px" converter="javax.faces.Boolean" />
+												</p:column>
+												<p:column styleClass="ui-widget-header"
+													rendered="#{avaluoConstructorBean.avaluoConstructorDTO.garajeDoble}">
+													<p:selectBooleanButton id="garajeParalelo5"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeParalelo5}"
+														onLabel="Paralelo" offLabel="Linea" onIcon="ui-icon-check"
+														offIcon="ui-icon-close" style="width:100px"
+														converter="javax.faces.Boolean">
+														<p:ajax
+															listener="#{avaluoConstructorBean.onParaleloClicked()}"
+															process="garajes" update="garajes" />
+													</p:selectBooleanButton>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputText value="Servidumbre: " />
+													<p:selectBooleanCheckbox id="garajeServidumbre5"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.garajeServidumbre5}"
+														style="width:100px" converter="javax.faces.Boolean" />
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</div>
+									<div id="totalGarajes" class="ui-grid-col-2">
+										<p:panelGrid style="width:99%">
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<p:spacer height="0" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="Total garajes" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="totalGarajes"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroTotalDeGarajes}"
+														label="numeroTotalDeGarajes" style="width:50px"
+														readonly="true" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="Total Cupos parqueaderos" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="totalCuposParquedaro"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.totalCuposParquedaro}"
+														label="totalCuposParquedaro" style="width:50px"
+														readonly="true" />
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</div>
+								</div>
+							</div>
+						</p:panel>
+
+						<p:panel id="depositos" header="Depositos"
+							style="margin-bottom:10px">
+							<div class="ui-grid ui-grid-responsive">
+								<div class="ui-grid-row">
+									<div class="ui-grid-col-4">
+										<p:panelGrid style="width:99%">
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel for="depositosPrivados" value="Privado: " />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:selectOneMenu id="depositosPrivados"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.depositosPrivados}"
+														label="Depositos privados" style="width:100px"
+														converter="javax.faces.Integer">
+														<p:ajax event="change"
+															listener="#{avaluoConstructorBean.actualizarDepositos('Privado')}"
+															onstart="$( '#form\\:accordionPanel\\:depositos' ).prop('disabled',true);"
+															oncomplete="$( '#from\\:accordionPanel\\:depositos' ).removeProp('disabled');"
+															update="depositos" global="false" />
+														<f:selectItem itemLabel="Seleccione..."
+															itemValue="#{null}" noSelectionOption="true" />
+														<f:selectItems
+															value="#{avaluoConstructorBean.numerosGarajes}" />
+													</h:selectOneMenu>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel for="depositosExclusivos"
+														value="Exclusivo: " />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:selectOneMenu id="depositosExclusivos"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.depositosExclusivos}"
+														label="Depositos exclusivos" style="width:100px"
+														converter="javax.faces.Integer">
+														<p:ajax event="change"
+															listener="#{avaluoConstructorBean.actualizarDepositos('Exclusivo')}"
+															update="depositos" global="false" />
+														<f:selectItem itemLabel="Seleccione..."
+															itemValue="#{null}" noSelectionOption="true" />
+														<f:selectItems
+															value="#{avaluoConstructorBean.numerosGarajes}" />
+													</h:selectOneMenu>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</div>
+									<div id="matriculaDepositos" class="ui-grid-col-6">
+										<p:panelGrid id="matriculaDepositosPanel" style="width:99%">
+											<p:row
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.depositosPrivados gt '0'}">
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="No. Deposito" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="Matricula Inmobiliaria" />
+												</p:column>
+											</p:row>
+											<p:row
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.depositosPrivados gt '0'}">
+												<p:column styleClass="ui-widget-header">
+													<p:inputMask id="numeroDeposito1" mask="9?99"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroDeposito1}"
+														label="numeroDeposito1"
+														valueChangeListener="#{avaluoConstructorBean.actualizarNombreDeposito1}">
+														<p:ajax update="" />
+													</p:inputMask>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="matriculaInmobiliariaDeposito1"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaDeposito1}"
+														label="Matricula Inmobiliaria Deposito 1"
+														required="#{avaluoConstructorBean.avaluoConstructorDTO.depositosPrivados gt '0' and not empty param[enviar.clientId]}">
+														<p:ajax event="change"
+															listener="#{avaluoConstructorBean.verificarMatriculaDuplicada(component.clientId, avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaDeposito1)}"
+															update="matriculaDepositosPanel"
+															process="matriculaDepositosPanel" global="false"
+															onstart="$( '#form\\:accordionPanel\\:matriculaInmobiliariaDeposito1' ).addClass('loadinggif');"
+															oncomplete="$( '#form\\:accordionPanel\\:matriculaInmobiliariaDeposito1' ).removeClass('loadinggif');" />
+													</p:inputText>
+												</p:column>
+											</p:row>
+											<p:row
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.depositosPrivados gt '1'}">
+												<p:column styleClass="ui-widget-header">
+													<p:inputMask id="numeroDeposito2" mask="9?99"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroDeposito2}"
+														label="numeroDeposito2"
+														valueChangeListener="#{avaluoConstructorBean.actualizarNombreDeposito2}">
+														<p:ajax update="" />
+													</p:inputMask>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="matriculaInmobiliariaDeposito2"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaDeposito2}"
+														label="Matricula Inmobiliaria Deposito 2"
+														required="#{avaluoConstructorBean.avaluoConstructorDTO.depositosPrivados gt '1' and not empty param[enviar.clientId]}">
+														<p:ajax event="change"
+															listener="#{avaluoConstructorBean.verificarMatriculaDuplicada(component.clientId, avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaDeposito2)}"
+															update="matriculaDepositosPanel"
+															process="matriculaDepositosPanel" global="false"
+															onstart="$( '#form\\:accordionPanel\\:matriculaInmobiliariaDeposito2' ).addClass('loadinggif');"
+															oncomplete="$( '#form\\:accordionPanel\\:matriculaInmobiliariaDeposito2' ).removeClass('loadinggif');" />
+													</p:inputText>
+												</p:column>
+											</p:row>
+											<p:row
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.depositosPrivados gt '2'}">
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="numeroDeposito3"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroDeposito3}"
+														label="numeroDeposito3">
+														<p:ajax
+															listener="#{avaluoConstructorBean.actualizarNombreDeposito3}"
+															update="" />
+													</p:inputText>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="matriculaInmobiliariaDeposito3"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaDeposito3}"
+														label="Matricula Inmobiliaria Deposito 3"
+														required="#{avaluoConstructorBean.avaluoConstructorDTO.depositosPrivados gt '2' and not empty param[enviar.clientId]}">
+														<p:ajax event="change"
+															listener="#{avaluoConstructorBean.verificarMatriculaDuplicada(component.clientId, avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaDeposito3)}"
+															update="matriculaDepositosPanel"
+															process="matriculaDepositosPanel" global="false"
+															onstart="$( '#form\\:accordionPanel\\:matriculaInmobiliariaDeposito3' ).addClass('loadinggif');"
+															oncomplete="$( '#form\\:accordionPanel\\:matriculaInmobiliariaDeposito3' ).removeClass('loadinggif');" />
+													</p:inputText>
+												</p:column>
+											</p:row>
+											<p:row
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.depositosPrivados gt '3'}">
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="numeroDeposito4"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroDeposito4}"
+														label="numeroDeposito2">
+														<p:ajax
+															listener="#{avaluoConstructorBean.actualizarNombreDeposito4}"
+															update="" />
+													</p:inputText>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="matriculaInmobiliariaDeposito4"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaDeposito4}"
+														label="Matricula Inmobiliaria Deposito 4"
+														required="#{avaluoConstructorBean.avaluoConstructorDTO.depositosPrivados gt '3' and not empty param[enviar.clientId]}">
+														<p:ajax event="change"
+															listener="#{avaluoConstructorBean.verificarMatriculaDuplicada(component.clientId, avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaDeposito4)}"
+															update="matriculaDepositosPanel"
+															process="matriculaDepositosPanel" global="false"
+															onstart="$( '#form\\:accordionPanel\\:matriculaInmobiliariaDeposito4' ).addClass('loadinggif');"
+															oncomplete="$( '#form\\:accordionPanel\\:matriculaInmobiliariaDeposito4' ).removeClass('loadinggif');" />
+													</p:inputText>
+												</p:column>
+											</p:row>
+											<p:row
+												rendered="#{avaluoConstructorBean.avaluoConstructorDTO.depositosPrivados gt '4'}">
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="numeroDeposito5"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroDeposito5}"
+														label="numeroDeposito2">
+														<p:ajax
+															listener="#{avaluoConstructorBean.actualizarNombreDeposito5}"
+															update="" />
+													</p:inputText>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="matriculaInmobiliariaDeposito5"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaDeposito5}"
+														label="Matricula Inmobiliaria Deposito 5"
+														required="#{avaluoConstructorBean.avaluoConstructorDTO.depositosPrivados gt '4' and not empty param[enviar.clientId]}">
+														<p:ajax event="change"
+															listener="#{avaluoConstructorBean.verificarMatriculaDuplicada(component.clientId, avaluoConstructorBean.avaluoConstructorDTO.matriculaInmobiliariaDeposito5)}"
+															update="matriculaDepositosPanel"
+															process="matriculaDepositosPanel" global="false"
+															onstart="$( '#form\\:accordionPanel\\:matriculaInmobiliariaDeposito5' ).addClass('loadinggif');"
+															oncomplete="$( '#form\\:accordionPanel\\:matriculaInmobiliariaDeposito5' ).removeClass('loadinggif');" />
+													</p:inputText>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</div>
+									<div id="totalDepositos" class="ui-grid-col-2">
+										<p:panelGrid style="width:99%">
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="Total depositos" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="totalDepositos"
+														value="#{avaluoConstructorBean.avaluoConstructorDTO.numeroTotalDepositos}"
+														label="numeroTotalDepositos" style="width:50px"
+														readonly="true" />
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</div>
+								</div>
+							</div>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="tabCronogramaObra" title="Cronograma de Obra">
+						<p:panel header="Cronograma de Obra">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:panelGroup id="pngTableCronObraCD">
+											<p:dataTable id="idTableCronObraCD" var="cronObraCD"
+												widgetVar="cronObraCdWV"
+												value="#{avaluoConstructorBean.listCostosDirectos}"
+												style="margin-bottom:20px">
+												<f:facet name="header">
+														Costos Directos
+													</f:facet>
+
+												<p:column headerText="N° Capitulo"
+													style="text-align:center;">
+													<h:outputText value="#{cronObraCD.noDeCapitulo}" />
+												</p:column>
+
+												<p:column headerText="Nombre Capitulo"
+													style="text-align:center;">
+													<h:outputText value="#{cronObraCD.nombreCapitulo}" />
+												</p:column>
+
+												<p:column id="valorPresupuestoId"
+													headerText="Valor Presupuesto" style="text-align:center;">
+													<p:inputMask mask="9?999999999" value="#{cronObraCD.valorPresupuesto}"
+														style="text-align:center;" size="10" disabled="#{cronObraCD.noDeCapitulo eq null}">
+														<p:ajax event="change" listener="#{avaluoConstructorBean.calcularTotalCostosDirectos('valorPresupuesto')}"
+															update="idTableCronObraCD" />
+													</p:inputMask>
+												</p:column>
+
+												<p:column headerText="% Costo Total"
+													style="text-align:center;">
+													<h:outputText value="#{cronObraCD.costoTotal}" />
+												</p:column>
+
+												<p:column headerText="% Avance" style="text-align:center;">
+													<p:inputMask mask="9?99" value="#{cronObraCD.porcentajeDeAvance}"
+														style="text-align:center;" size="10"
+														disabled="#{cronObraCD.noDeCapitulo eq null}">
+														<p:ajax event="change"
+															listener="#{avaluoConstructorBean.calcularTotalCostosDirectos('porAvance')}"
+															update="idTableCronObraCD" />
+													</p:inputMask>
+												</p:column>
+
+												<p:column headerText="Inversión Ejecutada"
+													style="text-align:center;">
+													<h:outputText value="#{cronObraCD.invesionEjecutada}" />
+												</p:column>
+
+												<p:column headerText="Inversión Por Ejecutar"
+													style="text-align:center;">
+													<h:outputText value="#{cronObraCD.inversionPoEjecutar}" />
+												</p:column>
+
+												<p:column headerText="Fecha Inicio"
+													style="text-align:center;">
+													<p:calendar id="fecIni" value="#{cronObraCD.fechaInicio}"
+														size="10"
+														rendered="#{cronObraCD.noDeCapitulo != null or cronObraCD.nombreCapitulo == null}">
+														<p:ajax event="dateSelect"
+															listener="#{avaluoConstructorBean.validarFechas(cronObraCD,'ini')}"
+															update=":form:msgs" />
+													</p:calendar>
+												</p:column>
+
+												<p:column headerText="Fecha Fin" style="text-align:center;">
+													<p:calendar id="fecFin" value="#{cronObraCD.fechaFin}"
+														size="10"
+														rendered="#{cronObraCD.noDeCapitulo != null or cronObraCD.nombreCapitulo == null}">
+														<p:ajax event="dateSelect"
+															listener="#{avaluoConstructorBean.validarFechas(cronObraCD,'fin')}"
+															update=":form:msgs" />
+													</p:calendar>
+												</p:column>
+
+												<p:column width="10"
+													rendered="#{cronObraCD.noDeCapitulo > 16}">
+													<p:commandButton id="cmbDelCD" icon="ui-icon-trash"
+														process="@this"
+														actionListener="#{avaluoConstructorBean.eliminarCostoDirecto(cronObraCD)}"
+														update="idTableCronObraCD" />
+												</p:column>
+											</p:dataTable>
+										</h:panelGroup>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="idAddCronoCD"
+											value="#{avaluoConstructorBean.addCostoD}" onLabel="Ocultar"
+											offLabel="Agregar Capitulo" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:140px"
+											converter="javax.faces.Boolean">
+											<p:ajax listener="#{avaluoConstructorBean.traerId(avaluoConstructorBean.listCronogramaObraCostosDirectos,'directo')}" update="pngAddNewCrono" />
+										</p:selectBooleanButton>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:panelGroup id="pngAddNewCrono">
+											<p:panelGrid id="pngAddNewCronograma" style="width: 99%;" rendered="#{avaluoConstructorBean.addCostoD eq true}">
+												<p:row>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="N° Capitulo" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="Nombre Capitulo" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="Valor Presupuesto" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="% Costo Total" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="% Avance" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="Inversión Ejecutada" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="Inversión Por Ejecutar" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="Fecha Inicio" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="Fecha Fin" />
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<h:outputText
+															value="#{avaluoConstructorBean.newCronObraCD.noDeCapitulo}"
+															size="5" style="width: 99%;text-align:center;" />
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:inputText id="idNewCronObraCD"
+															value="#{avaluoConstructorBean.newCronObraCD.nombreCapitulo}"
+															size="10" style="width: 99%;">
+															<p:ajax event="change"
+																listener="#{avaluoConstructorBean.validarCapituloRepetidos('directo')}"
+																update=":form:msgs idNewCronObraCD" />
+														</p:inputText>
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:inputMask mask="9?999999999" value="#{avaluoConstructorBean.newCronObraCD.valorPresupuesto}" style="width: 99%;text-align:center;" size="10">
+															<p:ajax event="change"/>
+														</p:inputMask>
+													</p:column>
+
+													<p:column styleClass="ui-widget-header" style="text-align:center;">
+														<p:inputText id="idCostoTotalCD"
+															value="#{avaluoConstructorBean.newCronObraCD.costoTotal}" size="10" style="width: 99%;text-align:center;"
+															disabled="true" />
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:inputMask mask="9?99" value="#{avaluoConstructorBean.newCronObraCD.porcentajeDeAvance}" style="width: 99%;text-align:center;" size="10">
+															<p:ajax event="change"
+																listener="#{avaluoConstructorBean.calcularInversion(avaluoConstructorBean.newCronObraCD)}"
+																update="idInversionEje idInversionPorEje" />
+														</p:inputMask>
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:inputText id="idInversionEje"
+															value="#{avaluoConstructorBean.newCronObraCD.invesionEjecutada}"
+															size="10" disabled="true" style="width: 99%;" />
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:inputText id="idInversionPorEje"
+															value="#{avaluoConstructorBean.newCronObraCD.inversionPoEjecutar}"
+															size="10" disabled="true" style="width: 99%;" />
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:calendar
+															value="#{avaluoConstructorBean.newCronObraCD.fechaInicio}"
+															size="10" style="width: 99%;">
+															<p:ajax event="dateSelect"
+																listener="#{avaluoConstructorBean.validarFechas(avaluoConstructorBean.newCronObraCD,'ini')}"
+																update=":form:msgs" />
+														</p:calendar>
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:calendar
+															value="#{avaluoConstructorBean.newCronObraCD.fechaFin}"
+															size="10" style="width: 99%;">
+															<p:ajax event="dateSelect" process="@this"
+																listener="#{avaluoConstructorBean.validarFechas(avaluoConstructorBean.newCronObraCD,'fin')}"
+																update=":form:msgs" />
+														</p:calendar>
+													</p:column>
+
+													<p:column styleClass="ui-widget-header">
+														<p:commandButton id="cmbAddCD" value="Agregar"
+															icon="ui-icon-plusthick" process="@this"
+															actionListener="#{avaluoConstructorBean.agregarCostosDirectos}"
+															update=":form:msgs idTableCronObraCD pngAddNewCrono"
+															rendered="#{avaluoConstructorBean.addCostoD eq true}" />
+														<p:tooltip id="addCDButtonToolTip" for="cmbAddCD"
+															value="Add Costos Directos" trackMouse="true" />
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+										</h:panelGroup>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<br />
+
+							<p:panelGrid id="pngTableCronObraCI">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:dataTable id="idTableCronObraCI" var="cronObraCI"
+											widgetVar="cronObraCiWV"
+											value="#{avaluoConstructorBean.listCostosIndirectos}"
+											style="margin-bottom:20px">
+											<f:facet name="header">
+													Costos Indirectos
+												</f:facet>
+
+											<p:column headerText="N° Capitulo" style="text-align:center;">
+												<h:outputText value="#{cronObraCI.noDeCapitulo}" />
+											</p:column>
+
+											<p:column headerText="Nombre Capitulo"
+												style="text-align:center;">
+												<h:outputText value="#{cronObraCI.nombreCapitulo}" />
+											</p:column>
+
+											<p:column id="presupuestoId" headerText="Valor Presupuesto"
+												style="text-align:center;">
+												<p:inputMask mask="9?999999999" value="#{cronObraCI.valorPresupuesto}" style="text-align:center;" size="10" disabled="#{cronObraCI.noDeCapitulo eq null}">
+													<p:ajax event="change" listener="#{avaluoConstructorBean.calcularTotalCostosIndirectos('valorPresupuesto')}" update="idTableCronObraCI" />
+												</p:inputMask>
+											</p:column>
+
+											<p:column headerText="% Costo Total"
+												style="text-align:center;">
+												<h:outputText value="#{cronObraCI.costoTotal}" />
+											</p:column>
+
+											<p:column headerText="% Avance" style="text-align:center;">
+												<p:inputMask mask="9?99" value="#{cronObraCI.porcentajeDeAvance}"
+													style="text-align:center;" size="10"
+													disabled="#{cronObraCI.noDeCapitulo eq null}">
+													<p:ajax event="change"
+														listener="#{avaluoConstructorBean.calcularTotalCostosIndirectos('porAvance')}"
+														update="idTableCronObraCI" />
+												</p:inputMask>
+											</p:column>
+
+											<p:column headerText="Inversión Ejecutada"
+												style="text-align:center;">
+												<h:outputText value="#{cronObraCI.invesionEjecutada}" />
+											</p:column>
+
+											<p:column headerText="Inversión Por Ejecutar"
+												style="text-align:center;">
+												<h:outputText value="#{cronObraCI.inversionPoEjecutar}" />
+											</p:column>
+
+											<p:column headerText="Fecha Inicio"
+												style="text-align:center;">
+												<p:calendar id="fecIni" value="#{cronObraCI.fechaInicio}"
+													size="10"
+													rendered="#{cronObraCI.noDeCapitulo != null or cronObraCI.nombreCapitulo == null}">
+													<p:ajax event="dateSelect"
+														listener="#{avaluoConstructorBean.validarFechas(cronObraCI,'ini')}"
+														update=":form:msgs" />
+												</p:calendar>
+											</p:column>
+
+											<p:column headerText="Fecha Fin" style="text-align:center;">
+												<p:calendar id="fecFin" value="#{cronObraCI.fechaFin}"
+													size="10"
+													rendered="#{cronObraCI.noDeCapitulo != null or cronObraCI.nombreCapitulo == null}">
+													<p:ajax event="dateSelect"
+														listener="#{avaluoConstructorBean.validarFechas(cronObraCI,'fin')}"
+														update=":form:msgs" />
+												</p:calendar>
+											</p:column>
+
+											<p:column width="30"
+												rendered="#{cronObraCI.noDeCapitulo > 4}">
+												<p:commandButton id="cmbDelCI" icon="ui-icon-trash"
+													process="@this"
+													actionListener="#{avaluoConstructorBean.eliminarCostoIndirecto(cronObraCI)}"
+													update="idTableCronObraCI" />
+											</p:column>
+										</p:dataTable>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="idAddCronoCI"
+											value="#{avaluoConstructorBean.addCostoI}" onLabel="Ocultar"
+											offLabel="Agregar Capitulo" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:140px"
+											converter="javax.faces.Boolean">
+											<p:ajax
+												listener="#{avaluoConstructorBean.traerId(avaluoConstructorBean.listCronogramaObraCostosIndirectos,'indirecto')}"
+												update="pngAddNewCronoCI" />
+										</p:selectBooleanButton>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:panelGroup id="pngAddNewCronoCI">
+											<p:panelGrid id="pngAddNewCronogramaCI" style="width: 99%;"
+												rendered="#{avaluoConstructorBean.addCostoI eq true}">
+												<p:row>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="N° Capitulo" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="Nombre Capitulo" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="Valor Presupuesto" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="% Costo Total" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="% Avance" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="Inversión Ejecutada" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="Inversión Por Ejecutar" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="Fecha Inicio" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText value="Fecha Fin" />
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<h:outputText
+															value="#{avaluoConstructorBean.newCronObraCI.noDeCapitulo}"
+															size="5" style="width: 99%;text-align:center;" />
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:inputText id="idNewCronObraCI" value="#{avaluoConstructorBean.newCronObraCI.nombreCapitulo}" size="10" style="width: 99%;">
+															<p:ajax event="change" listener="#{avaluoConstructorBean.validarCapituloRepetidos('indirecto')}"
+																update=":form:msgs idNewCronObraCI" />
+														</p:inputText>
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:inputMask mask="9?999999999" value="#{avaluoConstructorBean.newCronObraCI.valorPresupuesto}" style="width: 99%;text-align:center;" size="10">
+															<p:ajax event="change" />
+														</p:inputMask>
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:inputText
+															value="#{avaluoConstructorBean.newCronObraCI.costoTotal}"
+															size="10" style="width: 99%;text-align:center;"
+															disabled="true" />
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:inputMask mask="9?99" value="#{avaluoConstructorBean.newCronObraCI.porcentajeDeAvance}" style="width: 99%;text-align:center;" size="10">
+															<p:ajax event="change"
+																listener="#{avaluoConstructorBean.calcularInversion(avaluoConstructorBean.newCronObraCI)}"
+																update="idInversionEjeCI idInversionPorEjeCI" />
+														</p:inputMask>
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:inputText id="idInversionEjeCI"
+															value="#{avaluoConstructorBean.newCronObraCI.invesionEjecutada}"
+															size="10" disabled="true" style="width: 99%;" />
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:inputText id="idInversionPorEjeCI"
+															value="#{avaluoConstructorBean.newCronObraCI.inversionPoEjecutar}"
+															size="10" disabled="true" style="width: 99%;" />
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:calendar
+															value="#{avaluoConstructorBean.newCronObraCI.fechaInicio}"
+															size="10" style="width: 99%;">
+															<p:ajax event="dateSelect"
+																listener="#{avaluoConstructorBean.validarFechas(avaluoConstructorBean.newCronObraCI,'ini')}"
+																update=":form:msgs" />
+														</p:calendar>
+													</p:column>
+
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<p:calendar
+															value="#{avaluoConstructorBean.newCronObraCI.fechaFin}"
+															size="10" style="width: 99%;">
+															<p:ajax event="dateSelect" process="@this"
+																listener="#{avaluoConstructorBean.validarFechas(avaluoConstructorBean.newCronObraCI,'fin')}"
+																update=":form:msgs" />
+														</p:calendar>
+													</p:column>
+
+													<p:column styleClass="ui-widget-header">
+														<p:commandButton id="cmbAddCI" value="Agregar"
+															icon="ui-icon-plusthick" process="@this"
+															actionListener="#{avaluoConstructorBean.agregarCostosIndirectos}"
+															update=":form:msgs idTableCronObraCI pngAddNewCronoCI"
+															rendered="#{avaluoConstructorBean.addCostoI eq true}" />
+														<p:tooltip id="addCIButtonToolTip" for="cmbAddCI"
+															value="Add Costos Indirectos" trackMouse="true" />
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+										</h:panelGroup>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="tabInformeTecnico" title="Informe Técnico">
+						<p:panelGrid style="width: 99%;">
+							<p:row>
+								<p:column>
+									<p:panel header="Información General del lote">
+										<p:panelGrid>
+											<p:row>
+												<p:column><h:outputText value="Área Lote" /></p:column>
+												<p:column>
+													<p:inputMask value="#{avaluoConstructorBean.avaluoConstructorDTO.loteProyectoM2}" mask="9?99999">
+														<p:ajax event="change" />
+													</p:inputMask>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column><h:outputText value="Valor Lote" /></p:column>
+												<p:column>
+													<p:inputText id="iptValorLote" value="#{avaluoConstructorBean.avaluoConstructorDTO.valorLote}">
+														<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+														<p:ajax event="change" listener="#{avaluoConstructorBean.adicionarArea}" />
+													</p:inputText>
+													<script>
+														$(function(){
+															$('#form\\:accordionPanel\\:iptValorLote').maskMoney({prefix:'$',  thousands:".", decimal:','});
+														});
+													</script>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+								</p:column>
+								<p:column>
+									<p:panel header="Distribución de Costos">
+										<p:panelGrid>
+											<p:row>
+												<p:column><h:outputText value="Valor Solicitud" /></p:column>
+												<p:column>
+													<p:inputText id="iptValorSolicitado" value="#{avaluoConstructorBean.avaluoConstructorDTO.valorSolicitado}">
+														<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+														<p:ajax event="change" listener="#{avaluoConstructorBean.costosFinancieros}" update="pngDistCostos oupFinanciado"/>
+													</p:inputText>
+													<script>
+														$(function(){
+															$('#form\\:accordionPanel\\:iptValorSolicitado').maskMoney({prefix:'$',  thousands:".", decimal:','});
+														});
+													</script>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column><h:outputText value="Porcentaje a Financiar" /></p:column>
+												<p:column>
+													<p:inputText value="#{avaluoConstructorBean.avaluoConstructorDTO.porcentajeAFinanciar}">
+														<p:ajax event="change" listener="#{avaluoConstructorBean.costosFinancieros}" update="pngDistCostos oupFinanciado"/>
+													</p:inputText>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column><h:outputText value="Programación en Meses" /></p:column>
+												<p:column>
+													<p:inputText value="#{avaluoConstructorBean.avaluoConstructorDTO.programacionEnMeses}">
+														<p:ajax event="change" listener="#{avaluoConstructorBean.costosFinancieros}" update="pngDistCostos oupFinanciado"/>
+													</p:inputText>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column><h:outputText value="Factor" /></p:column>
+												<p:column>
+													<p:inputText value="#{avaluoConstructorBean.avaluoConstructorDTO.factor}">
+														<p:ajax event="change" listener="#{avaluoConstructorBean.costosFinancieros}" update="pngDistCostos oupFinanciado" />
+													</p:inputText>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="2">
+									<h:panelGroup id="pngDistCostos">
+										<p:panelGrid style="width: 99%;">
+											<p:row>
+												<p:column><h:outputLabel for="disCosto" value="Distribución de Costos" /></p:column>
+												<p:column><h:outputLabel for="disValor" value="Valor" /></p:column>
+												<p:column><h:outputLabel for="disPorcentaje" value="%" /></p:column>
+											</p:row>
+											<p:row>
+												<p:column><h:outputText for="disCostoD" value="Costos Directos"/></p:column>
+												<p:column>
+													<p:inputText value="#{avaluoConstructorBean.avaluoConstructorDTO.costosDirectos}" style="text-align:right;" readonly="true">
+														<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+													</p:inputText>
+												</p:column>
+												<p:column>
+													<p:inputText value="#{avaluoConstructorBean.avaluoConstructorDTO.porcentajeCostosDirectos}" style="text-align:right;" readonly="true"/>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column><h:outputText for="disCostoI" value="Costos Indirectos" /></p:column>
+												<p:column>
+													<p:inputText value="#{avaluoConstructorBean.avaluoConstructorDTO.costosIndirectos}" style="text-align:right;" readonly="true">
+														<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+													</p:inputText>
+												</p:column>
+												<p:column>
+													<p:inputText value="#{avaluoConstructorBean.avaluoConstructorDTO.porcentajeCostosIndirectos}" style="text-align:right;" readonly="true"/>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column><h:outputText for="disCostoFin" value="Costos Financieros" /></p:column>
+												<p:column>
+													<p:inputText value="#{avaluoConstructorBean.avaluoConstructorDTO.costosFinancieros}" style="text-align:right;" readonly="true">
+														<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+													</p:inputText>
+												</p:column>
+												<p:column>
+													<p:inputText value="" style="text-align:right;" readonly="true"/>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column><h:outputText for="disValTotPro" value="Valor Total de Proyecto" /></p:column>
+												<p:column>
+													<p:inputText value="#{avaluoConstructorBean.avaluoConstructorDTO.costosTotalDelProyecto}" style="text-align:right;" readonly="true">
+														<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+													</p:inputText>
+												</p:column>
+												<p:column>
+													<p:inputText value="#{avaluoConstructorBean.avaluoConstructorDTO.porcentajeDeCostosDelProyecto}" style="text-align:right;" readonly="true"/>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column><h:outputText for="disValMaxFin" value="Valor Maximo a Financiar" /></p:column>
+												<p:column>
+													<p:inputText value="#{avaluoConstructorBean.avaluoConstructorDTO.valorMaxAFinanciar}" style="text-align:right;" readonly="true">
+														<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+													</p:inputText>
+												</p:column>
+												<p:column>
+													<p:inputText value="#{avaluoConstructorBean.avaluoConstructorDTO.porcentajeAFinanciar}" style="text-align:right;" readonly="true"/>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</h:panelGroup>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<h:outputText for="disPorFinanciado" value="Porcentaje Financiado" />
+									<p:inputText id="oupFinanciado" value="#{avaluoConstructorBean.avaluoConstructorDTO.porcentajeFinanciado}" style="text-align:right;" readonly="true"/>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:tab>
+
+					<p:tab id="tabConceptosFinales" title="Conceptos Finales">
+						<p:panel header="Valor Total Avalúo">
+							<p:panelGrid id="pngValorTotalAvaluo" style="width:99%;">
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="4">
+										<p:dataTable id="dtbConceptosFinales" var="area"
+											widgetVar="proWV" value="#{avaluoConstructorBean.listAreas}"
+											editable="true">
+
+											<p:column headerText="Inmueble" style="text-align:center;">
+												<h:outputText value="#{area.nombre}"
+													style="text-align:center;" />
+											</p:column>
+
+											<p:column headerText="Área M2" style="text-align:center;">
+												<h:outputText value="#{area.area}"
+													style="text-align:center;" />
+											</p:column>
+
+											<p:column headerText="Valor M2" style="text-align:center;">
+												<h:outputText value="#{area.valorUnitario}"
+													style="text-align:center;" />
+											</p:column>
+
+											<p:column headerText="Valor Total" style="text-align:center;">
+												<h:outputText value="#{area.valorTotal}"
+													style="text-align:center;" />
+											</p:column>
+
+											<p:column width="30">
+												<p:commandButton icon="ui-icon-trash"
+													actionListener="#{avaluoConstructorBean.eliminarArea(area)}"
+													process="@this" update="dtbConceptosFinales" />
+											</p:column>
+
+										</p:dataTable>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="idAddConFin"
+											value="#{avaluoConstructorBean.addConFin}" onLabel="Ocultar"
+											offLabel="Agregar Área" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:140px"
+											converter="javax.faces.Boolean">
+											<p:ajax update="pngAgregarArea" />
+										</p:selectBooleanButton>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="4">
+										<h:panelGroup id="pngAgregarArea">
+											<p:panelGrid id="pnlAgregarArea" style="width:99%;"
+												rendered="#{avaluoConstructorBean.addConFin eq true}">
+												<p:row>
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<h:outputText value="Inmueble" />
+													</p:column>
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<h:outputText value="Área M2" />
+													</p:column>
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<h:outputText value="Valor M2" />
+													</p:column>
+													<p:column styleClass="ui-widget-header"
+														style="text-align:center;">
+														<h:outputText value="Valor Total" />
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column styleClass="ui-widget-header">
+														<p:inputText id="idNombreArea"
+															value="#{avaluoConstructorBean.areas.nombre}"
+															style="width:99%;text-align:center;">
+															<p:ajax event="change" />
+														</p:inputText>
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:inputText id="idArea"
+															value="#{avaluoConstructorBean.areas.area}"
+															style="width:99%;text-align:center;">
+															<p:ajax event="change"
+																listener="#{avaluoConstructorBean.calcularvalorAreaTotal()}"
+																update="idValorTotal" />
+														</p:inputText>
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:inputText id="idValorUnitario"
+															value="#{avaluoConstructorBean.areas.valorUnitario}"
+															style="width:99%;text-align:center;">
+															<p:ajax event="change"
+																listener="#{avaluoConstructorBean.calcularvalorAreaTotal()}"
+																update="idValorTotal" />
+														</p:inputText>
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:inputText id="idValorTotal"
+															value="#{avaluoConstructorBean.areas.valorTotal}"
+															style="width:99%;text-align:center;" disabled="true" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:commandButton id="cmbAddConFin"
+															icon="ui-icon-plusthick" value="Agregar"
+															style="width:99%;"
+															actionListener="#{avaluoConstructorBean.agregarArea}"
+															process="@this"
+															update="dtbConceptosFinales pngAgregarArea pngValorTotalAvaluo pngValorTotalAvaluoUvr :form:msgs"
+															rendered="#{avaluoConstructorBean.addConFin eq true}" />
+														<p:tooltip id="toolConFin" for="cmbAddConFin"
+															value="Add Área" trackMouse="true" />
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+										</h:panelGroup>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<p:panelGrid id="pngValorTotalAvaluoUvr" style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Valor Razanoble del Inmueble" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<h:outputText
+											value="#{avaluoConstructorBean.valorTotalAvaluo}" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Valor UVR del Día" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="#{avaluoConstructorBean.valorUvrDia}" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Valor Avalúo en UVR" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="#{avaluoConstructorBean.valorAvaluoUvr}" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Valor Inmueble Antes de la Reforma" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<h:outputText
+											value="#{avaluoConstructorBean.valorInmuebleAntesReforma}" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Valor Total de la Garantia" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<h:outputText
+											value="#{avaluoConstructorBean.valorTotalGarantia}" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<br />
+
+							<p:panelGrid style="width:99%;">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Consepto Técnico" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="conseptoTecnico"
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.conceptoTecnico}"
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Favorable" itemValue="1" />
+											<f:selectItem itemLabel="Desfavorable" itemValue="2" />
+											<p:ajax event="change" process="conseptoTecnico" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<h:outputText value="Descripción Ampliación" />
+										<p:inputTextarea
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.descripcionAmpliacion}"
+											rows="2" cols="30" maxlength="300" style="width:99%"
+											counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="tabConsideraciones" title="Consideraciones">
+						<p:panel id="pnlConsideraciones" header="Descripción del Proyecto">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.descripcionDelProyecto}"
+											rows="2" cols="30" maxlength="300" style="width:99%"
+											counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+
+						<p:panel header="Consideraciones del Avalúo">
+							<p:panelGrid id="pngConsideracionesAvaluo" style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea
+											value="#{avaluoConstructorBean.avaluoConstructorDTO.consideracionesDelAvaluo}"
+											rows="2" cols="30" maxlength="300" style="width:99%"
+											counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="tabMetodoValuacion" title="Método de Valuación">
+						<p:panel header="Método de Valuación">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="metodoValuacion" value=""
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Fitto Corvini" itemValue="1" />
+											<p:ajax event="change" process="metodoValuacion" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:commandButton icon="ui-icon-disk" value="Calcular" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<p:inputTextarea rows="2" cols="30" maxlength="300"
+											style="width:99%" counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<br />
+
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="metodoValuacion2" value=""
+											style="width:200px">
+											<f:selectItem itemLabel="Seleccione ..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Fitto Corvini" itemValue="1" />
+											<p:ajax event="change" process="metodoValuacion2" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:commandButton icon="ui-icon-disk" value="Calcular" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<p:inputTextarea rows="2" cols="30" maxlength="300"
+											style="width:99%" counterTemplate="{0} characters remaining.">
+											<p:ajax event="change" />
+										</p:inputTextarea>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+
+				</p:accordionPanel>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			</h:form>
+
+			<p:commandButton value="Guardar"
+				actionListener="#{avaluoConstructorBean.guardarAvaluoConstructor()}"
+				icon="ui-icon-disk" />
+
+			<p:dialog widgetVar="avaluosAnteriores" modal="true"
+				closeOnEscape="true">
+				<p:panel id="avaluoTabla" header="Avaluos anteriores"
+					style="margin-bottom:10px">
+					<p:dataTable var="avaluo"
+						value="#{avaluoConstructorBean.avaluosAnteriores}">
+						<p:column headerText="Código externo">
+							<h:outputText value="#{avaluo.codigoExterno}" />
+						</p:column>
+						<p:column headerText="Fecha avaluo">
+							<h:outputText value="#{avaluo.fechaEstado}" />
+						</p:column>
+						<p:column headerText="Tipo de avalúo">
+							<h:outputText id="tipoAvaluo" value="#{avaluo.tipoAvaluo.nombre}" />
+						</p:column>
+						<p:column headerText="Valor avaluo">
+							<h:outputText value="#{avaluo.valorTotalAvaluo}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</p:dialog>
+
+			<p:dialog widgetVar="ayudaDireccion" modal="true"
+				closeOnEscape="true" resizable="false">
+				<p:panelGrid>
+					<p:row>
+						<p:column>
+							<h:outputLabel value="Convenciones de la dirección" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:graphicImage  name="images/direccion.png" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:dialog>
+
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

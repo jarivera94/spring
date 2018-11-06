@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+
+		<ui:define name="content">
+			<h1 style="width: 90% !important; margin: 0px auto !important;">Liquidar avalúo</h1>
+			<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+
+					<p:panelGrid columns="1">
+						<p:outputLabel> Liquidando el avalúo...</p:outputLabel>
+                        <h:graphicImage  name="images/ajaxloadingbar.gif" />
+					</p:panelGrid>
+
+			</p:dialog>
+
+			<h:form id="form">
+				<p:growl id="growl" showDetail="true" sticky="true" />
+				<p:panel id="aprobarAvaluo" style="margin: 0px auto; width: 90%;">
+					<p:panelGrid columns="2" style="width: 40%; margin: 0px auto; text-align: center;">
+						<h:outputLabel for="tipoAvaluo" value="Tipo avalúo: " />
+						<h:outputLabel for="tipoInmueble" value="Tipo del inmueble: " />
+						<h:outputText id="tipoAvaluo" value="#{aprobarAvaluoBean.avaluo.tipoAvaluo.nombre}" style="width: 99%" />
+						<h:outputText id="tipoInmueble" value="#{aprobarAvaluoBean.avaluo.tipoDeInmueble.nombre}" style="width: 99%" />
+					</p:panelGrid>
+					<br /><br />
+						<p:commandButton value="Aprobar avalúo" id="botonAprobar"
+							onclick="PrimeFaces.monitorDownload(start, stop);"
+                            rendered="#{aprobarAvaluoBean.avaluo.estado.estado.key() ne '11'}"
+							icon="ui-icon-accept" ajax="false"
+                            styleClass="button_green btnIzquierda" update="aprobarAvaluo growl">
+							<p:fileDownload value="#{aprobarAvaluoBean.file}" />
+						</p:commandButton>
+						<p:commandButton value="Volver a listado"
+							action="#{aprobarAvaluoBean.volverInicio()}"
+							icon="ui-icon-arrowthickstop-1-w" styleClass="button_red" />
+
+					<input type="hidden"
+						name="${_csrf.parameterName}"
+						value="${_csrf.token}"/>
+				</p:panel>
+			</h:form>
+            <script type="text/javascript">
+				$(function(){
+					$('#form\\:botonAprobar').bind('click',function(){
+						$(this).hide();
+	                });
+				});
+
+                function start() {
+                    PF('statusDialog').show();
+                }
+
+                function stop() {
+                    PF('statusDialog').hide();
+                }
+            </script>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

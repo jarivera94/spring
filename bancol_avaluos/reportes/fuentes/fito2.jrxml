@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fito2" pageWidth="310" pageHeight="200" columnWidth="310" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0a7ce711-3356-4915-add5-c6f14bb0e985">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="language" value="Java"/>
+	<parameter name="IDAVALUO" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT e.prefijo, a.codigo_externo, tmv.justificacion, fih.justificacion_de_metodologia, ar.nombre, ar.valor_unitario, ar.calificacion, valor_reposicion_final,
+ar.edad, ar.depreciacion, ar.valor_depreciacion, ar.valor_final, ar.valor_adoptado, ar.tamano_area, ar.valor_total
+FROM avaluos.formato_informe_hipotecario fih
+INNER JOIN avaluos.formato_informe fi ON (fih.formato_informe_id = fi.formato_informe_id)
+INNER JOIN avaluos.avaluo a ON (fi.avaluo_id = a.avaluo_id)
+INNER JOIN avaluos.entidad e ON (a.entidad_id = e.entidad_id)
+INNER JOIN avaluos.metodo_valuacion mv ON (a.avaluo_id = mv.avaluo_id)
+INNER JOIN avaluos.tipo_metodo_valuacion tmv ON (mv.metodo_usado = tmv.id)
+INNER JOIN avaluos.area ar ON (a.avaluo_id = ar.avaluo_id)
+WHERE ar.descripcion_numerica != 2
+AND ar.descripcion_numerica != 3
+AND ar.descripcion_numerica != 4
+AND ar.descripcion_numerica != 7
+AND ar.descripcion_numerica != 21
+AND tmv.id = 23
+AND a.avaluo_id =  $P{IDAVALUO}
+ORDER BY ar.nombre]]>
+	</queryString>
+	<field name="prefijo" class="java.lang.String"/>
+	<field name="codigo_externo" class="java.lang.String"/>
+	<field name="justificacion" class="java.lang.String"/>
+	<field name="justificacion_de_metodologia" class="java.lang.String"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="valor_unitario" class="java.math.BigDecimal"/>
+	<field name="calificacion" class="java.math.BigDecimal"/>
+	<field name="valor_reposicion_final" class="java.math.BigDecimal"/>
+	<field name="edad" class="java.math.BigDecimal"/>
+	<field name="depreciacion" class="java.math.BigDecimal"/>
+	<field name="valor_depreciacion" class="java.math.BigDecimal"/>
+	<field name="valor_final" class="java.math.BigDecimal"/>
+	<field name="valor_adoptado" class="java.math.BigDecimal"/>
+	<field name="tamano_area" class="java.math.BigDecimal"/>
+	<field name="valor_total" class="java.math.BigDecimal"/>
+	<variable name="valor_total_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_total}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="100" height="20" forecolor="#FFFFFF" backcolor="#0099FF" uuid="35f9939f-67d7-4042-b4cf-e56604b23652"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<leftPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<bottomPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<rightPen lineWidth="0.25" lineColor="#0DB3C8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="100" y="0" width="100" height="20" forecolor="#FFFFFF" backcolor="#0099FF" uuid="710d2075-f959-4d44-a0e2-596a3e9d2d23"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<topPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<leftPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<bottomPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<rightPen lineWidth="0.25" lineColor="#0DB3C8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Aréa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="199" y="0" width="101" height="20" forecolor="#FFFFFF" backcolor="#0099FF" uuid="ff089e85-f6e8-4d22-bb50-9c6c2fe59989"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<topPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<leftPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<bottomPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<rightPen lineWidth="0.25" lineColor="#0DB3C8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Reposición]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField pattern="$ #,##0.00" isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="200" y="0" width="100" height="20" uuid="2cb66f27-53b4-4a9c-9b58-724cc0f0bea1"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<topPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<leftPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<bottomPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<rightPen lineWidth="0.25" lineColor="#0DB3C8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_reposicion_final}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="1" y="0" width="99" height="20" uuid="2b22198b-8273-4e48-bd29-2640b01bc8a1"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<topPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<leftPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<bottomPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<rightPen lineWidth="0.25" lineColor="#0DB3C8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Opaque" x="100" y="0" width="100" height="20" uuid="8daafad9-a6ff-457e-a7c2-43fcf7194134"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<topPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<leftPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<bottomPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<rightPen lineWidth="0.25" lineColor="#0DB3C8"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tamano_area}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="50">
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="0" width="199" height="20" forecolor="#0099FF" uuid="05230769-7aeb-412f-b8e5-e590c77dfb59"/>
+				<box rightPadding="2">
+					<pen lineWidth="0.25" lineColor="#0099FF"/>
+					<topPen lineWidth="0.25" lineColor="#0099FF"/>
+					<leftPen lineWidth="0.25" lineColor="#0099FF"/>
+					<bottomPen lineWidth="0.25" lineColor="#0099FF"/>
+					<rightPen lineWidth="0.25" lineColor="#0099FF"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Calibri" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Reposición]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="200" y="0" width="100" height="20" uuid="2af233d6-f9ca-4867-9e95-3bdbb4108def"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0099FF"/>
+					<topPen lineWidth="0.25" lineColor="#0099FF"/>
+					<leftPen lineWidth="0.25" lineColor="#0099FF"/>
+					<bottomPen lineWidth="0.25" lineColor="#0099FF"/>
+					<rightPen lineWidth="0.25" lineColor="#0099FF"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{valor_total_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

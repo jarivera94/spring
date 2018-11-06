@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_Portada" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ab6956ff-4370-4e1b-970b-394bf2fd7fbe">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="IDAVALUO" class="java.lang.Long"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT e.prefijo, m.nombre motivo, a.codigo_externo, a.tipo_credito, ti.nombre tipo_documento_identificacion, razon_social,
+REPLACE (COALESCE(c.primer_nombre_solicitante,'')||' '||COALESCE(c.segundo_nombre_solicitante,'')||' '||COALESCE(c.primer_apellido_solicitante,'')||' '||COALESCE(c.segundo_apellido_solicitante,''), '  ', ' ') nombre_solicitante,
+a.direccion_inmueble_informe, a.adicional_direccion_informe,
+COALESCE((SELECT g.numero_garaje||' ' FROM (SELECT ROW_NUMBER() OVER (ORDER BY numero_garaje) AS orden, numero_garaje FROM avaluos.garaje WHERE tipo=1 AND avaluo_id = a.avaluo_id) g WHERE g.orden = 1),'') ||
+COALESCE((SELECT g.numero_garaje||' ' FROM (SELECT ROW_NUMBER() OVER (ORDER BY numero_garaje) AS orden, numero_garaje FROM avaluos.garaje WHERE tipo=1 AND avaluo_id = a.avaluo_id) g WHERE g.orden = 2),'') ||
+COALESCE((SELECT g.numero_garaje||' ' FROM (SELECT ROW_NUMBER() OVER (ORDER BY numero_garaje) AS orden, numero_garaje FROM avaluos.garaje WHERE tipo=1 AND avaluo_id = a.avaluo_id) g WHERE g.orden = 3),'') ||
+COALESCE((SELECT g.numero_garaje||' ' FROM (SELECT ROW_NUMBER() OVER (ORDER BY numero_garaje) AS orden, numero_garaje FROM avaluos.garaje WHERE tipo=1 AND avaluo_id = a.avaluo_id) g WHERE g.orden = 4),'') ||
+COALESCE((SELECT g.numero_garaje||' ' FROM (SELECT ROW_NUMBER() OVER (ORDER BY numero_garaje) AS orden, numero_garaje FROM avaluos.garaje WHERE tipo=1 AND avaluo_id = a.avaluo_id) g WHERE g.orden = 5),'') garajes,
+COALESCE(CAST(h.numero_deposito_1 AS TEXT)||' ','')||
+COALESCE(CAST(h.numero_deposito_2 AS TEXT)||' ','')||
+COALESCE(CAST(h.numero_deposito_3 AS TEXT)||' ','')||
+COALESCE(CAST(h.numero_deposito_4 AS TEXT)||' ','')||
+COALESCE(CAST(h.numero_deposito_5 AS TEXT)||' ','') depositos,
+d.centro_poblado ciudad, d.departamento, latitud, longitud,
+(SELECT eaf.fecha_estado FROM avaluos.estado_avaluo eaf where eaf.estado_actual = true and eaf.avaluo_id=a.avaluo_id) AS fecha_estado
+
+FROM avaluos.formato_informe_hipotecario h
+LEFT JOIN avaluos.formato_informe fi ON (h.formato_informe_id = fi.formato_informe_id)
+LEFT JOIN avaluos.avaluo a ON (fi.avaluo_id = a.avaluo_id)
+LEFT JOIN avaluos.entidad e ON (a.entidad_id = e.entidad_id)
+LEFT JOIN avaluos.cliente c ON (a.cliente_tipo_documento = c.tipo_documento_identificacion AND a.cliente_numero_documento = c.numero_documento)
+LEFT JOIN avaluos.tipo_identificacion ti ON (a.cliente_tipo_documento = ti.id)
+LEFT JOIN avaluos.divipola d ON (a.divipola_informe = d.divipola_id)
+LEFT JOIN avaluos.motivo m ON (a.motivo_id = m.codigo)
+WHERE  a.avaluo_id = $P{IDAVALUO}]]>
+	</queryString>
+	<field name="prefijo" class="java.lang.String"/>
+	<field name="motivo" class="java.lang.String"/>
+	<field name="codigo_externo" class="java.lang.String">
+		<fieldDescription><![CDATA[Código de identificación de un sistema externo]]></fieldDescription>
+	</field>
+	<field name="tipo_credito" class="java.lang.String">
+		<fieldDescription><![CDATA[Tipo de crédito]]></fieldDescription>
+	</field>
+	<field name="tipo_documento_identificacion" class="java.lang.String">
+		<fieldDescription><![CDATA[Tipo de identificación]]></fieldDescription>
+	</field>
+	<field name="razon_social" class="java.lang.String">
+		<fieldDescription><![CDATA[Razón social]]></fieldDescription>
+	</field>
+	<field name="nombre_solicitante" class="java.lang.String"/>
+	<field name="direccion_inmueble_informe" class="java.lang.String">
+		<fieldDescription><![CDATA[Dirección completa del inmueble del informe]]></fieldDescription>
+	</field>
+	<field name="adicional_direccion_informe" class="java.lang.String">
+		<fieldDescription><![CDATA[Información adicional de la dirección del informe]]></fieldDescription>
+	</field>
+	<field name="garajes" class="java.lang.String"/>
+	<field name="depositos" class="java.lang.String"/>
+	<field name="ciudad" class="java.lang.String"/>
+	<field name="departamento" class="java.lang.String"/>
+	<field name="latitud" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Latitud del inmueble afinada]]></fieldDescription>
+	</field>
+	<field name="longitud" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[Longitud del inmueble afinada]]></fieldDescription>
+	</field>
+	<field name="fecha_estado" class="java.sql.Timestamp"/>
+	<background>
+		<band height="752" splitType="Stretch">
+			<textField>
+				<reportElement x="371" y="14" width="100" height="20" forecolor="#CCCCCC" uuid="355d3a28-08b9-4bf6-b89a-d09a2af72e62"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{prefijo} +"-"+ $F{codigo_externo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="472" y="14" width="60" height="20" forecolor="#CCCCCC" uuid="2a470c60-dbf0-46cb-a7ca-e89632626b4d"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="532" y="14" width="40" height="20" forecolor="#CCCCCC" uuid="fd5bfaa1-a913-4849-a6f1-11c217367a04"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="0" width="572" height="752" uuid="45435949-7e98-4c6a-bc8f-1837e4417473"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR}+"marca_firma.gif"]]></imageExpression>
+			</image>
+		</band>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="752" splitType="Stretch">
+			<break>
+				<reportElement x="0" y="702" width="100" height="1" uuid="26a9d036-af0d-4321-a182-029217059178"/>
+			</break>
+			<image>
+				<reportElement x="-8" y="0" width="580" height="752" uuid="edb24027-51ce-40b3-9af4-5cdbc0a91e4b"/>
+				<imageExpression><![CDATA[$P{SUBREPORT_DIR}+"fondo_reporte.gif"]]></imageExpression>
+			</image>
+			<subreport>
+				<reportElement x="0" y="708" width="107" height="44" uuid="76133fc0-e3e8-490d-aa91-66deee980507"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="IDAVALUO">
+					<subreportParameterExpression><![CDATA[$P{IDAVALUO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "reporte_base.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="230" y="130" width="572" height="22" forecolor="#404040" uuid="046f800f-4a5f-4f87-8e22-6638dc09b56a"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prefijo}+"-"+$F{codigo_externo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="24" y="669" width="526" height="14" forecolor="#404040" uuid="e4d83673-3241-453b-add7-ca41bc9fd2c5"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0" lineColor="#2BB538"/>
+					<leftPen lineWidth="0.0" lineColor="#2BB538"/>
+					<bottomPen lineWidth="0.0" lineColor="#2BB538"/>
+					<rightPen lineWidth="0.0" lineColor="#2BB538"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ciudad}+","+ $F{departamento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="160" y="100" width="572" height="28" forecolor="#0995CE" uuid="1ed24e16-fe6d-424f-aee0-a3aa0d8b12e4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INFORME AVALÚO HIPOTECARIO]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="43" y="196" width="487" height="412" uuid="38368b79-dc5d-4ad0-b4d9-2a949f646603"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="IDAVALUO">
+					<subreportParameterExpression><![CDATA[$P{IDAVALUO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "foto_portada.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="24" y="643" width="526" height="14" forecolor="#404040" uuid="476507b6-c66c-4aa4-b3f0-c97b7660d788"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0" lineColor="#2BB538"/>
+					<leftPen lineWidth="0.0" lineColor="#2BB538"/>
+					<bottomPen lineWidth="0.0" lineColor="#2BB538"/>
+					<rightPen lineWidth="0.0" lineColor="#2BB538"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccion_inmueble_informe}!=null && $F{adicional_direccion_informe}!=null?
+$F{direccion_inmueble_informe}.contains($F{adicional_direccion_informe})?$F{direccion_inmueble_informe}:$F{direccion_inmueble_informe}+" "+$F{adicional_direccion_informe}:
+$F{direccion_inmueble_informe}!=null?$F{direccion_inmueble_informe}:$F{adicional_direccion_informe}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="24" y="624" width="526" height="20" forecolor="#404040" uuid="3bbec2fa-5186-4d8c-9208-16dcb993aadf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo_documento_identificacion}.equals("NIT.")? $F{razon_social}:$F{nombre_solicitante}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="246" y="170" width="225" height="20" forecolor="#404040" uuid="eef770a3-3890-41e5-9f9f-62e1ca2db760"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo_credito}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy/MM/dd" isBlankWhenNull="true">
+				<reportElement x="24" y="682" width="526" height="20" forecolor="#404040" uuid="c84683c8-dabd-4e05-a9b5-b3475ce1833d"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{fecha_estado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="24" y="656" width="526" height="14" forecolor="#404040" uuid="0c32ceef-53ee-4936-8c95-3eb37f923645"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.0" lineColor="#2BB538"/>
+					<leftPen lineWidth="0.0" lineColor="#2BB538"/>
+					<bottomPen lineWidth="0.0" lineColor="#2BB538"/>
+					<rightPen lineWidth="0.0" lineColor="#2BB538"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(  $F{garajes}!=null &&   $F{garajes}.length()>0? "Garaje(s): "+   $F{garajes}.trim():"")+
+(($F{garajes}!=null &&  $F{garajes}.length()>0) && ($F{depositos}!=null && $F{depositos}.length()>0)?", ":"")+
+($F{depositos}!=null && $F{depositos}.length()>0?"Depósito(s): "+$F{depositos}.trim():"")+" "]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="170" y="152" width="522" height="22" forecolor="#404040" uuid="9a6799d0-01d0-4f82-8746-4c6ab4a15645"/>
+				<box leftPadding="2" rightPadding="2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{motivo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

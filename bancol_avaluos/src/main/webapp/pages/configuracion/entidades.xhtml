@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+
+		<ui:define name="content">
+			<h:form id="form">
+				<p:growl id="msgs" showDetail="true" life="8000" />
+				<p:panel id="entidadesTabla" header="Entidades"
+					style="margin-bottom:10px; width: 95% !important;">
+					
+					
+					<p:dataTable id="ent" var="entidad" widgetVar="entWV"
+						value="#{entidadesBean.listEntidades}" editable="true"
+						selectionMode="single"
+						selection="#{entidadesBean.entidadSeleccionada}"
+						rowKey="#{entidad.id}" 
+						filteredValue="#{entidadesBean.listFiltrarEntidades}"
+						style="font-size:10px !important; text-align: center !important;" reflow="true" 
+						rows="9"
+						paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false" 
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}" 
+						rowsPerPageTemplate="10,20,50">
+
+						<p:ajax event="rowEdit"
+							listener="#{entidadesBean.actualizarEntidad}"
+							update=":form:msgs,:form:ent" />
+						<p:ajax event="rowEditCancel"
+							listener="#{entidadesBean.onRowCancel}" update=":form:msgs" />
+							
+						<f:facet name="header">
+							<p:outputPanel style="margin-bottom:15px;">
+								<h:outputText value="Buscar Entidad:"/>
+								<p:inputText id="globalFilter" onkeyup="PF('entWV').filter()"
+											style="width:180px; margin-right: 50px; margin-left: 10px;" styleClass="nofireenter"/>
+								<p:commandButton process="ent"
+										update=":formCreateEntidad:entCrearDetail" icon="ui-icon-plus" title="Nueva Entidad"
+										style="float: right;" styleClass="button_green" oncomplete="PF('entCrearDialog').show()"/>
+							</p:outputPanel>
+						</f:facet>
+
+						<p:column headerText="Nit" sortBy="#{entidad.nit}"
+							style="text-align:center;" filterBy="#{entidad.nit}" filterMatchMode="contains"
+								filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{entidad.nit}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputMask id="nit" slotChar="" value="#{entidad.nit}"
+										mask="999999999?-9" required="true"
+										requiredMessage="Digita correctamente el NIT"
+										validatorMessage="Digita correctamente el NIT"
+										style="width:96%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Nombre" sortBy="#{entidad.nombre}"
+							filterBy="#{entidad.nombre}" filterMatchMode="contains"
+								filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{entidad.nombre}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{entidad.nombre}" style="width:96%"
+										maxlength="255" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Prefijo" sortBy="#{entidad.prefijo}"
+							style="text-align:center;" filterBy="#{entidad.prefijo}" filterMatchMode="contains"
+								filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{entidad.prefijo}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{entidad.prefijo}" style="width:96%"
+										maxlength="5" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="( % ) Valor Asegurable"
+							sortBy="#{entidad.porcentajeValorAsegurable}"
+							style="text-align:center;"
+							filterBy="#{entidad.porcentajeValorAsegurable}" filterMatchMode="contains"
+							filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{entidad.porcentajeValorAsegurable}%" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{entidad.porcentajeValorAsegurable}"
+										style="width:96%" maxlength="4"
+										validatorMessage="Porcentaje Valor Asegurable debe ser mayor a 0 y menor igual a 100">
+										<f:validateLongRange minimum="0" maximum="100"></f:validateLongRange>
+									</p:inputText>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column id="semVerde" headerText="Sem. Verde (Horas):"
+							sortBy="#{entidad.duracionSemaforoVerde}"
+							style="text-align:center;"
+							filterBy="#{entidad.duracionSemaforoVerde}" filterMatchMode="contains"
+							filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{entidad.duracionSemaforoVerde}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputMask slotChar=""
+										value="#{entidad.duracionSemaforoVerde}" mask="9?99"
+										style="width:96%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column id="semAmarillo" headerText="Sem. Amarillo (Horas):"
+							sortBy="#{entidad.duracionSemaforoAmarillo}"
+							style="text-align:center;"
+							filterBy="#{entidad.duracionSemaforoAmarillo}" filterMatchMode="contains"
+							filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{entidad.duracionSemaforoAmarillo}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputMask slotChar=""
+										value="#{entidad.duracionSemaforoAmarillo}" mask="9?99"
+										style="width:96%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column id="semRojo" headerText="Sem. Rojo (Horas):"
+							sortBy="#{entidad.duracionSemaforoRojo}"
+							style="text-align:center;"
+							filterBy="#{entidad.duracionSemaforoRojo}" filterMatchMode="contains"
+							filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{entidad.duracionSemaforoRojo}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputMask slotChar=""
+										value="#{entidad.duracionSemaforoRojo}" mask="9?99"
+										style="width:96%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+
+						<p:column headerText="Fecha de Creación"
+							sortBy="#{entidad.fechaCreacion}" style="text-align:center;"
+							filterBy="#{entidad.fechaCreacion}" filterMatchMode="contains"
+							filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{entidad.fechaCreacion}" />
+								</f:facet>
+								<f:facet name="input">
+									<h:outputText value="#{entidad.fechaCreacion}" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Cobrado por Bancol"
+							style="text-align:center;" filterBy="#{entidad.cobradoPorBancol}" filterMatchMode="contains"
+							filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<p:selectBooleanCheckbox id="sbcOutCobraAvaluo"
+										value="#{entidad.cobradoPorBancol}" disabled="true">
+										<f:selectItem itemValue="" />
+									</p:selectBooleanCheckbox>
+								</f:facet>
+								<f:facet name="input">
+									<p:selectBooleanCheckbox id="sbcInCobraAvaluo"
+										value="#{entidad.cobradoPorBancol}">
+										<f:selectItem itemValue="" />
+									</p:selectBooleanCheckbox>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Activo" style="text-align:center;"
+							filterBy="#{entidad.activo}" filterMatchMode="contains"
+							filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<p:selectBooleanCheckbox id="sbcOutActivo"
+										value="#{entidad.activo}" disabled="true">
+										<f:selectItem itemValue="" />
+									</p:selectBooleanCheckbox>
+								</f:facet>
+								<f:facet name="input">
+									<p:selectBooleanCheckbox id="sbcInActivo"
+										value="#{entidad.activo}">
+										<f:selectItem itemValue="" />
+									</p:selectBooleanCheckbox>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						
+						<p:column headerText="Codigo BUA" style="text-align:center;"
+							filterBy="#{entidad.codigoBUA}" filterMatchMode="contains"
+							filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<p:outputLabel id="sbcOutCodigoBUA"
+										value="#{entidad.codigoBUA}" disabled="true" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputMask id="sbcInCodigoBUA" mask="9?999999999"
+										value="#{entidad.codigoBUA}" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column style="width: 20px;">
+							<p:rowEditor />
+						</p:column>
+
+<!-- 						<p:column style="width: 30px;"> -->
+<!-- 							<p:commandButton icon="ui-icon-trash" process="ent" -->
+<!-- 								actionListener="#{entidadesBean.eliminarEntidad(entidad)}" -->
+<!-- 								update=":form:msgs,:form:entidadesTabla" /> -->
+<!-- 						</p:column> -->
+					</p:dataTable>
+					<p:tooltip id="toolTipFade1" for="form:ent:semVerde" value="Semaforo Verde" />
+					<p:tooltip id="toolTipFade2" for="form:ent:semAmarillo" value="Semaforo Amarillo"/>
+					<p:tooltip id="toolTipFade3" for="form:ent:semRojo" value="Semaforo Rojo" />
+				</p:panel>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			</h:form>
+
+			<p:dialog id="dlgCrear" header="Crear Entidad" widgetVar="entCrearDialog"
+				modal="true" showEffect="fade" hideEffect="fade" width="650"
+				resizable="false" closable="false" >
+				<h:form id="formCreateEntidad">
+					<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" globalOnly="true"/>
+					<p:outputPanel id="entCrearDetail" style="text-align:left;">
+						<h:panelGrid columns="3" cellspacing="10px" cellpadding="5px"
+							columnClasses="label,value"
+							style="width:90%; margin: 0px auto !important;">
+							<h:outputLabel for="nit" value="Nit: " />
+							<p:inputMask id="nit"  slotChar=""
+								value="#{entidadesBean.newEntidad.nit}" mask="999999999-9" required="true" requiredMessage="Nit es requerido"/>
+							<p:message for="nit" />
+							<h:outputLabel for="nombre" value="Nombre: " />
+							<p:inputText id="nombre" value="#{entidadesBean.newEntidad.nombre}"
+								maxlength="255" required="true" requiredMessage="Nombre es requerido"/>
+							<p:message for="nombre" />
+							<h:outputLabel for="prefijo"  value="Prefijo: " />
+							<p:inputText id="prefijo" value="#{entidadesBean.newEntidad.prefijo}"
+								maxlength="5" required="true" requiredMessage="Prefijo es requerido" />
+							<p:message for="prefijo" />
+							<h:outputLabel for="valorAsegurable" value="(%) Valor Asegurable: " />
+							<p:inputNumber id="valorAsegurable"
+								value="#{entidadesBean.newEntidad.porcentajeValorAsegurable}" symbol="%" symbolPosition="s" minValue="0" maxValue="100" decimalPlaces="0" validatorMessage="Porcentaje Valor Asegurable debe ser mayor a 0 y menor o igual a 100" required="true" requiredMessage="Valor Asegurable es requerido">
+								<f:validateLongRange minimum="0" maximum="100"/>
+							</p:inputNumber>
+							<p:message for="valorAsegurable" />
+							<h:outputLabel for="semaforoVerde" value="Semaforo Verde (Horas):" />
+							<p:inputMask id="semaforoVerde" slotChar=""
+								value="#{entidadesBean.newEntidad.duracionSemaforoVerde}"
+								mask="9?99" required="true" requiredMessage="Semaforo Verde es requerido"/>
+							<p:message for="semaforoVerde" />
+							<h:outputLabel for="semaforoAmarillo" value="Semaforo Amarillo (Horas):" />
+							<p:inputMask id="semaforoAmarillo" slotChar=""
+								value="#{entidadesBean.newEntidad.duracionSemaforoAmarillo}"
+								mask="9?99" required="true" requiredMessage="Semaforo Amarillo es requerido"/>
+							<p:message for="semaforoAmarillo" />
+							<h:outputLabel for="semaforoRojo" value="Semaforo Rojo (Horas):" />
+							<p:inputMask id="semaforoRojo" slotChar=""
+								value="#{entidadesBean.newEntidad.duracionSemaforoRojo}"
+								mask="9?99" required="true" requiredMessage="Semaforo Rojo es requerido"/>
+							<p:message for="semaforoRojo" />
+							<h:outputLabel value="Fecha Creación: " />
+							<h:outputLabel value="#{entidadesBean.fechaCreacion}" />
+							<h:outputLabel value="" />
+							<h:outputLabel value="Cobra Bancol: " />
+							<p:selectBooleanCheckbox id="sbcCobraAvaluo"
+								value="#{entidadesBean.newEntidad.cobradoPorBancol}">
+								<f:selectItem itemValue="" />
+							</p:selectBooleanCheckbox>
+							<h:outputLabel value="" />
+							<h:outputLabel value="Activo: " />
+							<p:selectBooleanCheckbox id="sbcActivo"
+								value="#{entidadesBean.newEntidad.activo}">
+								<f:selectItem itemValue="" />
+							</p:selectBooleanCheckbox>
+							<h:outputText value="" />
+						</h:panelGrid>
+						<h:panelGrid id="panelCodigoBUA" columns="3" style="width: 80%; margin-left: 30px;">
+									<h:outputLabel for="txtCodigoBUA" value="Tiene codigo BUA? : " style="margin-right: 25px;" />
+									<p:inputSwitch id="btnBoolean" value="#{entidadesBean.tieneCodigoBUA}" offLabel="No" onLabel="Si" >
+										<p:ajax update="panelCodigoBUA" global="false" />
+									</p:inputSwitch>
+									<p:inputMask id="txtCodigoBUA" value="#{entidadesBean.newEntidad.codigoBUA}" mask="9?9999999" slotChar="" rendered="#{entidadesBean.tieneCodigoBUA}" 
+										required="#{entidadesBean.tieneCodigoBUA}" requiredMessage="Debes ingresar el Codigo BUA" validatorMessage="Codigo BUA se debe ingresar" >
+										<p:watermark for="txtCodigoBUA" value="Escribe Codigo BUA"/>
+									</p:inputMask>
+						</h:panelGrid>
+						<p:message for="txtCodigoBUA" />
+							<center>
+								<p:panelGrid columns="2" style="width: 60%; margin: 15px auto;">
+									<p:commandButton value="Guardar" actionListener="#{entidadesBean.crearEntidad}"
+										icon="ui-icon-disk" styleClass="button_green" update=":form:ent formCreateEntidad" process="@all"/>
+
+									<p:commandButton value="Cancelar" icon="ui-icon-close"
+										styleClass="button_red" oncomplete="PF('entCrearDialog').hide()" />
+								</p:panelGrid>
+							</center>
+					</p:outputPanel>
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+				</h:form>
+			</p:dialog>
+			
+			<script>
+				$('.nofireenter').keypress(function(event){
+					console.log(event);
+					if( event.keyCode == 13 ){
+						event.stopImmediatePropagation();
+						event.preventDefault();
+						return false;
+					}
+				});		
+  				
+				$('.nofireenter').blur(function(event){
+					console.log( event );
+					if( event.keyCode == 13 ){
+						event.stopImmediatePropagation();
+						event.preventDefault();
+						return false;
+					}
+				});	
+
+				function stopFireEnter(event){
+					console.log(event);
+				}
+            </script>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+		<ui:define name="metadata">
+			<f:metadata>
+			</f:metadata>
+		</ui:define>
+		<ui:define name="content">
+<!-- 			<p:ajaxStatus onstart="PF('statusDialog').show()" -->
+<!-- 				onsuccess="PF('statusDialog').hide()" /> -->
+
+<!-- 			<p:dialog widgetVar="statusDialog" modal="true" draggable="false" -->
+<!-- 				closable="false" resizable="false" showHeader="false"> -->
+<!-- 				<p:graphicImage  name="images/ajax-loader.gif" /> -->
+<!-- 			</p:dialog> -->
+			<p:growl id="msgs" showDetail="false" showSummary="true" />
+			<h:form>
+				<p:panel id="datosRol" header="Datos Rol"
+					style="margin-bottom:10px;width: 70%;margin: 0px auto !important;">
+					<p:panelGrid id="datoRol" columns="5" style="margin: 0px auto;">
+						<h:outputLabel for="nombreRol" value="Nombre Rol:  " />
+						<p:inputText id="nombreRol" required="true" label="Nombre Rol"
+							value="#{rolBean.rolDTO.nombre}" requiredMessage="Digita un nombre para el rol" validatorMessage="Digita un nombre para el rol" />
+						<p:message for="nombreRol" />
+						<p:outputLabel for="Pagina_Inicio" value="Pagina de Inicio" />
+						<h:selectOneMenu id="Pagina_Inicio" required="true"
+                            converter="omnifaces.SelectItemsConverter"
+							style="width:150px"
+							value="#{rolBean.rolDTO.paginaInicio}" requiredMessage="Selecciona una pagina de inicio" validatorMessage="Selecciona una pagina de inicio">
+							<f:selectItems value="#{rolBean.paginas}" var="pagina"
+								itemLabel="#{pagina.nombre}" itemValue="#{pagina}" />
+						</h:selectOneMenu>
+					</p:panelGrid>
+				</p:panel>
+
+				<p:fieldset legend="Permisos"
+					style="width: 50%;margin: 40px auto !important;">
+					<p:column>
+						<p:pickList id="pickList" value="#{rolBean.permiso}" var="permiso"
+							itemLabel="#{permiso.nombre}" itemValue="#{permiso}"
+							effect="bounce" style="width: 90%;margin: 0px auto;">
+							<o:converter converterId="omnifaces.ListConverter" list="#{rolBean.todosLosPermisos}" />
+							
+							<f:facet name="sourceCaption">Disponibles</f:facet>
+							<f:facet name="targetCaption">Asignados</f:facet>
+						</p:pickList>
+					</p:column>
+				</p:fieldset>
+				<h:panelGrid id="buttonRoles" columns="4"
+					style="width: 10%; margin: 0px auto !important;">
+					<p:commandButton value="Aceptar" update=":msgs" icon="ui-icon-disk"
+						styleClass="button_green" action="#{rolBean.guardarRol()}" />
+					<p:spacer width="30px"></p:spacer>
+					<p:commandButton value="Cancelar" icon="ui-icon-user"
+						styleClass="button_red" action="#{rolBean.cancelarRol()}" />
+					<p:spacer width="30px"></p:spacer>
+				</h:panelGrid>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			</h:form>
+		</ui:define>
+	</ui:composition>
+
+</h:body>
+
+</html>

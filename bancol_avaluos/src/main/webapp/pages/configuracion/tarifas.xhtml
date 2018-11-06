@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+
+		<ui:define name="content">
+			<h:form id="form">
+				<p:growl id="msgs" showDetail="true" />
+				<p:panel id="tarifasTabla" header="Tarifas"
+					style="margin-bottom:10px">
+
+					<h:panelGrid columns="2" style="width: 20%; margin: 0px auto !important;">
+						<h:outputText value="Entidad: " />
+						<h:selectOneMenu value="#{tarifasBean.idEntidadSeleccionada}"
+							style="width:200px" onchange="submit()"
+							onvalueChangeListener="#{tarifasBean.idEntidadSeleccionada}">
+							<f:selectItems value="#{tarifasBean.listEntidades}" var="tari"
+								itemLabel="#{tari.nombre}" itemValue="#{tari.id}" />
+							<p:ajax onsuccess="true"
+								oncomplete="#{tarifasBean.listarTarifas()}" />
+						</h:selectOneMenu>
+					</h:panelGrid>
+
+					<p:dataTable id="tar" 
+						var="tarifa" 
+						widgetVar="tarWV"
+						rowKey="tarifa.id"
+						value="#{tarifasBean.listTarifas}" 
+						emptyMessage="No se encontraron tarifas"
+						style="margin-top: 20px;">
+
+						<p:column headerText="Tipo de Avaluo" style="text-align:center;">
+							<h:outputText value="#{tarifa.nombreTipoAvaluo}" />
+						</p:column>
+
+						<p:column id="tarifaId" headerText="Tarifa/1000" style="text-align:center;">
+							<p:inputMask mask="9,9999" slotChar="" validatorMessage="minimo 5 digitos"  value="#{tarifa.tarifaConComa}" 
+								style="text-align:center;" maxlength="6"/>
+						</p:column>
+
+						<p:column headerText="Valor Mínimo" style="text-align:center;">
+							<p:inputText value="#{tarifa.valorMinimo}"
+								style="text-align:center;" maxlength="7" />
+						</p:column>
+
+						<p:column headerText="Valor Máximo" style="text-align:center;">
+							<p:inputText value="#{tarifa.valorMaximo}"
+								style="text-align:center;" maxlength="7"/>
+						</p:column>
+						
+						<p:column headerText="Porcentaje Perito" style="text-align:center;">
+							<p:inputMask id="Porcentaje" mask="999.99" slotChar="" validatorMessage="minimo 5 digitos" value="#{tarifa.porcentajePerito}"
+								style="text-align:center;" />
+							<script type="text/javascript">
+								jQuery(function($) {
+									$('#form\\:tarifasTabla\\:porcentajePerito').autoNumeric('init', {aSep: '.', aDec: ',', vMax: '100.99', aSign: '%', pSign: 's'});    
+								});
+							</script>
+						</p:column>
+
+						<f:facet name="footer">
+							<p:commandButton process="tar"
+								actionListener="#{tarifasBean.guardarTarifa}"
+								update=":form:msgs" icon="ui-icon-disk" value="Guardar" 
+								style="margin-top: 20px" styleClass="button_green"/>
+						</f:facet>
+
+					</p:dataTable>
+				</p:panel>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+
+			</h:form>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

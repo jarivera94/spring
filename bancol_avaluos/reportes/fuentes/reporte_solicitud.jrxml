@@ -1,0 +1,1387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_solicitud" pageWidth="613" pageHeight="793" columnWidth="577" leftMargin="18" rightMargin="18" topMargin="18" bottomMargin="18" isFloatColumnFooter="true" uuid="535fe955-8b93-4c67-b28b-e7cc80a32b58">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ID_AVALUO" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+-- Informacion de Solicitud
+a.codigo_externo, t.nombre tipo_avaluo,
+-- Informacion del Cliente
+a.valor_solicitado ,c.numero_documento, c.primer_nombre_solicitante, c.segundo_nombre_solicitante,
+c.primer_apellido_solicitante, c.segundo_apellido_solicitante, c.celular_solicitante,
+c.telefono_solicitante, c.correo_electronico_solicitante, c.direccion_de_contacto_solicitante,
+seg.nombre nombre_segmento_cliente, divc.departamento departamento_cliente, divc.centro_poblado ciudad_cliente,
+-- Informacion del Inmueble
+ti.nombre tipo_inmueble, a.direccion_inmueble, a.adicional_direccion, a.nombre_del_conjunto, a.barrio,
+diva.departamento departamento_inmueble, diva.centro_poblado ciudad_inmueble,
+-- Informacion Persona que Recibira Avaluador
+a.nombre_persona_que_recibe_el_avaluo, a.telefono_persona_que_recibe_el_avaluo, a.correo_electronico_persona_que_recibe_el_avaluo,
+ev.fecha_hora_inicio fecha_cita,
+-- Informacion Asesor
+a.nombre_asesor, a.celular_asesor, a.telefono_asesor, a.correo_electronico_asesor, a.sucursal,
+-- Informacion Perito
+up.nombres nombres_perito, up.apellidos apellidos_perito, up.celular celular_perito, up.email email_perito,
+-- Informacion Secuestre
+ar.nombre_secuestre, ar.celular_secuestre, ar.telefono_secuestre, ar.email_secuestre,
+-- Informacion Abogado
+uabogado.nombres nombre_abogado, uabogado.apellidos apellido_abogado, uabogado.celular celular_abogado, uabogado.email email_abogado,
+-- Observaciones
+a.observaciones_solicitante
+FROM avaluos.avaluo a
+LEFT JOIN avaluos.avaluo_remate ar ON (a.avaluo_id = ar.avaluo_id)
+LEFT JOIN avaluos.tipo_avaluo t ON (a.tipo_avaluo = t.tipo_avaluo_id)
+LEFT JOIN avaluos.cliente c ON (a.cliente_tipo_documento = c.tipo_documento_identificacion) AND (a.cliente_numero_documento = c.numero_documento)
+LEFT JOIN avaluos.segmento seg ON (c.segmento = seg.segmento_id)
+LEFT JOIN avaluos.divipola divc ON (c.divipola = divc.divipola_id)
+LEFT JOIN avaluos.tipo_inmueble ti ON (a.tipo_de_inmueble = ti.id)
+LEFT JOIN avaluos.divipola diva ON (a.divipola = diva.divipola_id)
+LEFT JOIN avaluos.evento ev ON (a.avaluo_id = ev.avaluo_id)
+LEFT JOIN avaluos.usuario up ON (a.perito_tipo_documento = up.tipo_documento_identificacion) AND (a.perito_numero_documento = up.numero_documento)
+LEFT JOIN avaluos.estado_avaluo ea ON (a.avaluo_id = ea.avaluo_id) AND (ea.estado_actual = true)
+LEFT JOIN avaluos.usuario uabogado ON (ea.tipo_documento_usuario = uabogado.tipo_documento_identificacion) AND (ea.numero_documento_usuario = uabogado.numero_documento)
+WHERE a.avaluo_id = $P{ID_AVALUO}]]>
+	</queryString>
+	<field name="codigo_externo" class="java.lang.String"/>
+	<field name="tipo_avaluo" class="java.lang.String"/>
+	<field name="valor_solicitado" class="java.math.BigDecimal"/>
+	<field name="numero_documento" class="java.lang.Long"/>
+	<field name="primer_nombre_solicitante" class="java.lang.String"/>
+	<field name="segundo_nombre_solicitante" class="java.lang.String"/>
+	<field name="primer_apellido_solicitante" class="java.lang.String"/>
+	<field name="segundo_apellido_solicitante" class="java.lang.String"/>
+	<field name="celular_solicitante" class="java.lang.String"/>
+	<field name="telefono_solicitante" class="java.lang.String"/>
+	<field name="correo_electronico_solicitante" class="java.lang.String"/>
+	<field name="direccion_de_contacto_solicitante" class="java.lang.String"/>
+	<field name="nombre_segmento_cliente" class="java.lang.String"/>
+	<field name="departamento_cliente" class="java.lang.String"/>
+	<field name="ciudad_cliente" class="java.lang.String"/>
+	<field name="tipo_inmueble" class="java.lang.String"/>
+	<field name="direccion_inmueble" class="java.lang.String"/>
+	<field name="adicional_direccion" class="java.lang.String"/>
+	<field name="nombre_del_conjunto" class="java.lang.String"/>
+	<field name="barrio" class="java.lang.String"/>
+	<field name="departamento_inmueble" class="java.lang.String"/>
+	<field name="ciudad_inmueble" class="java.lang.String"/>
+	<field name="nombre_persona_que_recibe_el_avaluo" class="java.lang.String"/>
+	<field name="telefono_persona_que_recibe_el_avaluo" class="java.lang.String"/>
+	<field name="correo_electronico_persona_que_recibe_el_avaluo" class="java.lang.String"/>
+	<field name="fecha_cita" class="java.sql.Timestamp"/>
+	<field name="nombre_asesor" class="java.lang.String"/>
+	<field name="celular_asesor" class="java.lang.String"/>
+	<field name="telefono_asesor" class="java.lang.String"/>
+	<field name="correo_electronico_asesor" class="java.lang.String"/>
+	<field name="sucursal" class="java.lang.String"/>
+	<field name="nombres_perito" class="java.lang.String"/>
+	<field name="apellidos_perito" class="java.lang.String"/>
+	<field name="celular_perito" class="java.lang.String"/>
+	<field name="email_perito" class="java.lang.String"/>
+	<field name="nombre_secuestre" class="java.lang.String"/>
+	<field name="celular_secuestre" class="java.lang.String"/>
+	<field name="telefono_secuestre" class="java.lang.String"/>
+	<field name="email_secuestre" class="java.lang.String"/>
+	<field name="nombre_abogado" class="java.lang.String"/>
+	<field name="apellido_abogado" class="java.lang.String"/>
+	<field name="celular_abogado" class="java.lang.String"/>
+	<field name="email_abogado" class="java.lang.String"/>
+	<field name="observaciones_solicitante" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="2" y="0" width="218" height="33" forecolor="#FFFFFF" backcolor="#0995CE" uuid="937f2240-68eb-454b-a013-63c7b216fded"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Calibri" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Resumen de Solicitud Nº]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="220" y="0" width="117" height="33" forecolor="#FFFFFF" backcolor="#0995CE" uuid="04d62351-4cd0-4be8-8210-f0e3ec1a3046"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codigo_externo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="334" y="0" width="65" height="33" forecolor="#FFFFFF" backcolor="#0995CE" uuid="bc611baf-4247-40d9-8a8f-4355c1511441"/>
+				<box leftPadding="3" rightPadding="5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[de tipo]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="392" y="0" width="182" height="33" forecolor="#FFFFFF" backcolor="#0995CE" uuid="022d1c71-3cf0-474a-8aa1-11d01a963ec6"/>
+				<box leftPadding="3"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo_avaluo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="654" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="2" y="8" width="572" height="20" forecolor="#FFFFFF" backcolor="#0DB3C8" uuid="f0135c9e-c0e2-4674-8bdc-13ddbcf4825f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<text><![CDATA[Información de Cliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="2" y="28" width="80" height="20" uuid="1595ad5d-d8bc-46ca-9531-6e058ba9ae7d"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="10" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Nº Documento]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="83" y="28" width="99" height="20" forecolor="#666666" uuid="df906156-5f96-401b-9cd4-94fa10295a28"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero_documento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="2" y="48" width="80" height="20" uuid="b1f1d3cd-9a13-4527-b5f5-0587f1e389c6"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Primer Nombre]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="82" y="48" width="175" height="20" forecolor="#666666" uuid="a6de0064-e757-4692-8b7b-332825c3957d"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{primer_nombre_solicitante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="257" y="48" width="99" height="20" uuid="a039051f-65f1-43cf-a1a8-1636de9f8c2a"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Segundo Nombre]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="356" y="48" width="218" height="20" forecolor="#666666" uuid="4bb682cb-8809-4f0a-9229-499a879651ab"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{segundo_nombre_solicitante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="2" y="68" width="80" height="20" uuid="317abfc7-7001-4f6b-91fa-37d0846d2567"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Primer Apellido]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="82" y="68" width="175" height="20" forecolor="#666666" uuid="6ce789a4-6f2d-4844-a067-04b8db4f5a55"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{primer_apellido_solicitante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="257" y="68" width="99" height="20" uuid="66d5600d-0e80-46d2-b65a-2fa17c85b401"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Segundo Apellido]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="356" y="68" width="218" height="20" forecolor="#666666" uuid="02669b22-c74d-49cc-a499-44baec5fd856"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{segundo_apellido_solicitante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="412" y="28" width="58" height="20" uuid="2f2d20d7-e4ee-4764-86c7-d972b6be4489"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Segmento]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="470" y="28" width="104" height="20" forecolor="#666666" uuid="4d1c4c01-65cf-454c-b2e3-2c8eef89c02d"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_segmento_cliente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="2" y="88" width="40" height="20" uuid="9ab06621-8ef6-444f-bc2b-30eb540567e1"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Celular]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="42" y="88" width="249" height="20" forecolor="#666666" uuid="53d79c4e-02ef-4c66-a8b6-f8ef9af20380"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{celular_solicitante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="291" y="88" width="53" height="20" uuid="45de3769-b370-4600-b6ab-b807f52131f7"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Telefono]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="344" y="88" width="230" height="20" forecolor="#666666" uuid="b444c4f0-b59e-4cb8-90ca-7137865c175a"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{telefono_solicitante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="2" y="108" width="40" height="20" uuid="2e94e002-a43d-4756-ac58-37edc4812923"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[E-mail]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="42" y="108" width="178" height="20" forecolor="#666666" uuid="ca46fb0c-07dc-4dd6-8849-f851988370a6"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{correo_electronico_solicitante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="220" y="108" width="54" height="20" uuid="b54e0b18-1913-4a28-96be-86fef5711745"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Dirección]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="274" y="108" width="300" height="20" forecolor="#666666" uuid="1eb9b063-46da-457b-9ea3-89d73bff6258"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccion_de_contacto_solicitante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="2" y="128" width="80" height="20" uuid="b54070f9-3112-42ae-b51a-1d97e68772c0"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Departamento]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="82" y="128" width="209" height="20" forecolor="#666666" uuid="1a5c7426-60d7-4ad3-aa30-62137ed8e703"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{departamento_cliente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="291" y="128" width="43" height="20" uuid="4ff0ed11-5cec-4028-9d83-71b6e3a17c07"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Ciudad]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="334" y="128" width="240" height="20" forecolor="#666666" uuid="7506b758-7198-4846-8f70-7e9396d16bc7"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ciudad_cliente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="2" y="148" width="572" height="20" forecolor="#FFFFFF" backcolor="#0DB3C8" uuid="64f50d64-874f-4a16-95b0-9d5474451895"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<text><![CDATA[Información de Inmueble]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="168" width="40" height="20" uuid="5aeb4848-d91c-4c55-b9e9-be808d6f77ae"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="42" y="168" width="178" height="20" forecolor="#666666" uuid="310a2a44-f1ca-4d60-8cf9-eb66ba9a3ef8"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo_inmueble}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="220" y="168" width="54" height="20" uuid="d40b41fc-85ac-460b-aae1-3a2ec1e2fbe8"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dirección]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="274" y="168" width="300" height="20" forecolor="#666666" uuid="02f604c3-e745-4b64-9ac8-ae773f93369c"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccion_inmueble}!=null && $F{adicional_direccion}!=null?
+$F{direccion_inmueble}.contains($F{adicional_direccion})?$F{direccion_inmueble}:$F{direccion_inmueble}+" "+$F{adicional_direccion}:
+$F{direccion_inmueble}!=null?$F{direccion_inmueble}:$F{adicional_direccion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="188" width="63" height="20" uuid="d33b5792-48af-4d61-a4f4-0deda3e49fcd"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Conjunto]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="188" width="227" height="20" forecolor="#666666" uuid="cfb1df03-fb4c-4f9b-adb4-f14e4411677d"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_del_conjunto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="292" y="188" width="45" height="20" uuid="bd7037ac-2c8f-4a0e-8e87-d8cfb0a1d4cf"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Barrio]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="337" y="188" width="237" height="20" forecolor="#666666" uuid="a51af2db-c6dc-4ab0-81ec-fc7f2c3723b4"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{barrio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="208" width="90" height="20" uuid="e8ce8db1-80f2-4a92-a17e-e35dc1e1f3d1"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Departamento]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="92" y="208" width="200" height="20" forecolor="#666666" uuid="4c73d6b0-b4a9-419e-8c94-d6da9281c89b"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{departamento_inmueble}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="291" y="208" width="46" height="20" uuid="50d088e9-5e51-4f3c-9a3a-95f3b09e31cb"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ciudad]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="337" y="208" width="237" height="20" forecolor="#666666" uuid="893f06b7-c33c-44ae-bdc5-3d13f73cd9f0"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ciudad_inmueble}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="228" width="574" height="20" forecolor="#FFFFFF" backcolor="#0DB3C8" uuid="e58f5edc-e950-4b2d-9906-757d8517b797"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<text><![CDATA[Información de Persona que recibira al avaluador]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="248" width="63" height="20" uuid="57b497d5-bec3-491f-826d-a9ef80323982"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="66" y="248" width="227" height="20" forecolor="#666666" uuid="d24fc513-737a-49b4-994f-df50348beeb3"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_persona_que_recibe_el_avaluo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="293" y="248" width="48" height="20" uuid="bfaa1b15-38e5-4d20-8919-df1c972e4072"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefono]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="341" y="248" width="232" height="20" forecolor="#666666" uuid="3ee69d8a-a83d-4e23-863a-23aea39f8937"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{telefono_persona_que_recibe_el_avaluo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="268" width="63" height="20" uuid="43556e36-1290-43a1-9496-aa0b335b4dc7"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[E-mail]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="65" y="268" width="227" height="20" forecolor="#666666" uuid="7d2c669e-b0bd-4da8-93ab-fbf46a7db563"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{correo_electronico_persona_que_recibe_el_avaluo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="292" y="268" width="100" height="20" uuid="8a5b2977-6ee2-4d64-aa59-e095524d1482"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de Cita]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="392" y="268" width="181" height="20" forecolor="#666666" uuid="bed0b7f7-9baf-4611-b8cd-f541001863fa"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_cita}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="3" y="488" width="567" height="20" forecolor="#FFFFFF" backcolor="#0DB3C8" uuid="7857ecb4-1c3d-4f39-a507-93974b347c6a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<text><![CDATA[Información de Perito]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="508" width="63" height="20" uuid="604c14ee-6753-417d-b984-5fee380e3496"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombres]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="66" y="508" width="226" height="20" forecolor="#666666" uuid="d8f1f87a-db65-4397-81ed-3d0ead770f61"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombres_perito}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="293" y="508" width="52" height="20" uuid="d560d0d8-b3b4-4c38-b9de-099ccea0f5b9"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Apellidos]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="345" y="508" width="225" height="20" forecolor="#666666" uuid="d883aa6b-853f-433c-b156-5f05f58646da"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apellidos_perito}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="528" width="63" height="20" uuid="f64a70b9-7633-4201-8145-325ffdccf5f7"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Celular]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="66" y="528" width="227" height="20" forecolor="#666666" uuid="d0fb3add-0a31-458d-8434-b46028b445ce"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{celular_perito}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="293" y="528" width="52" height="20" uuid="b8f26a30-05f2-4cfd-911e-75a8e1fb46d6"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[E-mail]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="345" y="528" width="225" height="20" forecolor="#666666" uuid="2d2ab4c5-0870-47e0-bdf8-53ff17968777"/>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{email_perito}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="3" y="548" width="567" height="20" forecolor="#FFFFFF" backcolor="#0DB3C8" uuid="fb2e9be3-b57f-4011-82ba-a668cf2a10e6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<text><![CDATA[Observaciones de Solicitante]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="2" y="568" width="568" height="86" forecolor="#666666" uuid="a110fbb4-6852-4574-ab4d-b9ac0e698c58"/>
+				<box topPadding="3" leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{observaciones_solicitante}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="182" y="28" width="88" height="20" uuid="0c0c0a0e-950e-4a90-9cbb-4ddd8cd22b26"/>
+				<box leftPadding="3" rightPadding="5">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Solicitado   $]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="270" y="28" width="142" height="20" forecolor="#666666" uuid="4b989f4f-f60d-481d-9a0e-400c25d64b84"/>
+				<box leftPadding="3" rightPadding="0">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_solicitado}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="2" y="288" width="572" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#0DB3C8" uuid="0e75ea9f-886c-4202-ae6d-df239364369d">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Hipotecario" ))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<text><![CDATA[Información de Asesor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="308" width="64" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="fa1192a4-ded4-429b-93fa-1ede169b9b71">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Hipotecario" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="66" y="308" width="216" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" forecolor="#666666" uuid="6fdbf938-346a-4a57-a1b1-da4bce712760">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Hipotecario" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_asesor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="282" y="308" width="52" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="6c0ae94b-42ae-4c9f-b014-d8bdb3242444">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Hipotecario" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[E-mail]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="334" y="308" width="238" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" forecolor="#666666" uuid="9d6f952f-f0ab-4c7d-8294-bf404ebbf0c8">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Hipotecario" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{correo_electronico_asesor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="328" width="64" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="7af3adc7-0e3c-4982-a189-26d94f3f5e0d">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Hipotecario" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Celular]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="66" y="328" width="216" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" forecolor="#666666" uuid="9e91ccf1-3ebb-4e19-a703-63b4ede07186">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Hipotecario" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{celular_asesor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="282" y="328" width="52" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="68e282dd-1235-43ee-9cc8-f33881e6b953">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Hipotecario" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefono]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="334" y="328" width="238" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" forecolor="#666666" uuid="623a1934-98aa-4962-90cb-c857e9b51777">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Hipotecario" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{telefono_asesor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="408" width="63" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="3f3e485b-32ca-468d-8dbc-2c8fea5847fd">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sucursal]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="66" y="408" width="506" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" forecolor="#666666" uuid="854f8544-738b-47d2-9c01-9d2ced761f8d">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sucursal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="2" y="348" width="571" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#0DB3C8" uuid="bc841bfb-e79d-49f9-98a0-4706c6d2b29c">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<text><![CDATA[Información de Secuestre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="368" width="63" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="12ac4ba7-c833-4a60-8bd5-f6f33e7e70a6">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="66" y="368" width="225" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="ac94647e-162d-4c95-bfda-efb2c07ab17e">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_secuestre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="292" y="368" width="54" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="ac220cfc-f43d-461a-b681-8219ec1d751e">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[E-mail]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="346" y="368" width="226" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="5d9dd547-97e2-4af0-b042-9446e4b06a1a">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{email_secuestre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="388" width="63" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="94fb8c1a-f04f-489e-8d08-7400942d99a1">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Celular]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="66" y="388" width="225" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="d3648ceb-39fd-4956-9881-37ee73ff17e6">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{celular_secuestre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="291" y="388" width="55" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="5b946eca-504a-44f3-ab81-89a6dd960c7e">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telefono]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="346" y="388" width="226" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="8b607caa-6ee6-4a4c-9c51-a1a671842ae6">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{telefono_secuestre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="3" y="428" width="569" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" forecolor="#FFFFFF" backcolor="#0DB3C8" uuid="d3640c5e-7a29-4f94-b5fd-269519b5dbc0">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14"/>
+				</textElement>
+				<text><![CDATA[Información de Abogado]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="345" y="468" width="225" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="e8d9fd8b-011d-47c9-890b-7b2fbb69f766">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{email_abogado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="66" y="468" width="227" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="c497957a-8527-407f-afc0-9a35f8440fdd">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{celular_abogado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="346" y="448" width="224" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="6af519a5-47b0-4d0b-8ca4-7c9da76cd36c">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apellido_abogado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="66" y="448" width="227" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="274fb99c-ee58-4db2-89bb-50bd6d24aeb5">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_abogado}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="448" width="63" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="0bd25b28-5b7d-4d5d-8f4d-d35cfe979e32">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombres]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="448" width="52" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="52334d18-af29-455e-9959-926bc1b429f5">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Apellidos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="468" width="63" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="3b0c23cd-c00e-49c9-b439-93a75a39a199">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Celular]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="468" width="52" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true" uuid="c90ee7e5-3240-4ba6-9a54-f086cc2975df">
+					<printWhenExpression><![CDATA[new Boolean($F{tipo_avaluo}.equals( "Remates" ))]]></printWhenExpression>
+				</reportElement>
+				<box leftPadding="3">
+					<pen lineWidth="1.0" lineColor="#0995CE"/>
+					<topPen lineWidth="1.0" lineColor="#0995CE"/>
+					<leftPen lineWidth="1.0" lineColor="#0995CE"/>
+					<bottomPen lineWidth="1.0" lineColor="#0995CE"/>
+					<rightPen lineWidth="1.0" lineColor="#0995CE"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" isBold="true"/>
+				</textElement>
+				<text><![CDATA[E-mail]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<summary>
+		<band height="50"/>
+	</summary>
+</jasperReport>

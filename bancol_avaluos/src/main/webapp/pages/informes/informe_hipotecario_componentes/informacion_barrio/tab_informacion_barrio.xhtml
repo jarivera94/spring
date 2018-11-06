@@ -1,0 +1,1028 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:o="http://omnifaces.org/ui">
+
+	<p:tab id="informacionBarrio" title="Información del barrio">
+		<p:panel id="informacionBarrioPanel" header="Información del barrio"
+			style="margin-bottom:10px">
+			<p:panelGrid style="width: 99%">
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<h2>Servicios públicos</h2>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<p:spacer height="0" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h3 align="center">Sector</h3>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h3 align="center">Estados de Conservación</h3>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h3 align="center">Predio</h3>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h3 align="center">Información General</h3>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="alcantarillado" value="Alcantarillado:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="alcantarillado"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.alcantarilladoEnElSector}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean">
+							<p:ajax update="alcantarilladoEnElPredio"
+								listener="#{informeHipotecarioBean.actualizarValorPredio('alcantarillado', informeHipotecarioBean.informeHipotecarioDTO.alcantarilladoEnElSector)}"
+								global="false"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:alcantarillado' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:alcantarillado' ).removeClass('loadinggif');" />
+						</p:selectBooleanButton>
+					</p:column>
+					<p:column styleClass="ui-widget-header" style="text-align: center;">
+						<h:outputText value="N/A" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<!--  if !alcantarilladoEnElSector ? alcantarilladoEnElSector:alcantarilladoEnElPredio-->
+						<p:selectBooleanButton id="alcantarilladoEnElPredio"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.alcantarilladoEnElPredio}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean"
+							disabled="#{!informeHipotecarioBean.informeHipotecarioDTO.alcantarilladoEnElSector}" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="estrato" value="Estrato: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="estrato"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.estrato}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Estrato" style="width:99%">
+							<p:ajax event="change" global="false"
+								listener="#{informeHipotecarioBean.actualizarTiempoComercializacion}"
+								update="tiempoEsperadoDeComercializacion" />
+							<f:selectItem itemLabel="No aplica" itemValue="80"
+								itemDisabled="true" />
+							<f:selectItem itemLabel="1" itemValue="1" />
+							<f:selectItem itemLabel="2" itemValue="2" />
+							<f:selectItem itemLabel="3" itemValue="3" />
+							<f:selectItem itemLabel="4" itemValue="4" />
+							<f:selectItem itemLabel="5" itemValue="5" />
+							<f:selectItem itemLabel="6" itemValue="6" />
+							<f:selectItem itemLabel="Comercial" itemValue="51" />
+							<f:selectItem itemLabel="Industrial" itemValue="52" />
+							<f:selectItem itemLabel="Oficina" itemValue="53" />
+						</h:selectOneMenu>
+					</p:column>
+					<!-- 
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="estadoDeLasVias" value="Estado de las vias: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estadoDeLasVias" value="#{informeHipotecarioBean.informeHipotecarioDTO.estadoDeLasVias}"
+										required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}" label="Estado de las vías" style="width:99%" >
+											<f:selectItems value="#{informeHipotecarioBean.estados}" var="estado" itemValue="#{estado}" itemLabel="#{estado.value}" />
+											<o:validator validatorId="listaDesplegableValidator" disabled="#{empty param[enviar.clientId] and empty param[enviarHonorarios.clientId] and empty param[enviarCorrecciones.clientId] and empty param[aprobar.clientId] and empty param[correciones.clientId] and empty param[enviarComite.clientId]}" />
+
+										</h:selectOneMenu>
+									</p:column>
+									 -->
+				</p:row>
+				<p:row
+					rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:estrato') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:estadoDeLasVias'))}">
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:spacer height="0" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="estrato" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:spacer height="0" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="acueducto" value="Acueducto: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="acueducto"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.acueductoEnElSector}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean">
+							<p:ajax update="acueductoEnElPredio"
+								listener="#{informeHipotecarioBean.actualizarValorPredio('acueducto', informeHipotecarioBean.informeHipotecarioDTO.acueductoEnElSector)}"
+								global="false"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:acueducto' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:acueducto' ).removeClass('loadinggif');" />
+						</p:selectBooleanButton>
+					</p:column>
+					<p:column styleClass="ui-widget-header" style="text-align: center;">
+						<h:outputText value="N/A" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="acueductoEnElPredio"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.acueductoEnElPredio}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close"
+							disabled="#{!informeHipotecarioBean.informeHipotecarioDTO.acueductoEnElSector}"
+							style="width:100px" converter="javax.faces.Boolean" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="barrioLegal" value="Barrio Legal: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="barrioLegal"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.barrioLegal}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							style="width:100px" converter="javax.faces.Boolean" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:barrioLegal') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:viasPavimentadas'))}">
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:spacer height="0" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="barrioLegal" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="viasPavimentadas" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="gas" value="Gas: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="gas"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.gasEnElSector}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean">
+							<p:ajax update="gasEnElPredio"
+								listener="#{informeHipotecarioBean.actualizarValorPredio('gas', informeHipotecarioBean.informeHipotecarioDTO.gasEnElSector)}"
+								global="false"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:gas' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:gas' ).removeClass('loadinggif');" />
+						</p:selectBooleanButton>
+					</p:column>
+					<p:column styleClass="ui-widget-header" style="text-align: center;">
+						<h:outputText value="N/A" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="gasEnElPredio"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.gasEnElPredio}"
+							disabled="#{!informeHipotecarioBean.informeHipotecarioDTO.gasEnElSector}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="topografiaSector"
+							value="Topografía del sector: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="topografiaSector"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.topografiaSector}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Topografía del Sector" style="width:99%">
+							<f:selectItems
+								value="#{informeHipotecarioBean.topografiasSector}"
+								var="topografia" itemValue="#{topografia}"
+								itemLabel="#{topografia.value}" />
+							<o:validator validatorId="listaDesplegableValidator"
+								disabled="#{empty param[enviar.clientId] and empty param[enviarHonorarios.clientId] and empty param[enviarCorrecciones.clientId] and empty param[aprobar.clientId] and empty param[correciones.clientId] and empty param[enviarComite.clientId]}" />
+
+						</h:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:topografiaSector') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:sardinelesEnLasVias'))}">
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:spacer height="0" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="topografiaSector" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="sardinelesEnLasVias" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="energia" value="Energía: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="energia"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.energiaEnElSector}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean">
+							<p:ajax update="energiaEnElPredio"
+								listener="#{informeHipotecarioBean.actualizarValorPredio('energia', informeHipotecarioBean.informeHipotecarioDTO.energiaEnElSector)}"
+								global="false"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:energia' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:energia' ).removeClass('loadinggif');" />
+						</p:selectBooleanButton>
+					</p:column>
+					<p:column styleClass="ui-widget-header" style="text-align: center;">
+						<h:outputText value="N/A" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="energiaEnElPredio"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.energiaEnElPredio}"
+							disabled="#{!informeHipotecarioBean.informeHipotecarioDTO.energiaEnElSector}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="condicionesDeSalubridad"
+							value="Condiciones de salubridad: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="condicionesDeSalubridad"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.condicionesDeSalubridad}"
+							style="width:99%"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							requiredMessage="Condiciones de Salubridad es obligatorio">
+							<f:selectItems value="#{informeHipotecarioBean.estados}"
+								var="estado" itemValue="#{estado}" itemLabel="#{estado.value}" />
+							<o:validator validatorId="listaDesplegableValidator"
+								disabled="#{empty param[enviar.clientId] and empty param[enviarHonorarios.clientId] and empty param[enviarCorrecciones.clientId] and empty param[aprobar.clientId] and empty param[correciones.clientId] and empty param[enviarComite.clientId]}" />
+
+						</h:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:transporte')}">
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:spacer height="0" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="transporte" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:spacer height="0" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="telefonoEnElSector" value="Teléfono: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="telefonoEnElSector"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.telefonoEnElSector}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean">
+							<p:ajax update="telefonoEnElPredio"
+								listener="#{informeHipotecarioBean.actualizarValorPredio('telefono', informeHipotecarioBean.informeHipotecarioDTO.telefonoEnElSector)}"
+								global="false"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:telefonoEnElSector' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:telefonoEnElSector' ).removeClass('loadinggif');" />
+						</p:selectBooleanButton>
+					</p:column>
+					<p:column styleClass="ui-widget-header" style="text-align: center;">
+						<h:outputText value="N/A" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="telefonoEnElPredio"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.telefonoEnElPredio}"
+							disabled="#{!informeHipotecarioBean.informeHipotecarioDTO.telefonoEnElSector}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="transporte" value="Transporte: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="transporte"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.transporte}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Transporte" style="width:99%">
+							<f:selectItems value="#{informeHipotecarioBean.estados}"
+								var="estado" itemValue="#{estado}" itemLabel="#{estado.value}" />
+							<o:validator validatorId="listaDesplegableValidator"
+								disabled="#{empty param[enviar.clientId] and empty param[enviarHonorarios.clientId] and empty param[enviarCorrecciones.clientId] and empty param[aprobar.clientId] and empty param[correciones.clientId] and empty param[enviarComite.clientId]}" />
+
+						</h:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:usoPredominanteInmueble') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:andenesEnLasVias'))}">
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:spacer height="0" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="usoPredominanteInmueble" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="andenesEnLasVias" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="viasPavimentadas" value="Vías pavimentadas: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="viasPavimentadas"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.viasPavimentadas}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							style="width:100px" converter="javax.faces.Boolean" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="estadoConservacionViasPavimentadas"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.estadoConservacionViasPavimentadas}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Estado Conservacion Vías Pavimentadas" style="width:99%">
+							<f:selectItem itemLabel="Muy bueno" itemValue="Muy bueno" />
+							<f:selectItem itemLabel="Bueno" itemValue="Bueno" />
+							<f:selectItem itemLabel="Regular Malo" itemValue="Regular Malo" />
+							<f:selectItem itemLabel="En Proyecto" itemValue="En Proyecto" />
+							<f:selectItem itemLabel="En construcción"
+								itemValue="En construcción" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column />
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="usoPredominanteInmueble"
+							value="Uso Predominante del Sector: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="usoPredominanteInmueble"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.usoPredominanteInmueble}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Seleccionar: Uso Predominante del Sector"
+							style="width:99%">
+							<f:selectItems
+								value="#{informeHipotecarioBean.usosPredominantesInmueble}"
+								var="usoPredominante" itemValue="#{usoPredominante}"
+								itemLabel="#{usoPredominante.value}" />
+							<o:validator validatorId="listaDesplegableValidator"
+								disabled="#{empty param[enviar.clientId] and empty param[enviarHonorarios.clientId] and empty param[enviarCorrecciones.clientId] and empty param[aprobar.clientId] and empty param[correciones.clientId] and empty param[enviarComite.clientId]}" />
+
+							<p:ajax update="panelDescMixto" global="false"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:usoPredominanteInmueble' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:usoPredominanteInmueble' ).removeClass('loadinggif');" />
+						</h:selectOneMenu>
+						<p:column>
+							<p:panel id="panelDescMixto"
+								style="margin-bottom: -20px !important;">
+								<p:inputTextarea id="descripcionMixto"
+									value="#{informeHipotecarioBean.informeHipotecarioDTO.descripcionUsoPredominanteMixto}"
+									rendered="#{informeHipotecarioBean.informeHipotecarioDTO.usoPredominanteInmueble.key eq '100'}"
+									autoResize="false" maxlength="255">
+									<p:watermark value="Descripción mixto" for="descripcionMixto"></p:watermark>
+								</p:inputTextarea>
+							</p:panel>
+						</p:column>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="sardinelesEnLasVias"
+							value="Sardineles en las vías: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="sardinelesEnLasVias"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.sardinelesEnLasVias}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							style="width:100px" converter="javax.faces.Boolean" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="estadoConservacionSardinelesEnLasVias"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.estadoConservacionSardinelesEnLasVias}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Estado Conservacion Vías Pavimentadas" style="width:99%">
+							<f:selectItem itemLabel="Muy bueno" itemValue="Muy bueno" />
+							<f:selectItem itemLabel="Bueno" itemValue="Bueno" />
+							<f:selectItem itemLabel="Regular Malo" itemValue="Regular Malo" />
+							<f:selectItem itemLabel="En Proyecto" itemValue="En Proyecto" />
+							<f:selectItem itemLabel="En construcción"
+								itemValue="En construcción" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column />
+
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="demandaInteres" value="Demanda / Interés: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="demandaInteres"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.demandaInteres}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Demanda / Interes" style="width:99%">
+							<f:selectItem itemLabel="Nula" itemValue="Nula" />
+							<f:selectItem itemLabel="Débil" itemValue="Débil" />
+							<f:selectItem itemLabel="Media" itemValue="Media" />
+							<f:selectItem itemLabel="Fuerte" itemValue="Fuerte" />
+						</h:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="andenesEnLasVias"
+							value="Andenes en las vías: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="andenesEnLasVias"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.andenesEnLasVias}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							style="width:100px" converter="javax.faces.Boolean" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="estadoConservacionAndenesEnLasVias"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.estadoConservacionAndenesEnLasVias}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Estado Conservacion Vías Pavimentadas" style="width:99%">
+							<f:selectItem itemLabel="Muy bueno" itemValue="Muy bueno" />
+							<f:selectItem itemLabel="Bueno" itemValue="Bueno" />
+							<f:selectItem itemLabel="Regular Malo" itemValue="Regular Malo" />
+							<f:selectItem itemLabel="En Proyecto" itemValue="En Proyecto" />
+							<f:selectItem itemLabel="En construcción"
+								itemValue="En construcción" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column />
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<p:spacer width="100" height="20" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h3 align="center">Amoblamiento urbano</h3>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="1">
+						<h3 align="center">Equipamiento urbano</h3>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="1">
+						<h3 align="center">Nivel de equipamiento</h3>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="1">
+						<h3 align="center">Distancia aproximada</h3>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<h3 align="center">Impacto ambiental negativo</h3>
+					</p:column>
+				</p:row>
+				<p:row>
+					<!-- 
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="parques" value="Parques: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="parques" value="#{informeHipotecarioBean.informeHipotecarioDTO.parques}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" converter="javax.faces.Boolean" />
+									</p:column>
+									 -->
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="paradero" value="Paradero: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="paradero"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.paradero}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean" />
+					</p:column>
+					<p:column>
+						<h:outputLabel for="nivelEquipamientoComercial"
+							value="Comercial: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="nivelEquipamientoComercial"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.nivelEquipamientoComercial}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Nivel Equipamiento Comercial" style="width:99%">
+							<f:selectItem itemLabel="Abundante" itemValue="Muy bueno" />
+							<f:selectItem itemLabel="Suficiente" itemValue="Bueno" />
+							<f:selectItem itemLabel="Escaso" itemValue="Regular Malo" />
+							<f:selectItem itemLabel="No existe" itemValue="En Proyecto" />
+							<f:selectItem itemLabel="Otro" itemValue="En construcción" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="distanciaAproximadaComercial"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.distanciaAproximadaComercial}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Distancia Aproximada Comercial" style="width:99%">
+							<f:selectItem itemLabel="0 – 100 metros"
+								itemValue="0 – 100 metros" />
+							<f:selectItem itemLabel="100 – 200 metros"
+								itemValue="100 – 200 metros" />
+							<f:selectItem itemLabel="200 – 300 metros"
+								itemValue="200 – 300 metros" />
+							<f:selectItem itemLabel="300 – 400 metros"
+								itemValue="300 – 400 metros" />
+							<f:selectItem itemLabel="400 – 500 metros"
+								itemValue="400 – 500 metros" />
+							<f:selectItem itemLabel="500 o más" itemValue="500 o más" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="impactoAmbientalAire" value="Aire: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="impactoAmbientalAire"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.impactoAmbientalAire}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}">
+							<p:ajax event="change" process="informacionBarrioPanel"
+								update="informacionBarrioPanel"
+								listener="#{informeHipotecarioBean.cambiarImpactoAmbientalAire()}"
+								global="false"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:impactoAmbientalAire' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:impactoAmbientalAire' ).removeClass('loadinggif');" />
+						</p:selectBooleanButton>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputText id="descripcionImpactoAmbientalAire"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.explicacionImpactoAmbientalAire}"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.impactoAmbientalAire}"
+							style="width: 99%" maxlength="40" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="alumbrado" value="Alumbrado: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="alumbrado"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.alumbrado}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean" />
+					</p:column>
+					<p:column>
+						<h:outputLabel for="nivelEquipamientoEscolar" value="Escolar: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="nivelEquipamientoEscolar"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.nivelEquipamientoEscolar}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Nivel Equipamiento Escolar" style="width:99%">
+							<f:selectItem itemLabel="Abundante" itemValue="Muy bueno" />
+							<f:selectItem itemLabel="Suficiente" itemValue="Bueno" />
+							<f:selectItem itemLabel="Escaso" itemValue="Regular Malo" />
+							<f:selectItem itemLabel="No existe" itemValue="En Proyecto" />
+							<f:selectItem itemLabel="Otro" itemValue="En construcción" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="distanciaAproximadaEscolar"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.distanciaAproximadaEscolar}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Distancia Aproximada Escolar" style="width:99%">
+							<f:selectItem itemLabel="0 – 100 metros"
+								itemValue="0 – 100 metros" />
+							<f:selectItem itemLabel="100 – 200 metros"
+								itemValue="100 – 200 metros" />
+							<f:selectItem itemLabel="200 – 300 metros"
+								itemValue="200 – 300 metros" />
+							<f:selectItem itemLabel="300 – 400 metros"
+								itemValue="300 – 400 metros" />
+							<f:selectItem itemLabel="400 – 500 metros"
+								itemValue="400 – 500 metros" />
+							<f:selectItem itemLabel="500 o más" itemValue="500 o más" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="impactoAmbientalBasura" value="Basura: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="impactoAmbientalBasura"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.impactoAmbientalBasura}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}">
+							<p:ajax event="change" process="informacionBarrioPanel"
+								update="informacionBarrioPanel" global="false"
+								listener="#{informeHipotecarioBean.cambiarImpactoAmbientalBasura()}"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:impactoAmbientalBasura' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:impactoAmbientalBasura' ).removeClass('loadinggif');" />
+						</p:selectBooleanButton>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputText id="descripcionImpactoAmbientalBasura"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.explicacionImpactoAmbientalBasura}"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.impactoAmbientalBasura}"
+							style="width: 99%" maxlength="40" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="arborizacion" value="Arborización: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="arborizacion"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.arborizacion}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean" />
+					</p:column>
+					<p:column>
+						<h:outputLabel for="nivelEquipamientoAsistencial"
+							value="Asistencial: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="nivelEquipamientoAsistencial"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.nivelEquipamientoAsistencial}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Nivel Equipamiento Asistencial" style="width:99%">
+							<f:selectItem itemLabel="Abundante" itemValue="Muy bueno" />
+							<f:selectItem itemLabel="Suficiente" itemValue="Bueno" />
+							<f:selectItem itemLabel="Escaso" itemValue="Regular Malo" />
+							<f:selectItem itemLabel="No existe" itemValue="En Proyecto" />
+							<f:selectItem itemLabel="Otro" itemValue="En construcción" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="distanciaAproximadaAsistencial"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.distanciaAproximadaAsistencial}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Distancia Aproximada Asistencial" style="width:99%">
+							<f:selectItem itemLabel="0 – 100 metros"
+								itemValue="0 – 100 metros" />
+							<f:selectItem itemLabel="100 – 200 metros"
+								itemValue="100 – 200 metros" />
+							<f:selectItem itemLabel="200 – 300 metros"
+								itemValue="200 – 300 metros" />
+							<f:selectItem itemLabel="300 – 400 metros"
+								itemValue="300 – 400 metros" />
+							<f:selectItem itemLabel="400 – 500 metros"
+								itemValue="400 – 500 metros" />
+							<f:selectItem itemLabel="500 o más" itemValue="500 o más" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="impactoAmbientalInseguridad"
+							value="Inseguridad: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="impactoAmbientalInseguridad"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.impactoAmbientalInseguridad}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}">
+							<p:ajax event="change" process="informacionBarrioPanel"
+								update="informacionBarrioPanel" global="false"
+								listener="#{informeHipotecarioBean.cambiarImpactoAmbientalInseguridad()}"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:impactoAmbientalInseguridad' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:impactoAmbientalInseguridad' ).removeClass('loadinggif');" />
+						</p:selectBooleanButton>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputText id="descripcionImpactoAmbientalInseguridad"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.explicacionImpactoAmbientalInseguridad}"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.impactoAmbientalInseguridad}"
+							style="width: 99%" maxlength="40" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<!-- 
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="zonasVerdesPublicas" value="Zonas verdes públicas: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="zonasVerdesPublicas" value="#{informeHipotecarioBean.informeHipotecarioDTO.zonasVerdesPublicas}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" converter="javax.faces.Boolean" 
+											required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"/>
+									</p:column>
+									 -->
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="alamedas" value="Alamedas: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="alamedas"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.alamedas}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean" />
+					</p:column>
+					<p:column>
+						<h:outputLabel for="nivelEquipamientoEstacionamiento"
+							value="Estacionamiento: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="nivelEquipamientoEstacionamiento"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.nivelEquipamientoEstacionamiento}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Nivel Equipamiento Estacionamiento" style="width:99%">
+							<f:selectItem itemLabel="Abundante" itemValue="Muy bueno" />
+							<f:selectItem itemLabel="Suficiente" itemValue="Bueno" />
+							<f:selectItem itemLabel="Escaso" itemValue="Regular Malo" />
+							<f:selectItem itemLabel="No existe" itemValue="En Proyecto" />
+							<f:selectItem itemLabel="Otro" itemValue="En construcción" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="distanciaAproximadaEstacionamiento"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.distanciaAproximadaEstacionamiento}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Distancia Aproximada Estacionamiento" style="width:99%">
+							<f:selectItem itemLabel="0 – 100 metros"
+								itemValue="0 – 100 metros" />
+							<f:selectItem itemLabel="100 – 200 metros"
+								itemValue="100 – 200 metros" />
+							<f:selectItem itemLabel="200 – 300 metros"
+								itemValue="200 – 300 metros" />
+							<f:selectItem itemLabel="300 – 400 metros"
+								itemValue="300 – 400 metros" />
+							<f:selectItem itemLabel="400 – 500 metros"
+								itemValue="400 – 500 metros" />
+							<f:selectItem itemLabel="500 o más" itemValue="500 o más" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="impactoAmbientalRuido" value="Ruido: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="impactoAmbientalRuido"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.impactoAmbientalRuido}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}">
+							<p:ajax event="change" process="informacionBarrioPanel"
+								update="informacionBarrioPanel" global="false"
+								listener="#{informeHipotecarioBean.cambiarImpactoAmbientalRuido()}"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:impactoAmbientalRuido' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:impactoAmbientalRuido' ).removeClass('loadinggif');" />
+						</p:selectBooleanButton>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputText id="descripcionImpactoAmbientalRuido"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.explicacionImpactoAmbientalRuido}"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.impactoAmbientalRuido}"
+							style="width: 99%" maxlength="40" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="cicloRutas" value="Ciclo rutas: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="cicloRutas"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.cicloRutas}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean" />
+					</p:column>
+					<p:column>
+						<h:outputLabel for="nivelEquipamientoAreasVerdes"
+							value="Áreas Verdes: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="nivelEquipamientoAreasVerdes"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.nivelEquipamientoAreasVerdes}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Nivel Equipamiento Estacionamiento" style="width:99%">
+							<f:selectItem itemLabel="Abundante" itemValue="Muy bueno" />
+							<f:selectItem itemLabel="Suficiente" itemValue="Bueno" />
+							<f:selectItem itemLabel="Escaso" itemValue="Regular Malo" />
+							<f:selectItem itemLabel="No existe" itemValue="En Proyecto" />
+							<f:selectItem itemLabel="Otro" itemValue="En construcción" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="distanciaAproximadaAreasVerdes"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.distanciaAproximadaAreasVerdes}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Distancia Aproximada Estacionamiento" style="width:99%">
+							<f:selectItem itemLabel="0 – 100 metros"
+								itemValue="0 – 100 metros" />
+							<f:selectItem itemLabel="100 – 200 metros"
+								itemValue="100 – 200 metros" />
+							<f:selectItem itemLabel="200 – 300 metros"
+								itemValue="200 – 300 metros" />
+							<f:selectItem itemLabel="300 – 400 metros"
+								itemValue="300 – 400 metros" />
+							<f:selectItem itemLabel="400 – 500 metros"
+								itemValue="400 – 500 metros" />
+							<f:selectItem itemLabel="500 o más" itemValue="500 o más" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="impactoAmbientalAguasServidas"
+							value="Aguas Servidas: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="impactoAmbientalAguasServidas"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.impactoAmbientalAguasServidas}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}">
+							<p:ajax event="change" process="informacionBarrioPanel"
+								update="informacionBarrioPanel" global="false"
+								listener="#{informeHipotecarioBean.cambiarImpactoAmbientalAguasServidas()}"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:impactoAmbientalAguasServidas' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:impactoAmbientalAguasServidas' ).removeClass('loadinggif');" />
+						</p:selectBooleanButton>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputText id="descripcionImpactoAmbientalAguasServidas"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.explicacionImpactoAmbientalAguasServidas}"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.impactoAmbientalAguasServidas}"
+							style="width: 99%" maxlength="40" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column />
+					<p:column />
+					<p:column>
+						<h:outputLabel for="nivelEquipamientoZonasRecreativas"
+							value="Zonas Recreativas: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="nivelEquipamientoZonasRecreativas"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.nivelEquipamientoZonasRecreativas}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Nivel Equipamiento Zonas Recreativas" style="width:99%">
+							<f:selectItem itemLabel="Abundante" itemValue="Muy bueno" />
+							<f:selectItem itemLabel="Suficiente" itemValue="Bueno" />
+							<f:selectItem itemLabel="Escaso" itemValue="Regular Malo" />
+							<f:selectItem itemLabel="No existe" itemValue="En Proyecto" />
+							<f:selectItem itemLabel="Otro" itemValue="En construcción" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="distanciaAproximadaZonasRecreativas"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.distanciaAproximadaZonasRecreativas}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Distancia Aproximada Zonas Recreativas" style="width:99%">
+							<f:selectItem itemLabel="0 – 100 metros"
+								itemValue="0 – 100 metros" />
+							<f:selectItem itemLabel="100 – 200 metros"
+								itemValue="100 – 200 metros" />
+							<f:selectItem itemLabel="200 – 300 metros"
+								itemValue="200 – 300 metros" />
+							<f:selectItem itemLabel="300 – 400 metros"
+								itemValue="300 – 400 metros" />
+							<f:selectItem itemLabel="400 – 500 metros"
+								itemValue="400 – 500 metros" />
+							<f:selectItem itemLabel="500 o más" itemValue="500 o más" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="impactoAmbientalOtro" value="Otro: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="impactoAmbientalOtro"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.impactoAmbientalOtro}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean">
+							<p:ajax update="informacionBarrioPanel"
+								process="informacionBarrioPanel" global="false"
+								listener="#{informeHipotecarioBean.cambiarImpactoAmbientalOtro()}"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:impactoAmbientalOtro' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:impactoAmbientalOtro' ).removeClass('loadinggif');" />
+						</p:selectBooleanButton>
+					</p:column>
+					<!-- 
+									<p:column styleClass="ui-widget-header" rendered="#{informeHipotecarioBean.informeHipotecarioDTO.impactoAmbientalOtro}">
+										<h:outputLabel for="otroCual" value="Cual: " />
+									</p:column>
+									 -->
+					<p:column styleClass="ui-widget-header"
+						rendered="#{informeHipotecarioBean.informeHipotecarioDTO.impactoAmbientalOtro}"
+						colspan="4">
+						<p:inputText id="otroCual"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.explicacionOtro}"
+							label="Cual" style="width:99%" maxlength="40" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+
+		<p:panel id="panelDescripcionGeneralSector"
+			header="Descripción General Sector" style="margin-bottom:10px">
+			<p:panelGrid style="width: 99%">
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<p:inputTextarea rows="3" cols="50" id="descripcionGeneralSector"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.descripcionGeneralSector}"
+							label="Descripción General Sector"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							style="width:99%" maxlength="250"
+							counter="descripcionGeneralSectorCaracteresFaltantes"
+							counterTemplate="{0} caracteres faltantes." />
+						<h:outputText id="descripcionGeneralSectorCaracteresFaltantes" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:descripcionGeneralSector')}">
+					<p:column styleClass="ui-widget-header">
+						<p:message for="descripcionGeneralSector" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+
+		<p:panel id="perspectivasValorizacion"
+			header="Perspectivas de valorización" style="margin-bottom:10px">
+			<p:panelGrid style="width: 99%">
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<p:inputTextarea rows="3" cols="50"
+							id="perspectivasDeValorizacion"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.perspectivasDeValorizacion}"
+							label="Perspectivas de Valorización"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							style="width:99%" maxlength="250"
+							counter="perspectivasValorizacionFaltantes"
+							counterTemplate="{0} caracteres faltantes." />
+						<h:outputText id="perspectivasValorizacionFaltantes" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:perspectivasDeValorizacion')}">
+					<p:column styleClass="ui-widget-header">
+						<p:message for="perspectivasDeValorizacion" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+
+		<p:panel id="panelActualidadEdificadora"
+			header="Actualidad Edificadora " style="margin-bottom:10px">
+			<p:panelGrid style="width: 99%">
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<p:inputTextarea rows="5" cols="30" id="actualidadEdificadora"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.actualidadEdificadora}"
+							label="Actualidad edificadora"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							style="width: 99%" maxlength="250"
+							counter="actualidadEdificadoraFaltantes"
+							counterTemplate="{0} caracteres faltantes." />
+						<h:outputText id="actualidadEdificadoraFaltantes" />
+					</p:column>
+
+				</p:row>
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:actualidadEdificadora')}">
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<p:message for="actualidadEdificadora" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+
+		<p:panel id="panelComportamientoOfertaDemanda"
+			header="Comportamiento de oferta y demanda"
+			style="margin-bottom:10px">
+			<p:panelGrid style="width: 99%">
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<p:inputTextarea rows="3" cols="30"
+							id="comportamientoOfertaDemanda"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.comportamientoOfertaDemanda}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Comportamiento oferta y demanda" style="width: 99%"
+							maxlength="250" counter="comportamientoOfertaDemandaFaltantes"
+							counterTemplate="{0} caracteres faltantes." />
+						<h:outputText id="comportamientoOfertaDemandaFaltantes" />
+					</p:column>
+				</p:row>
+
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:comportamientoOfertaDemanda')}">
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<p:message for="comportamientoOfertaDemanda" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+
+	</p:tab>
+
+
+</ui:composition>

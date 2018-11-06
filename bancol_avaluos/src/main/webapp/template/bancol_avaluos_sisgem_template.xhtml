@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:insert name="metadata">
+</ui:insert>
+
+<h:head>
+	<link rel="shortcut icon" href="/images/favicon.ico"
+		type="image/x-icon" />
+
+	<h:outputScript name="js/primefaces_calendar_es.js" />
+	<h:outputScript name="js/jquery.maskMoney.js"	/>
+	<h:outputScript name="js/autoNumeric.js" />
+	<h:outputScript name="js/disableEnterFormSubmit.js" />
+	<h:outputScript name="js/offline.min.js" />
+	<h:outputScript name="js/jsplug.js" />
+	<h:outputStylesheet name="css/primefac.css" />
+	<h:outputStylesheet name="css/style_helio.css" />
+	<h:outputStylesheet name="css/style_menu.css" />
+	<h:outputStylesheet name="css/offline-theme-default.css" />
+	<h:outputStylesheet name="css/offline-language-spanish.css" />
+	<h:outputStylesheet name="css/offline-language-spanish-indicator.css" />
+	<h:outputStylesheet name="css/style_menu.css" />
+	<h:outputStylesheet library="primefaces" name="grid/grid.css" />
+	<script type="application/javascript">
+		$(document).ready(function(){
+			var header = $('#header');
+			var contenedor = $('#page');
+			var cont_offset = contenedor.offset();
+			$(window).scroll(function(){
+				if($(this).scrollTop() > cont_offset.top){
+					menu.addClass('header2');
+					alert($(window).scrollTop()+'hola');
+				}else{
+					menu.removeClass('header2');
+					alert($(window).scrollTop()+'hola2');
+				}
+			});
+		});
+	</script>
+</h:head>
+<h:body>
+	<div class="container">
+
+		<div class="main-content">
+			<div id="page">
+
+				<div id="content"
+					style="margin: 85px auto;margin-bottom: 15px; width: 99%; overflow-y: hidden; overflow-x: hidden;">
+					<ui:insert name="content">
+						<ui:include src="/template/template_content.xhtml" />
+					</ui:insert>
+				</div>
+
+				<div id="vector" class="image_vector">
+					<ui:insert name="vector">
+						<ui:include src="/template/template_vector.xhtml" />
+					</ui:insert>
+				</div>
+
+				<div id="footer" class="image_down">
+					<ui:insert name="footer">
+						<ui:include src="/template/template_footer.xhtml" />
+					</ui:insert>
+				</div>
+			</div>
+		</div>
+	</div>
+</h:body>
+</html>

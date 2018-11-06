@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta http-equiv="Refresh"
+		content="3;url=#{usuarioBean.redireccionarListado()}" />
+</h:head>
+<h:body style="background-image: url('images/edificios_azules_night_bckg.jpg');">
+
+	<h:form id="form" style="width: 100%; margin: 0px auto;">
+		<div style="width: 70%; margin: 0px auto;">
+			<div
+				style="width: 98%; margin: 100px auto; background-color: rgba(1, 82, 135, 0.4);">
+				<center
+					style="color: white; font-size: 100px; font-family: Arial; font-weight: bold;">Nuevo
+					Usuario</center>
+				<center
+					style="color: white; font-size: 50px; font-family: Arial; font-weight: bold;">creado
+					con ex&iacute;to</center>
+			</div>
+			<center style="color: white; font-size: 25px; font-family: Arial;">se
+				est&aacute; cargando la lista de usuarios</center>
+			<div
+				style="width: 50%; padding: 20px; margin: 50px auto; background-color: #29A929; border-radius: 10px;">
+				<center
+					style="color: white; font-size: 20px; font-family: Arial; font-weight: bold; top: 20px;">espera
+					unos segundos...</center>
+			</div>
+		</div>
+		<input type="hidden" name="${_csrf.parameterName}"
+			value="${_csrf.token}" />
+	</h:form>
+</h:body>
+</html>

@@ -1,0 +1,1 @@
+INSERT INTO avaluos.tarifa(tarifa_id,valor_minimo,valor_maximo,entidad_id,tipo_avaluo_id,tarifa,porcentaje_perito) VALUES (18, 110.670, 100000000, 1, 6, 1.1, 70);

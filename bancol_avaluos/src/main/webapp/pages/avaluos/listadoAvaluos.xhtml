@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui"
+	xmlns:of="http://omnifaces.org/functions"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body>
+
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+
+
+		<ui:define name="metadata">
+			<h:outputScript target="body">
+				$(function() {
+ 				  $('.rojo_color').click(function() {
+      				 $('.rojo_color').removeClass('active');
+      				 $(this).addClass('active');
+  					 });
+				});
+
+				$(function() {
+ 				  $('.verde_color').click(function() {
+      				 $('.verde_color').removeClass('active');
+      				 $(this).addClass('active');
+  					 });
+				});
+
+				$(function() {
+ 				  $('.amarillo_color').click(function() {
+      				 $('.amarillo_color').removeClass('active');
+      				 $(this).addClass('active');
+  					 });
+				});
+            </h:outputScript>
+			<f:metadata>
+				<f:event listener="#{listadoAvaluosBean.actualizarListado}"
+					type="preRenderView"></f:event>
+			</f:metadata>
+		</ui:define>
+		<ui:define name="content">
+			<!--script async="true" defer="true" src="http://maps.google.com/maps/api/js?client=AIzaSyBk_T1aF3u4MVbKcP_OKsGnqK1YDO2K5t8&amp;v=3.21&amp;callback=initMap" type="text/javascript"></script-->
+			<script src="http://maps.google.com/maps/api/js?sensor=false"
+				type="text/javascript"></script>
+			<div style="width: 95%; margin: 0px auto;">
+
+				<ui:include
+					src="#{'/pages/avaluos/listado_avaluos_componentes/menu_superior.xhtml'}" />
+
+				<h1 style="text-align: left;">Lista de Solicitudes para Avalúos</h1>
+
+				<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+					closable="false" resizable="false" showHeader="false">
+					<p:graphicImage name="images/ajax-loader.gif" />
+				</p:dialog>
+
+				<ui:include
+					src="#{'/pages/avaluos/listado_avaluos_componentes/tabla_listado_avaluos.xhtml'}" />
+
+			</div>
+
+			<ui:include
+				src="#{'/pages/componentes/dialogs/resumen_avaluo.xhtml'}" />
+
+			<ui:include
+				src="#{'/pages/componentes/dialogs/justificacion_rechazo.xhtml'}" />
+
+			<ui:include
+				src="#{'/pages/componentes/dialogs/mapa_Solicitud.xhtml'}" />
+
+			<ui:include src="#{'/pages/componentes/dialogs/tipo_avaluo.xhtml'}" />
+
+			<ui:include
+				src="#{'/pages/componentes/dialogs/confirmar_visita.xhtml'}" />
+
+			<ui:include
+				src="#{'/pages/componentes/dialogs/justificacion_devolucion.xhtml'}" />
+				
+			<ui:include
+				src="#{'/pages/componentes/dialogs/cancelar_avaluo.xhtml'}" />
+
+			<ui:include
+				src="#{'/pages/componentes/dialogs/informacion_honorarios.xhtml'}" />
+
+
+		</ui:define>
+
+			
+
+	</ui:composition>
+</h:body>
+</html>

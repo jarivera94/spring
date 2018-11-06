@@ -1,0 +1,1 @@
+ALTER TABLE avaluos.area_lote_avaluo ADD CONSTRAINT uk_area_lote_avaluo_avaluo_id UNIQUE (avaluo_id);

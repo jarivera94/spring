@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+		<ui:define name="content">
+			<h1 style="width: 90%; margin: 0px auto;">Subir anexos del informe <h:outputLabel value="#{subirAnexosBean.avaluo.entidad.prefijo}-#{subirAnexosBean.avaluo.codigoExterno}" /></h1>
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+				<h:outputLabel value="Cargando imágenes..." />
+				<p:graphicImage  name="images/ajax-loader.gif" />
+			</p:dialog>
+			
+			<script type="text/javascript">
+
+				 $(function() {
+				      // setTimeout waits till the widgetVar is ready!
+				      setTimeout(sortFileUpload, 2000);
+				   });
+
+				   function sortFileUpload() {
+				      //Set this option to true to issue all file upload requests in a sequential order instead of simultaneous requests.  
+				      PF('fileUploadWV').jq.data().blueimpFileupload.options.sequentialUploads = true;
+
+				      //every time a new file is added, sort the files based on name
+				      PF('fileUploadWV').jq.change(function() {
+				          PF('fileUploadWV').files.sort(function fileSort(a, b) {
+				           return a.name.localeCompare(b.name)
+				          })
+				      });
+				   }
+			</script>
+			
+			<h:form id="subirFotosForm" enctype="multipart/form-data" >
+				<p:growl id="messages" showDetail="true" />
+				<p:panel style="width: 99%" rendered="#{subirAnexosBean.listadoAvaluosBean.cargarFotos}">
+					<p:fileUpload widgetVar="fileUploadWV" fileUploadListener="#{subirAnexosBean.subirFoto}" mode="advanced" dragDropSupport="true"
+					multiple="true" cancelLabel="Cancelar"
+					uploadLabel="Subir" label="Agregar" invalidFileMessage="El archivo no es una imagen valida"
+					invalidSizeMessage="El tamaño de la imagen debe ser maximo de 10Mb"
+					update="messages" sizeLimit="10000000" fileLimit="20" fileLimitMessage="Máximo puede subir veinte imágenes" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide();updateDashboard();" />
+				</p:panel>
+				<input type="hidden"
+					name="${_csrf.parameterName}"
+					value="${_csrf.token}"/>
+			</h:form>
+			<h:form id="formFotos">
+				<p:growl id="messages2" showDetail="true" />
+				<p:remoteCommand name="updateDashboard" update=":formFotos:panel"/>
+				<center>
+					<p:panel id="panel" style="width: 60%">
+	        			<p:dashboard id="dynamic_dashboard" binding="#{subirAnexosBean.dashboard}" style="width: 99%; margin: 5px auto;">
+	        				<p:ajax event="reorder" listener="#{subirAnexosBean.handleReorder}" update="messages2" global="false" />
+	        			</p:dashboard>
+					</p:panel>
+				</center>
+
+					<p:panelGrid id="panelButtons" columns="2" styleClass="contenedorBotones" style="width: 20%; margin: 20px; clear: left; ">
+						<p:commandButton icon="ui-icon-circle-close" value="Cerrar" actionListener="#{subirAnexosBean.cancelar}" styleClass="button_red"/>
+					</p:panelGrid>
+
+				<input type="hidden"
+					name="${_csrf.parameterName}"
+					value="${_csrf.token}"/>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

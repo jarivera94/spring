@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:dialog widgetVar="avaluosAnteriores" modal="true"
+		closeOnEscape="true">
+		<p:panel id="avaluoTabla" header="Avaluos anteriores"
+			style="margin-bottom:10px">
+			<p:dataTable var="avaluo"
+				value="#{informeHipotecarioBean.avaluosAnteriores}">
+				<p:column headerText="Código externo">
+					<h:outputText value="#{avaluo.codigoExterno}" />
+				</p:column>
+				<p:column headerText="Fecha avaluo">
+					<h:outputText value="#{avaluo.fechaEstado}" />
+				</p:column>
+				<p:column headerText="Tipo de avalúo">
+					<h:outputText id="tipoAvaluo" value="#{avaluo.tipoAvaluo.nombre}" />
+				</p:column>
+				<p:column headerText="Valor avaluo">
+					<h:outputText value="#{avaluo.valorTotalAvaluo}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</p:dialog>
+
+
+</ui:composition>

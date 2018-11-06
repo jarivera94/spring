@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <h:outputStylesheet name="grid/grid.css" library="primefaces" />
+</h:head>
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+		<ui:define name="metadata">
+		</ui:define>
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false">
+				<p:graphicImage name="images/ajax-loader.gif" />
+			</p:dialog>
+			<h:form id="form">
+				<p:growl id="msgs" showDetail="false" sticky="false" life="5000" />
+				<center>
+					<h1>Estudio de Mercado</h1>
+				</center>
+				<p:layout id="layoutG"
+					style="border:2px solid #f2f2f2;min-width: 70%;min-height: 350px;position: relative;overflow: visible;margin: 0px auto;width: 100%;height:470px;top:10px;">
+					<p:layoutUnit id="layuoutUnitWest" position="west" size="350"
+						minSize="200" maxSize="400" resizable="true" collapsed="false"
+						collapsible="true" header=" "
+						style="border-right: 2px solid rgb(222, 230, 236) !important;">
+						<center>
+							<h3>Realiza tu Busqueda:</h3>
+						</center>
+						<p:panel id="accordionP" style="width: 99%;">
+							<p:fieldset id="tabUbicacion" legend="Info. Basica"
+								toggleable="true" collapsed="true">
+								<p:panelGrid columns="1" style="width: 70%;margin: 0px auto;">
+									<p:outputLabel value="Tipo de Inmueble:" />
+									<h:selectOneMenu id="tipoInmueble"
+										value="#{estudiosmercadoBean.avaluoConsultaDTO.tipoInmuebleDTO}"
+										converter="omnifaces.SelectItemsConverter" required="true"
+										requiredMessage="Selecciona Tipo Inmueble"
+										style="width: 170px;">
+										<f:selectItem itemLabel="Selecciona..." itemValue=""
+											noSelectionOption="true" />
+										<f:selectItems value="#{estudiosmercadoBean.tiposInmuebles}"
+											var="tipoInmueble" itemValue="#{tipoInmueble}"
+											itemLabel="#{tipoInmueble.nombre}" />
+									</h:selectOneMenu>
+									<p:outputLabel value="Departamento:" />
+									<h:selectOneMenu id="departamentos"
+										value="#{estudiosmercadoBean.departamento}" required="true"
+										requiredMessage="Selecciona Departamento"
+										style="width: 170px;">
+										<p:ajax
+											listener="#{estudiosmercadoBean.onDepartamentoChanged}"
+											global="false" update="ciudades" />
+										<f:selectItem itemLabel="Selecciona..." itemValue=""
+											noSelectionOption="true" />
+										<f:selectItems value="#{estudiosmercadoBean.departamentos}" />
+									</h:selectOneMenu>
+									<p:outputLabel value="Ciudad:" />
+									<h:selectOneMenu id="ciudades"
+										value="#{estudiosmercadoBean.avaluoConsultaDTO.divipolaCiudad}"
+										converter="omnifaces.SelectItemsConverter" required="true"
+										requiredMessage="Selecciona Ciudad" style="width: 170px;">
+										<f:selectItem itemLabel="Selecciona..." itemValue=""
+											noSelectionOption="true" />
+										<f:selectItems value="#{estudiosmercadoBean.ciudades}"
+											var="ciudad" itemLabel="#{ciudad.centroPoblado}"
+											itemValue="#{ciudad}" />
+									</h:selectOneMenu>
+									<p:outputLabel value="Sector:" />
+									<h:selectOneMenu id="sector"
+										value="#{estudiosmercadoBean.sector}" required="true"
+										requiredMessage="Selecciona Sector" style="width: 170px;">
+										<f:selectItem itemLabel="Selecciona..." itemValue=""
+											noSelectionOption="true" />
+										<f:selectItem itemLabel="Urbano" itemValue="1" />
+										<f:selectItem itemLabel="Rural" itemValue="2" />
+										<p:ajax listener="#{estudiosmercadoBean.sectorSeleccionado}"
+											update=":form:tabDireccion,:form:tabPH,:form:tabRural" />
+									</h:selectOneMenu>
+									<br></br>
+								</p:panelGrid>
+							</p:fieldset>
+							<p:fieldset id="tabDireccion" legend="Dirección (Urbano)"
+								toggleable="true" collapsed="true">
+								<p:panel id="busqDireccion"
+									rendered="#{estudiosmercadoBean.busqDireccion}"
+									style="  width: 78%; margin: 0px !important; background-color: #FBFCFD; border: 3px solid #FBFCFD !important;">
+									<p:panelGrid columns="1" style="width:98%; margin: 0px auto;">
+										<p:outputLabel value="Barrio: " />
+										<p:inputText
+											value="#{estudiosmercadoBean.avaluoConsultaDTO.barrio}"
+											style="width: 96%;" />
+										<p:outputLabel value="Estrato: " />
+										<p:inputMask
+											value="#{estudiosmercadoBean.avaluoConsultaDTO.estrato}"
+											mask="9" style=" z-index: 0;width: 96%;" />
+										<p:outputLabel value="Cuadras a la redonda: " />
+										<p:inputMask
+											value="#{estudiosmercadoBean.avaluoConsultaDTO.cuadrasRedonda}"
+											mask="9" style=" z-index: 0;width: 96%;" />
+										<h:outputLabel value="Direccion:" />
+									</p:panelGrid>
+										<p:panelGrid columns="2">
+											<p:inputText id="txtDireccion"
+												value="#{estudiosmercadoBean.direccion}" readonly="true"
+												style="width: 150px;font-size: 10px !important;" />
+											<p:commandButton id="btnConstruirDireccion" type="button"
+												icon="ui-icon-pencil"
+												onclick="PF('dlgContruyeDireccion').show();" />
+										</p:panelGrid>
+								</p:panel>
+							</p:fieldset>
+							<p:fieldset legend="Ubicar en Mapa" toggleable="true"
+								collapsed="true">
+								<!-- Notification Bar -->
+								<p:notificationBar widgetVar="ayuda" position="bottom"
+									effect="slide"
+									style="background-color: rgba(234, 241, 249, 0.92);">
+									<h:outputText value="Busqueda por Mapa" style="font-size:30px;" />
+									<br />
+									<h:outputText
+										value=" - Debes ubicar el marcador para establecer latitud y longitud del lugar"
+										style="font-size:20px; font-style: italic;" />
+									<br />
+									<h:outputText
+										value=" - Puedes ampliar el mapa, pulsando sobre el boton 'Ampliar' "
+										style="font-size:20px; font-style: italic;" />
+									<p:commandButton onclick="PF('ayuda').hide()" type="button"
+										icon="ui-icon-closethick"
+										style="float: right;margin-right: 20px;" />
+								</p:notificationBar>
+								<p:panelGrid columns="1"
+									style="  width: 310px;background-color: #FBFCFD !important;position: relative;right: 10px;">
+									<!-- Google map -->
+									<p:row>
+										<p:column>
+											<p:commandButton id="btn" type="button" value="Ampliar"
+												title="Abrir Mapa" icon="ui-icon-arrow-4-diag"
+												onclick="PF('dlgMap').show();" />
+											<p:commandButton onclick="PF('ayuda').show()" type="button"
+												title="Info" icon="ui-icon-help" />
+										</p:column>
+									</p:row>
+									<p:gmap id="gMap" center="#{estudiosmercadoBean.centroMapa}"
+										zoom="4" type="HYBRID" style="width:99%;height:200px"
+										model="#{estudiosmercadoBean.mapModel}">
+										<p:ajax event="markerDrag"
+											listener="#{estudiosmercadoBean.onMarkerDrag}"
+											update="longitud,latitud" />
+									</p:gmap>
+									<h:outputLabel value="Coordenadas de Georeferenciacion" />
+									<h:outputLabel for="latitud" value="Latitud: " />
+									<p:inputText id="latitud"
+										value="#{estudiosmercadoBean.latitud}" label="Latitud"
+										style="width:96%" />
+									<p:message for="latitud" />
+									<h:outputLabel for="longitud" value="Longitud: " />
+									<p:inputText id="longitud"
+										value="#{estudiosmercadoBean.longitud}" label="Longitud"
+										style="width:96%" />
+									<p:message for="longitud" />
+									<h:outputLabel value="Kilometros a la Redonda: " />
+									<p:inputMask value="#{estudiosmercadoBean.kilometrosRedonda}"
+										mask="99" style=" z-index: 0;" />
+									<br />
+								</p:panelGrid>
+							</p:fieldset>
+							<p:fieldset id="tabPH" legend="Propiedad Horizontal"
+								toggleable="true" collapsed="true">
+								<p:panel id="panelPH">
+									<p:panelGrid columns="1"
+										rendered="#{estudiosmercadoBean.panelPH}"
+										style="margin-top: 0px;">
+										<h:outputLabel value="Pertenece a Propiedad Horizontal?: " />
+										<h:selectOneMenu value="#{estudiosmercadoBean.ph}"
+											required="true"
+											requiredMessage="Selecciona Propiedad Horizontal">
+											<f:selectItem itemLabel="Selecciona..." itemValue=""
+												noSelectionOption="true" />
+											<f:selectItem itemLabel="Si" itemValue="si" />
+											<f:selectItem itemLabel="No" itemValue="no" />
+											<p:ajax listener="#{estudiosmercadoBean.propiedadHorizontal}"
+												update="panels" />
+										</h:selectOneMenu>
+									</p:panelGrid>
+								</p:panel>
+								<p:panel id="panels">
+									<p:panel id="caracInmUrbNPH"
+										rendered="#{estudiosmercadoBean.inmuebleUrbNoPH}"
+										style="  width: 100%; margin: 15px auto; background-color: #FBFCFD; border: 3px solid #FBFCFD !important;">
+										<h:outputLabel value="Area Total entre: " />
+										<p:panelGrid columns="2">
+											<p:inputText
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.urbAreaTotalMaxNPH}"></p:inputText>
+											<h:outputLabel value="(m^2)" />
+										</p:panelGrid>
+										<center>
+											<h:outputLabel value=" y " />
+										</center>
+										<p:panelGrid columns="2">
+											<p:inputText
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.urbAreaTotalMinNPH}"></p:inputText>
+											<h:outputLabel value="(m^2)" />
+										</p:panelGrid>
+										<br />
+										<h:outputLabel value="Area Construida entre: " />
+										<p:panelGrid columns="2">
+											<p:inputText
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.urbAreaConstMinNPH}"></p:inputText>
+											<h:outputLabel value="(m^2)" />
+										</p:panelGrid>
+										<center>
+											<h:outputLabel value=" y " />
+										</center>
+										<p:panelGrid columns="2">
+											<p:inputText
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.urbAreaConstMinNPH}"></p:inputText>
+											<h:outputLabel value="(m^2)" />
+										</p:panelGrid>
+										<br />
+										<p:panelGrid columns="1">
+											<h:outputLabel value="Habitaciones: " />
+											<p:inputMask
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.habitacionesNPH}"
+												mask="99" style=" z-index: 0;" />
+											<h:outputLabel value="Baños: " />
+											<p:inputMask
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.banosNPH}"
+												mask="99" style=" z-index: 0;" />
+										</p:panelGrid>
+										<br />
+										<p:outputLabel value="Parqueaderos: " />
+										<hr width="100%" style="background-color: #f2f2f2;"></hr>
+										<br />
+										<p:panelGrid columns="1">
+											<h:outputLabel value="Tipo Parqueadero: " />
+											<h:selectOneMenu
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.tipoParqNPH}">
+												<f:selectItem itemLabel="Privado" itemValue="privado" />
+												<f:selectItem itemLabel="Exclusivo" itemValue="exclusivo" />
+												<f:selectItem itemLabel="Bahia" itemValue="bahia" />
+											</h:selectOneMenu>
+											<h:outputLabel value="Numero Parqueaderos: " />
+											<p:inputMask
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.numParqNPH}"
+												mask="99" style=" z-index: 0;" />
+										</p:panelGrid>
+										<br />
+										<p:outputLabel value="Estado de Inmueble: " />
+										<hr width="100%" style="background-color: #f2f2f2;"></hr>
+										<p:panelGrid columns="1">
+											<h:outputLabel value="Estado" />
+											<h:selectOneMenu value="#{estudiosmercadoBean.estadoInmNPH}">
+												<f:selectItem itemLabel="Nuevo" itemValue="nuevo" />
+												<f:selectItem itemLabel="Usado" itemValue="usado" />
+												<p:ajax listener="#{estudiosmercadoBean.mostrarEdadInmb()}"
+													update=":form" />
+											</h:selectOneMenu>
+										</p:panelGrid>
+										<br />
+										<p:panelGrid columns="1"
+											rendered="#{estudiosmercadoBean.edadInm}">
+											<p:outputLabel value="Edad de Inmueble: " />
+											<hr width="100%" style="background-color: #f2f2f2;"></hr>
+											<h:outputLabel value="Edad" />
+											<p:selectOneRadio
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.edadInmuebleNPH}"
+												layout="grid" columns="1">
+												<f:selectItem itemLabel="0 a 5 años" itemValue="0-5" />
+												<f:selectItem itemLabel="5 a 10 años" itemValue="5-10" />
+												<f:selectItem itemLabel="10 a 20 años" itemValue="10-20" />
+												<f:selectItem itemLabel="mas de 20 años" itemValue="20-100" />
+											</p:selectOneRadio>
+										</p:panelGrid>
+									</p:panel>
+
+									<p:panel id="caracInmUrbPH"
+										rendered="#{estudiosmercadoBean.inmuebleUrbPH}"
+										style="  width: 85%; margin: 15px auto; background-color: #FBFCFD; border: 3px solid #FBFCFD !important;">
+										<h:outputLabel value="Area Privada entre: " />
+										<p:panelGrid columns="2">
+											<p:inputText
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.urbAreaPrivMinPH}"></p:inputText>
+											<h:outputLabel value="(m^2)" />
+										</p:panelGrid>
+										<center>
+											<h:outputLabel value=" y " />
+										</center>
+										<p:panelGrid columns="2">
+											<p:inputText
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.urbAreaPrivMaxPH}"></p:inputText>
+											<h:outputLabel value="(m^2)" />
+										</p:panelGrid>
+										<p:panelGrid columns="1">
+											<h:outputLabel value="Habitaciones: " />
+											<p:inputMask
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.habitacionesPH}"
+												mask="99" style=" z-index: 0;" />
+											<h:outputLabel value="Baños: " />
+											<p:inputMask
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.banosPH}"
+												mask="99" style=" z-index: 0;" />
+										</p:panelGrid>
+										<br />
+										<p:outputLabel value="Parqueaderos: " />
+										<hr width="100%" style="background-color: #f2f2f2;"></hr>
+										<p:panelGrid columns="1">
+											<h:outputLabel value="Tipo Parqueadero: " />
+											<h:selectOneMenu
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.tipoParqPH}">
+												<f:selectItem itemLabel="Privado" itemValue="privado" />
+												<f:selectItem itemLabel="Exclusivo" itemValue="exclusivo" />
+												<f:selectItem itemLabel="Bahia" itemValue="bahia" />
+											</h:selectOneMenu>
+											<h:outputLabel value="Numero Parqueaderos: " />
+											<p:inputMask
+												value="#{estudiosmercadoBean.avaluoConsultaDTO.numParqPH}"
+												mask="99" style=" z-index: 0;" />
+										</p:panelGrid>
+										<br />
+										<p:outputLabel value="Estado de Inmueble: " />
+										<hr width="100%" style="background-color: #f2f2f2;"></hr>
+										<p:panelGrid columns="1">
+											<h:outputLabel value="Estado" />
+											<h:selectOneMenu value="#{estudiosmercadoBean.estadoInmPH}">
+												<f:selectItem itemLabel="Selecciona..." itemValue=""
+													noSelectionOption="true" />
+												<f:selectItem itemLabel="Nuevo" itemValue="nuevo" />
+												<f:selectItem itemLabel="Usado" itemValue="usado" />
+												<p:ajax listener="#{estudiosmercadoBean.mostrarEdadInmb()}"
+													update="panelEdad" />
+											</h:selectOneMenu>
+										</p:panelGrid>
+										<br />
+										<p:panel id="panelEdad">
+											<p:panelGrid columns="1"
+												rendered="#{estudiosmercadoBean.edadInm}">
+												<p:outputLabel value="Edad de Inmueble: " />
+												<hr width="100%" style="background-color: #f2f2f2;"></hr>
+												<h:outputLabel value="Edad" />
+												<p:selectOneRadio
+													value="#{estudiosmercadoBean.avaluoConsultaDTO.edadInmueblePH}"
+													layout="grid" columns="1">
+													<f:selectItem itemLabel="0 a 5 años" itemValue="0-5" />
+													<f:selectItem itemLabel="5 a 10 años" itemValue="5-10" />
+													<f:selectItem itemLabel="10 a 20 años" itemValue="10-20" />
+													<f:selectItem itemLabel="mas de 20 años" itemValue="20-100" />
+												</p:selectOneRadio>
+											</p:panelGrid>
+										</p:panel>
+									</p:panel>
+								</p:panel>
+								<br />
+							</p:fieldset>
+							<p:fieldset id="tabRural" legend="Propiedad Rural"
+								toggleable="true" collapsed="true">
+								<p:panel id="caracInmRural"
+									rendered="#{estudiosmercadoBean.inmuebleRur}"
+									style="  width: 100%; margin: 15px auto; background-color: #FBFCFD; border: 3px solid #FBFCFD !important;">
+									<h:outputLabel value="Area Total entre: " />
+									<p:panelGrid columns="2">
+										<p:inputText
+											value="#{estudiosmercadoBean.avaluoConsultaDTO.rurAreaTotalMin}"></p:inputText>
+										<h:outputLabel value="(Hectareas)" />
+									</p:panelGrid>
+									<center>
+										<h:outputLabel value=" y " />
+									</center>
+									<p:panelGrid columns="2">
+										<p:inputText
+											value="#{estudiosmercadoBean.avaluoConsultaDTO.rurAreaTotalMax}"></p:inputText>
+										<h:outputLabel value="(Hectareas)" />
+									</p:panelGrid>
+									<br />
+									<h:outputLabel value="Area Construida entre: " />
+									<p:panelGrid columns="2">
+										<p:inputText
+											value="#{estudiosmercadoBean.avaluoConsultaDTO.rurAreaConstMin}"></p:inputText>
+										<h:outputLabel value="(Hectareas)" />
+									</p:panelGrid>
+									<center>
+										<h:outputLabel value=" y " />
+									</center>
+									<p:panelGrid columns="2">
+										<p:inputText
+											value="#{estudiosmercadoBean.avaluoConsultaDTO.rurAreaConstMax}"></p:inputText>
+										<h:outputLabel value="(Hectareas)" />
+									</p:panelGrid>
+									<br />
+									<h:outputLabel value="Area Infraestructura entre: " />
+									<p:panelGrid columns="2">
+										<p:inputText
+											value="#{estudiosmercadoBean.avaluoConsultaDTO.rurAreaInfrMin}"></p:inputText>
+										<h:outputLabel value="(Hectareas)" />
+									</p:panelGrid>
+									<center>
+										<h:outputLabel value=" y " />
+									</center>
+									<p:panelGrid columns="2">
+										<p:inputText
+											value="#{estudiosmercadoBean.avaluoConsultaDTO.rurAreaInfrMax}"></p:inputText>
+										<h:outputLabel value="(Hectareas)" />
+									</p:panelGrid>
+									<br />
+									<h:outputLabel value="Area Cultivos Avaluables entre: " />
+									<p:panelGrid columns="2">
+										<p:inputText
+											value="#{estudiosmercadoBean.avaluoConsultaDTO.rurAreaCultMin}"></p:inputText>
+									</p:panelGrid>
+									<center>
+										<h:outputLabel value=" y " />
+									</center>
+									<p:panelGrid columns="2">
+										<p:inputText
+											value="#{estudiosmercadoBean.avaluoConsultaDTO.rurAreaCultMax}"></p:inputText>
+										<h:outputLabel value="(Hectareas)" />
+									</p:panelGrid>
+									<br />
+									<h:outputLabel value="Distancia al casco urbano: " />
+									<p:panelGrid columns="2">
+										<p:inputMask
+											value="#{estudiosmercadoBean.avaluoConsultaDTO.rurDistCascoUrb}"
+											mask="999" />
+										<h:outputLabel value="Km" />
+									</p:panelGrid>
+									<br />
+									<p:panelGrid columns="1">
+										<h:outputLabel value="Condiciones de los Cultivos: " />
+										<h:selectOneMenu
+											value="#{estudiosmercadoBean.avaluoConsultaDTO.rurCondCultivos}">
+											<f:selectItem itemLabel="1-Buenas" itemValue="1" />
+											<f:selectItem itemLabel="2-Regulares" itemValue="2" />
+											<f:selectItem itemLabel="3-Malas" itemValue="3" />
+										</h:selectOneMenu>
+										<h:outputLabel value="Condiciones Agrologicas: " />
+										<h:selectOneMenu
+											value="#{estudiosmercadoBean.avaluoConsultaDTO.rurCondAgrolog}">
+											<f:selectItem itemLabel="Buenas" itemValue="1" />
+											<f:selectItem itemLabel="Malas" itemValue="2" />
+											<f:selectItem itemLabel="Regulares" itemValue="3" />
+										</h:selectOneMenu>
+									</p:panelGrid>
+								</p:panel>
+							</p:fieldset>
+							<p:fieldset legend="Antiguedad Avaluo" toggleable="true"
+								collapsed="true">
+							</p:fieldset>
+							<p:fieldset legend="Valor Inmueble" toggleable="true"
+								collapsed="true">
+								<p:panelGrid columns="1" style="width: 100%;">
+									<p:inputText id="valorInmueble"
+										value="#{estudiosmercadoBean.avaluoConsultaDTO.valorMin}"
+										style="width: 96%;">
+										<f:convertNumber type="currency" currencySymbol="$"
+											locale="en_US" />
+									</p:inputText>
+									<script type="application/javascript">
+											$(function(){
+												$('#form\\:accordionP\\:valorInmueble').maskMoney({prefix:'$',  thousands:".", decimal:','});
+											});
+
+									</script>
+									<center>
+										<h:outputLabel value=" A " style="text-align: center;" />
+									</center>
+									<p:inputText
+										value="#{estudiosmercadoBean.avaluoConsultaDTO.valorMax}"
+										style="width: 96%;">
+										<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+									</p:inputText>
+								</p:panelGrid>
+							</p:fieldset>
+						</p:panel>
+						<br />
+						<center>
+							<p:commandButton value="Consultar"
+								action="#{estudiosmercadoBean.consultar}"
+								update="msgs,ResMap,dataAvaluosUrbPH,panelResultados" />
+						</center>
+					</p:layoutUnit>
+					<p:layoutUnit position="center" size="700" minSize="600"
+						maxSize="800" style="background: #f2f2f2;">
+						<p:panel id="panelResultados">
+							<p:outputLabel value="No hay resultados"
+								rendered="#{estudiosmercadoBean.mostrarSinResultados}"
+								style="font-size: 40px !important;color: rgb(225, 226, 226);text-shadow: 1px 1px 1px rgb(152, 149, 149);
+ 								 position: absolute;top: 200px;left: 200px;text-align:center;" />
+							<p:gmap id="ResMap" type="HYBRID" style="width:99%;height:300px"
+								fitBounds="true" center="#{estudiosmercadoBean.resCentroMapa}"
+								model="#{estudiosmercadoBean.resMapModel}" zoom="7"
+								rendered="#{estudiosmercadoBean.mostrarMapaResultado}">
+								<p:ajax event="overlaySelect"
+									listener="#{estudiosmercadoBean.onMarkerSelect}" />
+								<p:gmapInfoWindow id="ventanaMarcador">
+									<p:outputPanel
+										style="text-align: center; display: block; margin: auto">
+										<p:outputLabel
+											value="#{estudiosmercadoBean.marcadorGMapSeleccionado.title}" />
+										<br />
+										<p:graphicImage  name="images/icono_reporte.png"
+											height="64" />
+										<br />
+										<p:commandButton value="Ver Informe"
+											action="#{estudiosmercadoBean.verInforme}" />
+									</p:outputPanel>
+								</p:gmapInfoWindow>
+							</p:gmap>
+							<p:dataTable id="dataAvaluosUrbPH"
+								value="#{estudiosmercadoBean.avaluosEncontrados}"
+								var="avaluoUrbPH"
+								style="font-size: 10px !important; text-align:center;"
+								rendered="#{estudiosmercadoBean.mostrarTablaResultadoUrbPH}">
+								<f:facet name="header">
+								Resultados Avaluos Urbano PH
+							</f:facet>
+								<p:column headerText="Avaluo">
+									<h:outputText value="#{avaluoUrbPH.resIdAvaluo}" />
+								</p:column>
+								<p:column headerText="Tipo Inmueble">
+									<h:outputText value="#{avaluoUrbPH.resNombreTipoInmueble}" />
+								</p:column>
+								<p:column headerText="Barrio">
+									<h:outputText value="#{avaluoUrbPH.resUrbPHbarrio}" />
+								</p:column>
+								<p:column headerText="Estado">
+									<h:outputText
+										value="#{avaluoUrbPH.resUrbPHnombreEstadoConstruccion}" />
+								</p:column>
+								<p:column headerText="Edad">
+									<h:outputText value="#{avaluoUrbPH.resUrbPHedad}" />
+								</p:column>
+								<p:column headerText="Habitaciones">
+									<h:outputText value="#{avaluoUrbPH.resUrbPHhabitaciones}" />
+								</p:column>
+								<p:column headerText="Area Total (m^2)">
+									<h:outputText value="#{avaluoUrbPH.resUrbPHareaPrivada}" />
+								</p:column>
+								<p:column headerText="Valor (m^2)">
+									<h:outputText value="#{avaluoUrbPH.resUrbPHvalorMtrCuadrado}" />
+								</p:column>
+								<p:column headerText="Valor Inmueble">
+									<h:outputText value="#{avaluoUrbPH.resUrbPHvalorTotal}" />
+								</p:column>
+							</p:dataTable>
+
+							<p:dataTable id="dataAvaluosUrbNPH"
+								value="#{estudiosmercadoBean.avaluosEncontrados}"
+								var="avaluoUrbNPH"
+								style="font-size: 10px !important; text-align:center;"
+								rendered="#{estudiosmercadoBean.mostrarTablaResultadoUrbNPH}">
+								<f:facet name="header">
+								Resultados Avaluos Urbano NPH
+							</f:facet>
+								<p:column headerText="Avaluo">
+									<h:outputText value="#{avaluoUrbNPH.resIdAvaluo}" />
+								</p:column>
+								<p:column headerText="Tipo Inmueble">
+									<h:outputText value="#{avaluoUrbNPH.resNombreTipoInmueble}" />
+								</p:column>
+								<p:column headerText="Barrio">
+									<h:outputText value="#{avaluoUrbNPH.resUrbNPHbarrio}" />
+								</p:column>
+								<p:column headerText="Estado">
+									<h:outputText
+										value="#{avaluoUrbNPH.resUrbNPHnombreEstadoConstruccion}" />
+								</p:column>
+								<p:column headerText="Edad">
+									<h:outputText value="#{avaluoUrbNPH.resUrbNPHedad}" />
+								</p:column>
+								<p:column headerText="Habitaciones">
+									<h:outputText value="#{avaluoUrbNPH.resUrbNPHhabitaciones}" />
+								</p:column>
+								<p:column headerText="Area Total (m^2)">
+									<h:outputText value="#{avaluoUrbNPH.resUrbNPHareaTotal}" />
+								</p:column>
+								<p:column headerText="Valor (m^2)">
+									<h:outputText value="#{avaluoUrbNPH.resUrbNPHvalorMtrCuadrado}" />
+								</p:column>
+								<p:column headerText="Valor Inmueble">
+									<h:outputText value="#{avaluoUrbNPH.resUrbNPHvalorTotal}" />
+								</p:column>
+							</p:dataTable>
+
+							<p:dataTable id="dataAvaluosRural"
+								value="#{estudiosmercadoBean.avaluosEncontrados}"
+								var="avaluoRural"
+								style="font-size: 10px !important; text-align:center;"
+								rendered="#{estudiosmercadoBean.mostrarTablaResultadoRural}">
+								<f:facet name="header">
+								Resultados Avaluos Rural
+							</f:facet>
+								<p:column headerText="Avaluo">
+									<h:outputText value="#{avaluoRural.resIdAvaluo}" />
+								</p:column>
+								<p:column headerText="Tipo Inmueble">
+									<h:outputText value="#{avaluoRural.resNombreTipoInmueble}" />
+								</p:column>
+								<p:column headerText="Vereda">
+									<h:outputText value="#{avaluoRural.resRuralVereda}" />
+								</p:column>
+								<p:column headerText="Dist. Casco Urbano (Km)">
+									<h:outputText value="#{avaluoRural.resRuralDistCascoUrbano}" />
+								</p:column>
+								<p:column headerText="Area Construida (m^2)">
+									<h:outputText value="#{avaluoRural.resRuralAreaConst}" />
+								</p:column>
+								<p:column headerText="Valor (m^2)">
+									<h:outputText
+										value="#{avaluoRural.resRuralvalorMtrCuadradoAreaConst}" />
+								</p:column>
+								<p:column headerText="Area Cultivos Aval. (m^2)">
+									<h:outputText
+										value="#{avaluoRural.resRuralAreaCultivosAvaluables}" />
+								</p:column>
+								<p:column headerText="Valor (m^2)">
+									<h:outputText
+										value="#{avaluoRural.resRuralvalorHtaCultivosAvaluables}" />
+								</p:column>
+								<p:column headerText="Area Total Terreno (Hta)">
+									<h:outputText value="#{avaluoRural.resRuralAreaTerreno}" />
+								</p:column>
+								<p:column headerText="Valor (Hta)">
+									<h:outputText value="#{avaluoRural.resRuralValorHtaTerreno}" />
+								</p:column>
+								<p:column headerText="Valor Inmueble">
+									<h:outputText value="#{avaluoRural.resRuralvalorTotal}" />
+								</p:column>
+							</p:dataTable>
+						</p:panel>
+					</p:layoutUnit>
+				</p:layout>
+
+				<p:dialog id="gmapDialog" widgetVar="dlgMap" width="625"
+					height="400" modal="true">
+					<p:gmap id="dMap" center="#{estudiosmercadoBean.centroMapa}"
+						zoom="5" type="HYBRID" style="width:99%;height:400px"
+						model="#{estudiosmercadoBean.mapModel}">
+						<p:ajax event="markerDrag"
+							listener="#{estudiosmercadoBean.onMarkerDrag}"
+							update=":form:longitud,:form:latitud,:form:gMap" />
+					</p:gmap>
+				</p:dialog>
+
+				<p:dialog widgetVar="dlgContruyeDireccion" modal="true"
+					header="Construye la Dirección" position="top">
+					<h:panelGrid columns="9"
+						style="width: 100%;margin: 10px auto;background: #F3FBFF !important;padding: 10px;">
+						<p:outputLabel value="Tipo Via: " styleClass="subLabel" />
+						<p:outputLabel value="Via: " styleClass="subLabel" />
+						<p:outputLabel value="Complemento Via: " styleClass="subLabel" />
+						<p:outputLabel value="  " styleClass="subLabel" />
+						<p:outputLabel value="Número: " styleClass="subLabel" />
+						<p:outputLabel value="Complemento Numero: " styleClass="subLabel" />
+						<p:outputLabel value="  " styleClass="subLabel" />
+						<p:outputLabel value="Placa: " styleClass="subLabel" />
+						<p:outputLabel value="Adicional: " styleClass="subLabel" />
+
+						<h:selectOneMenu value="#{estudiosmercadoBean.avaluoConsultaDTO.tipoVia}">
+							<f:selectItem itemLabel="Seleccione ..." noSelectionOption="true" />
+							<f:selectItem itemLabel="Calle" itemValue="CL" />
+							<f:selectItem itemLabel="Carrera" itemValue="KR" />
+							<f:selectItem itemLabel="Diagonal" itemValue="DG" />
+							<f:selectItem itemLabel="Transversal" itemValue="TV" />
+							<f:selectItem itemLabel="Avenida" itemValue="AV" />
+							<f:selectItem itemLabel="Avenida calle" itemValue="AC" />
+							<f:selectItem itemLabel="Avenida carrera" itemValue="AK" />
+							<f:selectItem itemLabel="Avenida autopista" itemValue="AU" />
+							<f:selectItem itemLabel="Carretera" itemValue="CT" />
+							<f:selectItem itemLabel="Circular" itemValue="CQ" />
+							<f:selectItem itemLabel="Camino" itemValue="CN" />
+							<p:ajax event="change" update="txtDireccion"
+								listener="#{estudiosmercadoBean.onDireccionChanged()}" />
+						</h:selectOneMenu>
+						<p:inputMask id="txtNvia" mask="9?99" placeHolder=" "
+							value="#{estudiosmercadoBean.avaluoConsultaDTO.numeroVia}" style="width:50px;">
+							<p:ajax event="keyup" update="txtDireccion"
+								listener="#{estudiosmercadoBean.onDireccionChanged()}" />
+						</p:inputMask>
+						<p:autoComplete id="txtCompvia"
+							value="#{estudiosmercadoBean.avaluoConsultaDTO.complementoVia}" multiple="true"
+							forceSelection="true" maxlength="1"
+							completeMethod="#{usuarioBean.completarComplemento}"
+							style="width:90%;">
+							<p:ajax event="itemSelect" update="txtDireccion"
+								listener="#{estudiosmercadoBean.onDireccionChanged()}" />
+						</p:autoComplete>
+						<p:outputLabel value=" # " styleClass="subLabel"
+							style="left: -8px;position: relative;font-size: 18px !important;" />
+						<p:inputMask id="Numero" mask="9?99" placeHolder=" "
+							value="#{estudiosmercadoBean.avaluoConsultaDTO.numeroViaGeneradora}"
+							style="width:100px;">
+							<p:ajax event="keyup" update="txtDireccion"
+								listener="#{estudiosmercadoBean.onDireccionChanged()}" />
+						</p:inputMask>
+						<p:autoComplete id="txtCompNumero"
+							value="#{estudiosmercadoBean.avaluoConsultaDTO.complementoViaGeneradora}" multiple="true"
+							forceSelection="true" maxlength="1"
+							completeMethod="#{usuarioBean.completarComplemento}"
+							style="width:90%;">
+							<p:ajax event="itemSelect" update="txtDireccion"
+								listener="#{estudiosmercadoBean.onDireccionChanged()}" />
+						</p:autoComplete>
+						<p:outputLabel value=" - " styleClass="subLabel"
+							style="left: -8px;position: relative;font-size: 18px !important;" />
+						<p:inputMask id="txtPlaca" value="#{estudiosmercadoBean.avaluoConsultaDTO.placa}"
+							mask="9?99" placeHolder=" " style="width:50px;">
+							<p:ajax event="keyup" update="txtDireccion"
+								listener="#{estudiosmercadoBean.onDireccionChanged()}" />
+						</p:inputMask>
+						<p:inputText id="txtAdic"
+							value="#{estudiosmercadoBean.avaluoConsultaDTO.adicional}" style="width:50px;">
+							<p:ajax event="keyup" update="txtDireccion"
+								listener="#{estudiosmercadoBean.onDireccionChanged()}" />
+						</p:inputText>
+					</h:panelGrid>
+				</p:dialog>
+
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			</h:form>
+		</ui:define>
+	</ui:composition>
+
+
+</h:body>
+</html>

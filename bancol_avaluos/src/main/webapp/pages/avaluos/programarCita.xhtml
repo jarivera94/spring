@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false">
+				<p:graphicImage  name="images/ajax-loader.gif" />
+			</p:dialog>
+			<h:form id="parentForm">
+				<p:growl id="growl" showDetail="true" sticky="true"
+					autoUpdate="true" />
+				<p:panel id="programarCita" style="margin-bottom:10px">
+					<center>
+						<h1>Programar Cita</h1>
+					</center>
+					<p:fieldset id="programacionCita" legend="Información de la cita"
+						style="margin-bottom:10px">
+						<p:panelGrid style="width: 99%">
+							<p:row>
+								<p:column>
+									<p:outputLabel for="codigoExterno" value="Código externo: " />
+								</p:column>
+								<p:column colspan="3">
+									<p:outputLabel id="codigoExterno"
+										value="#{programarCitaBean.avaluo.codigoExterno}" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:fieldset>
+					<p:fieldset id="informacionContacto" style="margin-bottom:10px">
+						<p:panelGrid style="width: 100%">
+							<p:row>
+								<p:column colspan="3">
+									<h3>Información de Persona que recibirá al avaluador</h3>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<h:outputLabel for="nombreRecibe" value="Nombre: " />
+								</p:column>
+								<p:column>
+									<p:inputText id="nombreRecibe"
+										value="#{programarCitaBean.avaluo.nombreRecibe}"
+										required="true" label="Nombre de quien recibe"
+										style="width: 99%;" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<h:outputLabel for="telefonoRecibe"
+										value="(Cod. Area)+Teléfono: " />
+								</p:column>
+								<p:column>
+									<p:inputText id="telefonoRecibe"
+										value="#{programarCitaBean.avaluo.telefonoRecibe}" label="Teléfono" style="width: 99%" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>
+									<h:outputLabel for="correoElectronicoRecibe"
+										value="Correo electrónico: " />
+								</p:column>
+								<p:column>
+									<p:inputText id="correoElectronicoRecibe"
+										value="#{programarCitaBean.avaluo.correoElectronicoRecibe}" label="Correo electrónico" style="width: 99%" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:fieldset>
+				</p:panel>
+				<h2 style="margin-left: 65px;">Selecciona una fecha en el
+					calendario:</h2>
+				<div id="contenedor_calendario" class="content_calendar">
+					<p:spacer height="10" />
+					<p:schedule view="agendaWeek" id="agendaPerito"
+						value="#{programarCitaBean.eventModel}" locale="es"
+						timeZone="America/Bogota" timeFormat="hh:mm A" style="width:82%">
+						<p:ajax event="dateSelect"
+							listener="#{programarCitaBean.onDateSelect}"
+							update=":dialogEventoCita"
+							oncomplete="PF('eventoCita').show();" />
+						<p:ajax event="eventSelect"
+							listener="#{programarCitaBean.onEventSelect}"
+							update=":dialogEventoCita"
+							oncomplete="PF('eventoCita').show();" />
+						<p:ajax event="eventMove"
+							listener="#{programarCitaBean.onEventMove}"
+							update=":dialogEventoCita" />
+						<p:ajax event="eventResize"
+							listener="#{programarCitaBean.onEventResize}"
+							update=":dialogEventoCita" />
+					</p:schedule>
+					<p:commandButton value="Reprogramar cita"
+						action="#{programarCitaBean.reProgramarCita()}"
+						process=":parentForm"
+						rendered="#{programarCitaBean.modoReprogramarCita and programarCitaBean.avaluo.estado.estado.key() lt 5}"
+						icon="ui-icon-check" styleClass="button_green" />
+					<p:commandButton value="Programar cita"
+						action="#{programarCitaBean.programarCita()}"
+						process=":parentForm"
+						rendered="#{not programarCitaBean.modoReprogramarCita and programarCitaBean.avaluo.estado.estado.key() lt 5}"
+						icon="ui-icon-check" styleClass="button_green" />
+					<p:commandButton value="Cerrar" icon="ui-icon-circle-close"
+						action="#{programarCitaBean.cancelar()}" styleClass="button_red" />
+				</div>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			</h:form>
+			<p:dialog id="dialogEventoCita" widgetVar="eventoCita" modal="true"
+				closeOnEscape="true" width="595px">
+				<h:form>
+					<p:panel id="programarCitaDialog" style="margin-bottom:10px">
+						<div style="width: 50% !important; margin: 10px auto;">
+							<h1 style="text-align: center !important;">Programa una cita</h1>
+						</div>
+						<p:fieldset id="programacionCita" legend="Información de la cita"
+							style="margin-bottom:10px">
+							<p:panelGrid columns="2" layout="grid"  style="width: 99%">
+								<p:row>
+									<p:column>
+										<p:outputLabel for="codigoExterno" value="Código externo: " style="font-weight: bold;" />
+									</p:column>
+									<p:column colspan="3">
+										<p:outputLabel id="codigoExterno"
+											value=" #{programarCitaBean.avaluo.codigoExterno}" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:fieldset>
+						<p:fieldset id="fechaHoraCita" legend="Fecha y Hora"
+							style="margin-bottom:10px">
+							<p:panelGrid columns="2" layout="grid" style="width: 99%">
+								<p:outputLabel for="fechaCitaDialog" value="Fecha: " />
+								<p:calendar id="fechaCitaDialog" timeZone="GMT-5" locale="es"
+									value="#{programarCitaBean.fechaCita}" mode="inline" style="margin-right: 10px !important;"/>
+							</p:panelGrid>
+							<p:panelGrid columns="2" layout="grid" style="width: 99%">
+								<p:outputLabel for="horaInicioDialog" value="Hora inicio: " />
+								<p:calendar id="horaInicioDialog" timeZone="GMT-5"
+									value="#{programarCitaBean.horaInicio}" locale="es"
+									pattern="hh:mm a" timeOnly="true" mode="popup" showOn="button">
+									<p:ajax event="dateSelect"
+										listener="#{programarCitaBean.onHoraInicioSeleccionada}"
+										update="horaFinDialog" />
+									<p:ajax event="change"
+										listener="#{programarCitaBean.onHoraInicioSeleccionada}"
+										update="horaFinDialog" />
+								</p:calendar>
+								<p:outputLabel for="horaFinDialog" value="Hora fin: " />
+								<p:calendar id="horaFinDialog" timeZone="GMT-5"
+									value="#{programarCitaBean.horaFin}" locale="es"
+									pattern="hh:mm a" timeOnly="true" mode="popup" showOn="button" />
+							</p:panelGrid>
+						</p:fieldset>
+					</p:panel>
+					<center>
+						<p:commandButton value="Crear cita" process=":dialogEventoCita"
+							action="#{programarCitaBean.onFechaChanged}" update=":parentForm:agendaPerito"
+							styleClass="button_green" icon="ui-icon-calendar"
+							oncomplete="PF('eventoCita').hide();" />
+					</center>
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+				</h:form>
+			</p:dialog>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

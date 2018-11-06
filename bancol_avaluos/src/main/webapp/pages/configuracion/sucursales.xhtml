@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:head>
+</h:head>
+
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+
+		<ui:define name="content">
+			<h:form id="form">
+				<p:growl id="msgs" showDetail="false" showSummary="true" />
+				<p:panel id="sucursalesTabla" header="Sucursales"
+					style="margin-bottom:10px">
+					<p:dataTable id="suc" var="sucursal"
+						value="#{sucursalesBean.listSucursales}" widgetVar="sucWV"
+						editable="true" selectionMode="single"
+						selection="#{sucursalesBean.sucursalSeleccionada}"
+						rowKey="#{sucursal.id}" rows="12"
+						paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false" 
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}" 
+						rowsPerPageTemplate="10,20,50"
+						filteredValue="#{sucursalesBean.listFiltrarSucursales}" reflow="true" style="text-align: center !important;">
+
+						<p:ajax event="rowEdit"
+							listener="#{sucursalesBean.actualizarSucursal}"
+							update=":form:msgs :form:suc" />
+						<p:ajax event="rowEditCancel"
+							listener="#{sucursalesBean.onRowCancel}" update=":form:msgs" />
+
+						<f:facet name="header">
+							<p:outputPanel style="margin-bottom: 20px !important;">
+								<h:outputText value="Buscar Todo:" />
+								<p:inputText id="globalFilter" onkeyup="PF('sucWV').filter()" style="width:180px; margin-right: 50px; margin-left: 10px;" styleClass="nofireenter" />
+								<p:commandButton process="suc" 
+								update=":formCrearSucursal:sucCrearDetail" icon="ui-icon-plus" title="Nueva Sucursal" style="float: right;" styleClass="button_green" oncomplete="PF('sucCrearDialog').show()" />
+							</p:outputPanel>
+						</f:facet>
+
+						<p:column headerText="Código" sortBy="#{sucursal.codigo}"
+							style="text-align:center;" filterBy="#{sucursal.codigo}" filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{sucursal.codigo}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{sucursal.codigo}" maxlength="255"/>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Sucursal" sortBy="#{sucursal.nombre}"
+							filterBy="#{sucursal.nombre}" filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{sucursal.nombre}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{sucursal.nombre}" maxlength="255"/>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Entidad" sortBy="#{sucursal.nombreEntidad}"
+							style="text-align:center;" filterBy="#{sucursal.nombreEntidad}" filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{sucursal.nombreEntidad}" />
+								</f:facet>
+								<f:facet name="input">
+									<h:selectOneMenu value="#{sucursal.entidadId}"
+										style="width:60%;">
+										<f:selectItems value="#{sucursalesBean.listEntidades}"
+											var="enti" itemLabel="#{enti.nombre}" itemValue="#{enti.id}" />
+									</h:selectOneMenu>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Fecha de Creación"
+							sortBy="#{sucursal.fechaCreacion}" style="text-align:center;"
+							filterBy="#{sucursal.fechaCreacion}" filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{sucursal.fechaCreacion}" />
+								</f:facet>
+								<f:facet name="input">
+									<h:outputText value="#{sucursal.fechaCreacion}" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Activo" width="50"
+							style="text-align:center;" filterBy="#{sucursal.activo}" filterStyle="background: white !important;width: 70px">
+							<p:cellEditor>
+								<f:facet name="output">
+									<p:selectBooleanCheckbox id="sbcOutActivo"
+										value="#{sucursal.activo}" disabled="true">
+										<f:selectItem itemValue="" />
+									</p:selectBooleanCheckbox>
+								</f:facet>
+								<f:facet name="input">
+									<p:selectBooleanCheckbox id="sbcInActivo"
+										value="#{sucursal.activo}">
+										<f:selectItem itemValue="" />
+									</p:selectBooleanCheckbox>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column style="width:32px">
+							<p:rowEditor />
+						</p:column>
+
+<!-- 						<p:column width="30"> -->
+<!-- 							<p:commandButton icon="ui-icon-trash" process="suc" -->
+<!-- 								actionListener="#{sucursalesBean.eliminarSucursal(sucursal)}" -->
+<!-- 								update=":form:msgs,:form:sucursalesTabla"/> -->
+<!-- 						</p:column> -->
+
+					</p:dataTable>
+				</p:panel>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			</h:form>
+
+			<p:dialog header="Crear Sucursal" widgetVar="sucCrearDialog"
+				modal="true" showEffect="fade" hideEffect="fade" resizable="false" closable="false">
+				<h:form id="formCrearSucursal">
+					<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" globalOnly="true"/>
+					<p:outputPanel id="sucCrearDetail" style="text-align:center;">
+						<p:panelGrid columns="3" columnClasses="label,value,label" 
+							style="width:90%; margin: 0px auto !important;">
+
+							<h:outputLabel for="codigo" value="Código: " />
+							<p:inputMask id="codigo" value="#{sucursalesBean.newSucursal.codigo}" mask="9?9999999999" slotChar="" required="true" requiredMessage="Codigo es requerido"/>
+							<p:message for="codigo" />
+							<h:outputLabel for="nombre" value="Nombre: " />
+							<p:inputText id="nombre" value="#{sucursalesBean.newSucursal.nombre}" maxlength="255" required="true" requiredMessage="Nombre es requerido"/>
+							<p:message for="nombre" />
+							<h:outputLabel value="Entidad: " />
+							<h:selectOneMenu value="#{sucursalesBean.newSucursal.entidadId}"
+								style="width:70%;">
+								<f:selectItems value="#{sucursalesBean.listEntidades}"
+									var="enti" itemLabel="#{enti.nombre}" itemValue="#{enti.id}" />
+							</h:selectOneMenu>
+							<h:outputLabel value="" />
+							<h:outputLabel value="Fecha Creación: " />
+							<h:outputLabel value="#{sucursalesBean.fechaCreacion}" />
+							<h:outputLabel value="" />
+							<h:outputLabel value="Activo: " />
+							<p:selectBooleanCheckbox id="sbcActivo"
+								value="#{sucursalesBean.newSucursal.activo}">
+								<f:selectItem itemValue="" />
+							</p:selectBooleanCheckbox>
+							<h:outputLabel value="" />
+							<center>
+								<p:panelGrid columns="2" style="width: 60%; margin: 15px auto;">
+									<p:commandButton id="btnGuardar" value="Guardar"
+										actionListener="#{sucursalesBean.crearSucursal}"
+										icon="ui-icon-disk" styleClass="button_green" update=":form:msgs :form:sucursalesTabla formCrearSucursal" process="@all" />
+
+									<p:commandButton value="Cancelar" icon="ui-icon-close" styleClass="button_red"
+										oncomplete="PF('sucCrearDialog').hide()"/>	
+								</p:panelGrid>	
+							</center>							
+						</p:panelGrid>
+					</p:outputPanel>
+					<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+				</h:form>
+			</p:dialog>
+
+			<script>
+				$('.nofireenter').keypress(function(event){
+					console.log(event);
+					if( event.keyCode == 13 ){
+						event.stopImmediatePropagation();
+						event.preventDefault();
+						return false;
+					}
+				});		
+  				
+				$('.nofireenter').blur(function(event){
+					console.log( event );
+					if( event.keyCode == 13 ){
+						event.stopImmediatePropagation();
+						event.preventDefault();
+						return false;
+					}
+				});	
+
+				function stopFireEnter(event){
+					console.log(event);
+				}
+            </script>
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

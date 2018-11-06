@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog header="Justificación de rechazo" widgetVar="rechazoDialog"
+		modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+		<h:form id="formJustificacionRechazo">
+			<p:fieldset style="margin-bottom:10px">
+				<h:panelGrid style="width: 99%">
+					<p:row>
+						<p:column>
+							<p:inputTextarea required="true" rows="5" cols="30"
+								id="justificacionRechazo"
+								value="#{listadoAvaluosBean.justificacionRechazo}"
+								label="Justificación del rechazo" style="width: 99%"
+								counter="leftCharsJR" maxlength="2000"
+								counterTemplate="{0} caracteres faltantes." />
+						</p:column>
+						<p:column>
+							<h:outputText id="leftCharsJR" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:commandButton value="Guardar"
+								action="#{listadoAvaluosBean.rechazarCaso()}"
+								oncomplete="PF('avaluoDialog').hide(); PF('rechazoDialog').hide();"
+								update=":formBtnAccion :form:avaluoTabla	:formJustificacionRechazo:justificacionRechazo"
+								icon="ui-icon-check" styleClass="button_green" />
+							<p:commandButton value="Cancelar" immediate="true"
+								update=":formBtnAccion :form:avaluoTabla	"
+								oncomplete="PF('avaluoDialog').hide(); PF('rechazoDialog').hide();"
+								icon="ui-icon-closethick" styleClass="button_red" />
+						</p:column>
+					</p:row>
+				</h:panelGrid>
+			</p:fieldset>
+			<input type="hidden" name="${_csrf.parameterName}"
+				value="${_csrf.token}" />
+		</h:form>
+	</p:dialog>
+
+</ui:composition>

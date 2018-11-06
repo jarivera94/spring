@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:o="http://omnifaces.org/ui">
+	
+	<p:outputPanel styleClass="contenedorBotones">
+					<p:commandButton value="Solicitar corrección"
+						binding="#{correciones}"
+						rendered="#{informeHipotecarioBean.avaluoEnRevision}"
+						icon="ui-icon-arrowreturnthick-1-e"
+						oncomplete="PF('correcionesDialog').show()" global="false" />
+					<p:spacer width="30px"
+						rendered="#{informeHipotecarioBean.avaluoEnRevision}" />
+					<p:commandButton value="Aprobar avalúo" binding="#{aprobar}"
+						rendered="#{informeHipotecarioBean.avaluoEnRevision}"
+						icon="ui-icon-circle-check" update="accordionPanel growl"
+						action="#{informeHipotecarioBean.aprobarAvaluo()}">
+					</p:commandButton>
+					<p:spacer width="30px"></p:spacer>
+					<p:commandButton value="Mostrar correcciones"
+						rendered="#{informeHipotecarioBean.avaluoEnCorrecion}"
+						icon="ui-icon-arrowreturnthick-1-e"
+						oncomplete="PF('correcionesDialog').show()" global="false" />
+					<p:spacer width="30px"
+						rendered="#{informeHipotecarioBean.avaluoEnCorrecion}"></p:spacer>
+					<p:commandButton value="Confirmar documentos"
+						rendered="#{informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado == 'PendienteDocumentos'}"
+						icon="ui-icon-folder-open"
+						action="#{informeHipotecarioBean.confirmarDocumentosCompletos()}"
+						update="informeHipotecario growl" />
+					<p:commandButton value="Enviar notificación de honorarios"
+						binding="#{enviarHonorarios}"
+						rendered="#{(informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() gt 5 and informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() lt 7) and (informeHipotecarioBean.modificarInforme and not informeHipotecarioBean.avaluoEnRevision) and not informeHipotecarioBean.cobradoPorBancol}"
+						icon="ui-icon-mail-closed"
+						action="#{informeHipotecarioBean.enviarNotificacionHonorarios(true)}"
+						update="accordionPanel growl" />
+					<p:commandButton value="Enviar informe" binding="#{enviar}"
+						rendered="#{(informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() gt 5 and informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() lt 7) and (informeHipotecarioBean.modificarInforme and not informeHipotecarioBean.avaluoEnRevision) and informeHipotecarioBean.cobradoPorBancol}"
+						icon="ui-icon-circle-check"
+						action="#{informeHipotecarioBean.enviarAvaluo(true)}"
+						update="accordionPanel growl" />
+					<p:commandButton value="Enviar correcciones"
+						binding="#{enviarCorrecciones}"
+						rendered="#{informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() eq '9' and (informeHipotecarioBean.modificarInforme and not informeHipotecarioBean.avaluoEnRevision)}"
+						icon="ui-icon-circle-check"
+						action="#{informeHipotecarioBean.enviarAvaluo(true)}"
+						update="accordionPanel growl" />
+					<p:commandButton value="Enviar a comite" binding="#{enviarComite}"
+						rendered="#{informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado == 'Enviado' and informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne '9' and listadoAvaluosBean.isEnviarAComite()}"
+						icon="ui-icon-mail-closed"
+						action="#{informeHipotecarioBean.enviarAvaluoAComite()}"
+						update="accordionPanel growl" />
+					<p:spacer width="30px"></p:spacer>
+					<p:commandButton binding="#{guardar}" value="Guardar"
+						rendered="#{informeHipotecarioBean.modificarInforme}"
+						icon="ui-icon-disk"
+						action="#{informeHipotecarioBean.guardarSinEnviar()}"
+						update="growl" styleClass="button_green">
+					</p:commandButton>
+					<p:commandLink id="autoGuardar"
+						rendered="#{informeHipotecarioBean.modificarInforme and not (informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado == 'Aprobado')}"
+						global="false" style="display: none;"
+						action="#{informeHipotecarioBean.autoGuardar()}">
+						<f:ajax execute="@form" />
+					</p:commandLink>
+					<p:defaultCommand target="dummy" />
+					<p:commandButton id="dummy" process="@none" global="false"
+						style="display:none;" />
+					<p:spacer width="30px"></p:spacer>
+					<p:commandButton immediate="true" value="Cancelar"
+						icon="ui-icon-circle-close"
+						actionListener="#{informeHipotecarioBean.cerrar()}"
+						styleClass="button_red" global="false" />
+				</p:outputPanel>
+	
+	</ui:composition>

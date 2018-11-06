@@ -1,0 +1,1 @@
+INSERT INTO avaluos.calificacion_garantia (id, nombre) VALUES (51, 'Favorable con Limitaciones');

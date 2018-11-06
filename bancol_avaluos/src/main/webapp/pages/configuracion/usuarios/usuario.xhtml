@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:o="http://omnifaces.org/ui"
+    xmlns:of="http://omnifaces.org/functions"
+    xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+<h:body>
+    <f:metadata>
+        <f:viewParam name="numeroDocumento" value="#{usuarioBean.usuario.numeroDocumento}" />
+        <f:viewParam name="tipoDocumento" value="#{usuarioBean.usuario.tipoDocumentoIdentificacion}" />
+        <f:viewAction action="#{usuarioBean.cargarUsuario}" />
+    </f:metadata>
+    <ui:composition template="/template/bancol_avaluos_template.xhtml">
+        <ui:define name="content">
+            <p:ajaxStatus onstart="PF('statusDialog').show()"
+                onsuccess="PF('statusDialog').hide()" />
+            <p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+                closable="false" resizable="false" showHeader="false">
+                <h:outputLabel value="Guardando usuario..." />
+                <p:graphicImage  name="images/ajax-loader.gif" />
+            </p:dialog>
+            <h:form id="usuario" style="width: 960px; margin: 20px auto;" onkeypress="if (event.keyCode == 13) { return false; }">
+                <p:growl id="mensajes" showDetail="true" life="9000" />
+                <p:panel id="panelCrearUsuarios" style="width:90%; margin: 0px auto;">
+                    <f:facet name="header">
+                        <center>Datos de Usuario</center>
+                    </f:facet>
+                    <center>
+                        <p:panelGrid id="panelVigentes" columns="2" style="margin-bottom: 10px;">
+                            <h:outputLabel for="usuarioVigente"   value="* Vigente:" />
+                            <p:inputSwitch id="usuarioVigente"  value="#{usuarioBean.usuario.usuarioVigente}" onLabel="Si" offLabel="No"/>
+                        </p:panelGrid>
+                    </center>
+                    <center>
+                   	<h:panelGrid id="panelRol" columns="3" style="margin-bottom:20px;">
+                            <h:outputLabel value="Rol:" />
+                            <h:selectOneMenu id="rol" required="true" requiredMessage="Se requiere un rol de usuario"
+                                value="#{usuarioBean.usuario.rol}"
+                                converter="omnifaces.SelectItemsConverter">
+                                <f:selectItems value="#{usuarioBean.roles}" var="rol"
+                                    itemLabel="#{rol.nombre}" itemValue="#{rol}" />
+                                <p:ajax event="change"
+                                    update=":usuario"
+                                    listener="#{usuarioBean.cambioRol()}"
+                                    process=":usuario:rol :usuario:usuarioVigente"
+                                    global="false"
+                                    onstart="$( '#usuario\\:rol' ).addClass('loadinggif');"
+                                    oncomplete="$( '#usuario\\:rol' ).removeClass('loadinggif');"/>
+                            </h:selectOneMenu>
+                            <p:message for="rol" />
+                  	</h:panelGrid>
+                    </center>
+                
+                   
+                     
+                    <h:panelGrid id="datosBasicos" columns="4"
+                        style="width:90%; margin: 0px auto;">
+
+                        <p:outputLabel value="Nombres: " />
+                        <p:inputText id="nombre" value="#{usuarioBean.usuario.nombres}"
+                            requiredMessage="Se requiere un nombre"
+                            required="true" maxlength="255" />
+
+                        <p:outputLabel value="Apellidos: " />
+                        <p:inputText id="apellidos"
+                            value="#{usuarioBean.usuario.apellidos}"
+                            requiredMessage="Se requiere un apellido"
+                            required="true" maxlength="255" />
+
+                        <p:outputLabel value="Tipo Documento: " />
+                        <h:selectOneMenu id="tipoDocumento"
+                            requiredMessage="Se requiere un tipo de documento" required="true"
+                            value="#{usuarioBean.usuario.tipoDocumentoIdentificacion}"
+                            style="width: 170px;">
+                            <f:selectItem itemLabel="Selecciona..." itemValue="" />
+                            <f:selectItem itemLabel="C.C" itemValue="21" />
+                            <f:selectItem itemLabel="C. Ext." itemValue="22" />
+                            <f:selectItem itemLabel="NIT" itemValue="23" />
+                            <p:ajax
+                                onstart="$( '#usuarios\\:tipoDocumento' ).addClass('loadinggif');"
+                                oncomplete="$( '#usuarios\\:tipoDocumento' ).removeClass('loadinggif');"
+                                update=":usuario:botonesAccionFormulario"
+                                process="tipoDocumento, numeroDocumento" global="false"
+                                listener="#{usuarioBean.verificarNumeroTipoDocumentoExistente}"/>
+                        </h:selectOneMenu>
+
+                        <p:outputLabel value="N° Documento: " />
+                        <p:inputMask
+                            id="numeroDocumento"
+                            value="#{usuarioBean.usuario.numeroDocumento}"
+                            mask="9?9999999999" requiredMessage="Se requiere un N° Documento"
+                            required="true" >
+                            <p:ajax
+                                onstart="$( '#usuarios\\:numeroDocumento' ).addClass('loadinggif');"
+                                oncomplete="$( '#usuarios\\:numeroDocumento' ).removeClass('loadinggif');"
+                                update=":usuario:botonesAccionFormulario, :usuario:mensajes"
+                                process="tipoDocumento, numeroDocumento" global="false"
+                                listener="#{usuarioBean.verificarNumeroTipoDocumentoExistente}"/>
+                        </p:inputMask>
+
+                        <p:outputLabel value="Alias Usuario: " />
+                        <p:inputText id="alias"
+                            value="#{usuarioBean.usuario.nombreUsuario}"
+                            requiredMessage="Se requiere un alias"
+                            required="true" >
+                            <p:ajax
+                                update=":usuario:botonesAccionFormulario, :usuario:mensajes"
+                                process="alias" global="false"
+                                listener="#{usuarioBean.verificarAliasExistente}" />
+                        </p:inputText>
+
+                        <p:outputLabel value="Email: " />
+                        <p:inputText id="email" value="#{usuarioBean.usuario.email}" style="font-size: 10px;"
+                            requiredMessage="Se requiere un correo electrónico"
+                            required="true"
+                            validatorMessage="Email: El correo ingresado es incorrecto">
+                            <f:validateRegex
+                                pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                        </p:inputText>
+                        
+                         <p:outputLabel for="celular" value="Celular: " />
+                    	 <p:inputMask id="celular" required="true" mask="999-999-9999"
+	                            value="#{usuarioBean.usuario.celular}" label="Celular Solicitud"
+	                            validatorMessage="Celular debe tener 10 digitos"
+	                            requiredMessage="Se requiere numero de celular"
+	                            >
+	                            <f:validateRegex pattern="\d{3}[\-]\d{3}[\-]\d{4}" />
+	                            <p:ajax update="msgCelular" event="blur" global="false"
+	                                onstart="$( '#usuarios\\:celular' ).addClass('loadinggif');"
+	                                oncomplete="$( '#usuarios\\:celular' ).removeClass('loadinggif');"/>
+	                      </p:inputMask>
+	                      <p:message id="msgCelular" for="celular" /> 
+                     </h:panelGrid>
+                     
+                     <h:panelGrid id="ubicacion" columns="4" style="width:90%; margin: 0px auto;">
+                        <p:outputLabel value="Departamento: "  rendered="#{empty usuarioBean.usuario.rol.permisos ? true: usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoAceptarCasos) eq false}"/>
+                        <h:selectOneMenu id="departamento"
+							rendered="#{empty usuarioBean.usuario.rol.permisos ? true: usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoAceptarCasos) eq false}"
+                            value="#{usuarioBean.usuario.departamento}" required="true"
+                            requiredMessage="Se requiere un departamento"
+                            style="width: 170px;">
+                            <p:ajax listener="#{usuarioBean.cambiarDepartamento}"
+                                onstart="$( '#usuarios\\:ciudad' ).addClass('loadinggif');"
+                                oncomplete="$( '#usuarios\\:ciudad' ).removeClass('loadinggif');"
+                                global="false" update="ciudad" />
+                            <f:selectItem itemLabel="Selecciona..." itemValue=""
+                                noSelectionOption="true" />
+                            <f:selectItems value="#{usuarioBean.departamentos}" />
+                        </h:selectOneMenu>
+                        <p:outputLabel value="Ciudad: " rendered="#{empty usuarioBean.usuario.rol.permisos ? true: usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoAceptarCasos) eq false}" />
+                        <h:selectOneMenu id="ciudad"
+                        	rendered="#{empty usuarioBean.usuario.rol.permisos ? true: usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoAceptarCasos) eq false}"
+                            value="#{usuarioBean.ciudad}" required="true"
+                            converter="omnifaces.SelectItemsConverter"
+                            requiredMessage="Se requiere una ciudad"
+                            style="width: 170px;">
+                            <p:ajax event="change" listener="#{usuarioBean.seleccionarCiudad}" />
+                            <f:selectItems value="#{usuarioBean.ciudades}"
+                                var="ciudad" itemLabel="#{ciudad.centroPoblado}"
+                                itemValue="#{ciudad}" />
+                        </h:selectOneMenu>
+					 </h:panelGrid>
+					 
+					 <h:panelGrid id="divipolas" columns="4" style="margin-top:30px;" rendered="#{not empty usuarioBean.usuario.rol.permisos ? ( usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoAceptarCasos) eq true)  : false}">
+					   
+	                   			<!--LISTA DE DIVIPOLAS A SELECCIONAR  -->
+	                   			<p:dataTable id="tablaDivipolasASeleccionar" 
+	                   				value="#{usuarioBean.divipolasUsuarios}" 
+	                   				var="divipola" 
+	                   				selection="#{usuarioBean.divipolasSeleccionadas}"
+	                   				rowKey="#{divipola.id}"
+	                   				scrollHeight="420"
+									scrollRows="10"
+									scrollable="true"
+	                   				 >
+	                   				<f:facet name="header"> Municipios a seleccionar  </f:facet>
+	                            	<p:ajax global="false" event="rowSelectCheckbox"  update=":usuario:tablaDivipolasSeleccionados" immediate="true" />  
+	                            	<p:ajax global="false" event="rowUnselectCheckbox"  update=":usuario:tablaDivipolasSeleccionados" immediate="true" />  
+	                            	
+	                            	<p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+	                            	
+	                            	<p:column  headerText="Departamento"  
+	                            		disabledSelection="true"
+	                            		selectRow="false"
+	                            		filterMatchMode="contains" 
+	                            		sortBy="#{divipola.departamento}" 
+	                            		filterBy="#{divipola.departamento}"
+	                            		filterStyle="background: white !important;width: 70px">
+	                            		  <h:outputText value="#{divipola.departamento}" />
+	                            	</p:column>
+	                            	
+	                            	<p:column   headerText="Municipio" 
+	                            		disabledSelection="true"
+	                            		selectRow="false"
+	                            		filterMatchMode="contains" 
+	                            		sortBy="#{divipola.centroPoblado}" 
+	                            		filterBy="#{divipola.centroPoblado}"
+	                            		filterStyle="background: white !important;width: 70px">
+	                            		  <h:outputText value="#{divipola.centroPoblado}" />
+	                            	</p:column>
+	                            </p:dataTable>
+	                            
+	                            <!-- LISTA DE DIVIPOLAS SELECCIONAS -->
+	                            <p:dataTable id="tablaDivipolasSeleccionados" value="#{usuarioBean.divipolasSeleccionadas}" var="divipola">
+	                            	<f:facet name="header"> Municipios seleccionados  </f:facet>
+	                            	<p:column> #{divipola.departamento} - #{divipola.centroPoblado}</p:column>
+	                            </p:dataTable>
+                    </h:panelGrid>
+                    
+                    
+                    
+                    <br></br>
+                    <center>
+                        <!-- direcccion solicitante  -->
+                        <p:row>
+                            <p:column styleClass="ui-widget-header">
+                                <p:outputLabel for="direccion" value="Dirección: " />
+                            </p:column>
+                            <p:column styleClass="ui-widget-header" colspan="3">
+                                <p:panelGrid id="direccion" columns="9">
+                                    <p:outputLabel value="Tipo Via: " styleClass="subLabel" />
+                                    <p:outputLabel value="Via: " styleClass="subLabel" />
+                                    <p:outputLabel value="Complemento Via: " styleClass="subLabel" />
+                                    <p:outputLabel value="  " styleClass="subLabel" />
+                                    <p:outputLabel value="Número: " styleClass="subLabel" />
+                                    <p:outputLabel value="Complemento Numero: " styleClass="subLabel" />
+                                    <p:outputLabel value="  " styleClass="subLabel" />
+                                    <p:outputLabel value="Placa: " styleClass="subLabel" />
+                                    <p:outputLabel value="Adicional: " styleClass="subLabel" />
+                                    <h:selectOneMenu
+                                            value="#{usuarioBean.usuario.tipoVia}"
+                                            label="Tipo vía Dirección"
+                                            style="width:100px;">
+                                        <f:selectItem itemLabel="Seleccione ..." noSelectionOption="true" />
+                                        <f:selectItem itemLabel="Calle" itemValue="CL"/>
+                                        <f:selectItem itemLabel="Carrera" itemValue="KR"/>
+                                        <f:selectItem itemLabel="Diagonal" itemValue="DG"/>
+                                        <f:selectItem itemLabel="Transversal" itemValue="TV"/>
+                                        <f:selectItem itemLabel="Avenida" itemValue="AV"/>
+                                        <f:selectItem itemLabel="Avenida calle" itemValue="AC"/>
+                                        <f:selectItem itemLabel="Avenida carrera" itemValue="AK"/>
+                                        <f:selectItem itemLabel="Avenida autopista" itemValue="AU"/>
+                                        <f:selectItem itemLabel="Carretera" itemValue="CT"/>
+                                        <f:selectItem itemLabel="Circular" itemValue="CQ"/>
+                                        <f:selectItem itemLabel="Camino" itemValue="CN"/>
+                                    </h:selectOneMenu>
+                                    <p:inputMask
+                                            mask="9?99"
+                                            value="#{usuarioBean.usuario.numeroVia}"
+                                            label="Número via Dirección"
+                                            style="width:30px;">
+                                    </p:inputMask>
+                                    <p:autoComplete
+                                            id="complementoVia"
+                                            value="#{usuarioBean.complementoVia}"
+                                            label="Complemento Via"
+                                            style="width:150px;"
+                                            multiple="true"
+                                            forceSelection="true"
+                                            maxlength="1"
+                                            completeMethod="#{usuarioBean.completarComplemento}" />
+                                    <p:outputLabel value=" # "
+                                            styleClass="subLabel"
+                                            style="left: -8px;position: relative;font-size: 18px !important;" />
+                                    <p:inputMask
+                                            id="numeroViaGeneradora"
+                                            mask="9?99"
+                                            value="#{usuarioBean.usuario.numeroViaGeneradora}"
+                                            label="Número Via Generadora"
+                                            style="width:30px;" >
+                                    </p:inputMask>
+                                    <p:autoComplete
+                                            id="complementoViaGeneradora"
+                                            value="#{usuarioBean.complementoViaGeneradora}"
+                                            label="Complemento Via Generadora"
+                                            style="width:150px;"
+                                            multiple="true"
+                                            forceSelection="true"
+                                            maxlength="1"
+                                            completeMethod="#{usuarioBean.completarComplemento}" />
+                                    <p:outputLabel
+                                            value=" - " styleClass="subLabel"
+                                            style="left: -8px;position: relative;font-size: 18px !important;" />
+                                    <p:inputText
+                                            id="placa"
+                                            value="#{usuarioBean.usuario.placa}"
+                                            label="Placa dirección"
+                                            style="width:30px;">
+                                    </p:inputText>
+                                    <p:inputText
+                                            id="adicionalDireccion"
+                                            value="#{usuarioBean.usuario.adicional}"
+                                            label="Adicional de la dirección"
+                                            style="width:150px;">
+                                    </p:inputText>
+                                    <p:row
+                                            rendered="#{(not empty facesContext.messageList and (not empty facesContext.getMessageList('usuario:tipoVia') or not empty facesContext.getMessageList('usuario:numeroVia') or not empty facesContext.getMessageList('usuario:numeroViaGeneradora') or not empty facesContext.getMessageList('usuario:placa')))}">
+                                        <p:column styleClass="ui-widget-header">
+                                            <p:message for="tipoVia" />
+                                        </p:column>
+                                        <p:column styleClass="ui-widget-header" colspan="2" >
+                                            <p:message for="numeroVia" />
+                                        </p:column>
+                                        <p:column styleClass="ui-widget-header" colspan="2" >
+                                            <p:message for="numeroViaGeneradora" />
+                                        </p:column>
+                                        <p:column styleClass="ui-widget-header" colspan="2" >
+                                            <p:message for="placa" />
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:column>
+                        </p:row>
+                    </center>
+                    <br />
+                    
+                         <center>
+                            <h:panelGrid id="datosRol" columns="8" style="margin-top: 20px; width: 60%;">
+                                <p:outputLabel value="Registro"
+                                    rendered="#{usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoAceptarCasos)}" />
+                                <p:inputMask rendered="#{usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoAceptarCasos)}"
+                                    value="#{usuarioBean.usuario.registro}" mask="9?9999999999"
+                                    requiredMessage="Se requiere un N° de Registro" required="true" />
+                                <p:outputLabel value="Cobra IVA?: "
+                                    rendered="#{usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoAceptarCasos)}" />
+                                <p:inputSwitch value="#{usuarioBean.usuario.iva}"
+                                    onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"
+                                    rendered="#{usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoAceptarCasos)}"
+                                    required="true"  converter="javax.faces.Boolean"
+                                    requiredMessage="Debe seleccionar el cobro de iva" />
+                                <p:outputLabel value="Activo: "
+                                    rendered="#{usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoAceptarCasos)}" />
+                                <p:inputSwitch id="buttonSuspenderPerito" value="#{usuarioBean.usuario.activoParaAsignacion}"
+                                onLabel="Si" offLabel="No" rendered="#{usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoAceptarCasos)}"/>
+                                <p:outputLabel value="Coordinador: "
+                                    rendered="#{(usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoAbogado) or (usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoCrearSolicitudes) and not usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoEditarSolicitudes))) and not (usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoCrearUsuarios))}" />
+                                <h:selectOneMenu required="true" requiredMessage="Coordinador es requerido"
+                                    validatorMessage="Fallo la validacion"
+                                    value="#{usuarioBean.coordinadorAsociado}"
+                                    converter="omnifaces.SelectItemsConverter"
+                                    rendered="#{(usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoAbogado) or (usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoCrearSolicitudes) and not usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoEditarSolicitudes))) and not (usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoCrearUsuarios))}">
+                                    <f:selectItem itemLabel="Seleccione" itemValue="" value="#{null}" noSelectionOption="true"/>
+                                    <f:selectItems value="#{usuarioBean.usuariosCoordinadores}"
+                                        var="coordinador"
+                                        itemLabel="#{coordinador.nombres} #{coordinador.apellidos}"
+                                        itemValue="#{coordinador}" />
+                                </h:selectOneMenu>
+                        </h:panelGrid>
+                    </center>
+                    <br />
+                    <center>
+                    <p:panel id="panelCuentaBancaria">
+                        <p:panelGrid columns="3" style="width:100%;" rendered="#{usuarioBean.usuario.rol.permisos.contains(usuarioBean.permisoAceptarCasos)}">
+                        <f:facet name="header">
+                            <p:outputLabel value="Datos Bancarios" style="font-size: 16px !important;font-weight: bold;color: rgb(62, 140, 195);"/>
+                        </f:facet>
+                            <p:outputLabel value="Banco:" />
+                            <p:outputLabel value="Tipo de Cuenta:" />
+                            <p:outputLabel value="Nª Cuenta:" />
+                            <p:inputText value="#{usuarioBean.usuario.nombreBanco}" required="true" requiredMessage="Se requiere el nombre de banco" />
+                            <h:selectOneMenu value="#{usuarioBean.usuario.tipoCuentaBanco}"
+                                required="true" requiredMessage="Se requiere tipo cuenta de banco">
+                                <f:selectItem itemLabel="Selecciona..." itemValue="" noSelectionOption="true"/>
+                                <f:selectItem itemLabel="Ahorros" itemValue="ahorros"/>
+                                <f:selectItem itemLabel="Corriente" itemValue="corriente"/>
+                            </h:selectOneMenu>
+                            <p:inputMask value="#{usuarioBean.usuario.numeroCuentaBanco}" mask="9?9999999999999999999" slotChar=" "
+                                required="true" requiredMessage="Se requiere número cuenta de banco"
+                                maxlength="20" style="font-size: 10px !important;" />
+                            <p:outputLabel value="Titular:" />
+                            <p:outputLabel value="Identificación Titular:" />
+                            <p:outputLabel value="Nª Identificacion Titular:" />
+                            <p:inputText value="#{usuarioBean.usuario.nombreTitular}"
+                                required="true" requiredMessage="Se requiere nombre de titular" />
+                            <h:selectOneMenu value="#{usuarioBean.usuario.tipoIdentificacionTitular}"
+                                required="true" requiredMessage="Se requiere tipo identificación de titular">
+                                <f:selectItem itemLabel="Selecciona..." itemValue="" noSelectionOption="true"/>
+                                <f:selectItem itemLabel="C.C." itemValue="cc"/>
+                                <f:selectItem itemLabel="C.E." itemValue="ce"/>
+                                <f:selectItem itemLabel="NIT" itemValue="nit"/>
+                            </h:selectOneMenu>
+                            <p:inputMask
+                                value="#{usuarioBean.usuario.numeroIdentificacionTitular}"
+                                mask="9?999999999"
+                                slotChar=" " maxlength="10"
+                                required="true"
+                                requiredMessage="Se requiere número identificación de titular"/>
+                        </p:panelGrid>
+                    </p:panel>
+                    </center>
+                    <br />
+                    <div
+                        style="width: 100%; height: 100%; margin: 0px auto;">
+                        <div
+                            style="width: 80%; height: 300px; margin: 0px auto;">
+                            <br></br>
+                            <h:outputLabel value="Entidad:" />
+                            <br></br>
+                        
+                            <p:pickList value="#{usuarioBean.entidades}" 
+                            	var="entity"
+                            	itemValue="#{entity}" 
+                            	itemLabel="#{entity.nombre}"
+                            	
+                            	requiredMessage="Se requiere al menos una entidad"
+                            	>
+     							<o:converter converterId="omnifaces.ListConverter" list="#{usuarioBean.todasEntidades}" />
+							 </p:pickList>
+                            <br></br>
+                        </div>
+               
+                        <div
+                            style="width: 80%; height: 300px; margin: 0px auto;">
+                            <br></br>
+                            <h:outputLabel value="Acceso por Tipo Avaluo:" />
+                            <br></br>
+                            <p:pickList value="#{usuarioBean.tiposAvaluo}"
+                                var="tipoAvaluo" itemLabel="#{tipoAvaluo.nombre}"
+                                itemValue="#{tipoAvaluo}"
+                                showCheckbox="true"
+                                responsive="true"
+                                showSourceFilter="true"
+                                showTargetFilter="true"
+                                filterMatchMode="contains"
+                                requiredMessage="Se requiere un tipo avaluo"
+                                style="  border: 1px solid #f2f2f2 !important;">
+                                <o:converter converterId="omnifaces.ListConverter" list="#{usuarioBean.todosTiposAvaluos}" />
+                             </p:pickList>
+                             <br></br>
+                        </div>
+                        
+                        <div
+                            style="width: 80%; height: 300px; margin: 0px auto;">
+                            <br></br>
+                            <h:outputLabel value="Regional:" />
+                            <br></br>
+                            <p:pickList
+                                value="#{usuarioBean.regionales}"
+                                var="regional" itemLabel="#{regional.nombre}"
+                                itemValue="#{regional}"
+                                showCheckbox="true"
+                                responsive="true"
+                                showSourceFilter="true"
+                                showTargetFilter="true"
+                                filterMatchMode="contains"
+                                requiredMessage="Se requiere una regional"
+                                style="  border: 1px solid #f2f2f2 !important;">
+                                <o:converter converterId="omnifaces.ListConverter" list="#{usuarioBean.todasRegionales}" />
+                            </p:pickList>
+                            <br></br>
+                        </div>
+                   </div>
+                   <br></br>
+                   
+				   <p:panel style="height: 100px;clear: left">
+				   	<f:facet name="header">
+				   		<h:outputLabel value="* Recuerda verificar el campo 'Vigente'" style="text-align: center;font-size: 12px; color: #0995ce; margin-left: 35%;"/>
+				   	</f:facet>
+                   <h:panelGrid id="botonesAccionFormulario" columns="3" style="width: 90px;margin: 0px auto;">
+                        <p:commandButton value="Guardar" icon="ui-icon-disk" 
+                            action="#{usuarioBean.guardar()}" update="mensajes"
+                            rendered="#{not usuarioBean.ocultarBotonGuardar}"
+                            styleClass="button_green" />
+                        <p:commandButton value="Cancelar"
+                            action="#{usuarioBean.cancelarUsuario()}" ajax="false" immediate="true" icon="ui-icon-close"
+                            styleClass="button_red" />
+                        <p:commandButton value="Reestablecer Contraseña" icon="ui-icon-arrowreturn-1-w" action="#{usuarioBean.reestablecerContrasena()}" rendered="#{listadoAvaluosBean.usuarioActivo.rol.permisos.contains(usuarioBean.permisoCrearUsuarios) and not usuarioBean.modoCrear}" immediate="true" update="mensajes"/>
+                    </h:panelGrid>
+					 </p:panel>
+                </p:panel>
+
+                <input type="hidden" name="${_csrf.parameterName}"
+                    value="${_csrf.token}" />
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+		<ui:define name="metadata">
+			<f:metadata>
+			<f:event listener="#{listadoUsuariosBean.actualizarListado}"
+					type="preRenderView"></f:event>
+			</f:metadata>
+		</ui:define>
+		<ui:define name="content">
+            <h:form id="barraAccion"
+                    style="  position: absolute;bottom: 90%;left: 5%;z-index: 25;width: 85%; margin-bottom: 0px;">
+                <p:toolbar id="toolbar"
+                    rendered="#{not empty listadoUsuariosBean.usuarioSeleccionado}" >
+                    <f:facet name="right">
+                        <p:commandButton value="Editar"
+                            action="#{listadoUsuariosBean.modificarUsuario()}"
+							icon="ui-icon-pencil" title="Actualizar Usuario" />
+                        <input type="hidden" name="${_csrf.parameterName}"
+                            value="${_csrf.token}" />
+                    </f:facet>
+                </p:toolbar>
+            </h:form>
+
+			<h1 style="text-align: left; margin-top: 20px;">Usuarios</h1>
+			<p:growl id="msgs" showDetail="true" />
+			<h:form id="formDataUsuarios">
+				<p:commandButton icon="ui-icon-circle-plus" title="Crear Nuevo Usuario"
+					action="#{listadoUsuariosBean.crearUsuario()}"
+					style="float: right; bottom: 35px !important;" styleClass="button_green" />
+				<p:dataTable var="usuario"
+                    value="#{listadoUsuariosBean.usuarios}"
+					paginator="true"
+                    paginatorAlwaysVisible="false" rows="10"
+					resizableColumns="true"
+                    selection="#{listadoUsuariosBean.usuarioSeleccionado}"
+                    selectionMode="single"
+                    rowKey="#{usuario.nombreUsuario}"
+                    emptyMessage="No tiene usuarios" >
+
+                    <p:ajax event="rowSelect"
+                        update=":barraAccion" />
+                    <p:column headerText="Vigente" style="width: 60px !important;">
+						<p:selectBooleanCheckbox value="#{usuario.usuarioVigente}" disabled="true" />
+					</p:column>
+					<p:column headerText="Nombres" filterBy="#{usuario.nombres}" filterStyle="background: white !important;width: 70px">
+						<h:outputText value="#{usuario.nombres}" />
+					</p:column>
+					<p:column headerText="Apellidos" filterBy="#{usuario.apellidos}" filterStyle="background: white !important;width: 70px">
+						<h:outputText value="#{usuario.apellidos}" />
+					</p:column>
+					<p:column headerText="Cedula" filterBy="#{usuario.numeroDocumento}" filterStyle="background: white !important;width: 70px">
+						<h:outputText value="#{usuario.numeroDocumento}" />
+					</p:column>
+					<p:column headerText="Usuario" filterBy="#{usuario.nombreUsuario}" filterStyle="background: white !important;width: 70px">
+						<h:outputText value="#{usuario.nombreUsuario}" />
+					</p:column>
+					<p:column headerText="Rol" filterBy="#{usuario.rol.nombre}" filterStyle="background: white !important;width: 70px">
+						<h:outputText value="#{usuario.rol.nombre}" />
+					</p:column>
+					<p:column headerText="Email"
+						filterBy="#{usuario.email}" filterStyle="background: white !important;width: 70px">
+						<h:outputText value="#{usuario.email}" />
+					</p:column>
+				</p:dataTable>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			</h:form>
+			
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

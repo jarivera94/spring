@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:o="http://omnifaces.org/ui"
+    xmlns:of="http://omnifaces.org/functions"
+	xmlns:p="http://primefaces.org/ui">
+ 
+<h:head>
+	<h:outputStylesheet name="grid/grid.css" library="primefaces" />
+</h:head>
+<h:body>
+<ui:composition template="/template/bancol_avaluos_template.xhtml">
+	<ui:define name="content">
+		<!--
+		   Formulario que permite buscar el cliente a editar 
+		  -->
+		<h:form id="busquedaCliente" style="width: 90%; margin: 0px auto;">
+			<h1>Edición de Clientes</h1>
+			<p:growl id="mensajes" showDetail="true" life="5000"/>
+			<p:panelGrid cellpading="5" columns="2">
+	            	<p:outputLabel> Tipo de documento</p:outputLabel> 
+	            	<h:selectOneMenu value="#{editarClienteBean.tipoDocumento}" style="max-width:180px;">
+							<f:selectItem itemLabel="Seleccione ..." noSelectionOption="true"/>
+							<f:selectItem itemLabel="C.C." itemValue="21"/>
+							<f:selectItem itemLabel="C.Ext." itemValue="22"/>
+							<f:selectItem itemLabel="NIT." itemValue="23"/>
+							<p:ajax event="change"  update=":edicionCliente" listener="#{editarClienteBean.limpiarCliente()}"/>
+					</h:selectOneMenu>
+	            	<p:outputLabel> Número</p:outputLabel> 
+	                <p:inputMask mask="9?99999999999" value="#{editarClienteBean.numero}" style="min-width:170px;" > 
+	                	<p:ajax event="change"  update=":edicionCliente" listener="#{editarClienteBean.limpiarCliente()}"/>
+	                </p:inputMask> 
+			</p:panelGrid>
+			<p:commandButton  styleClass="button_blue" value="Buscar Cliente" 
+				action="#{editarClienteBean.buscarCliente()}"
+				update="mensajes :edicionCliente" />
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />	
+		</h:form>
+		<!-- 
+		    Formulario en la que se muestra la informacion del cliente para ser editada. 
+		-->
+
+		<h:form id="edicionCliente" style="width: 90%; margin: 0px auto;">
+			<p:panel id="datosCliente" rendered="#{not empty editarClienteBean.cliente}"  style="margin-top:20px;">
+				<p:panelGrid  cellpading="5" columns="4" 
+					rendered="#{editarClienteBean.tipoDocumento eq '21' or editarClienteBean.tipoDocumento eq '22'}">
+	            	<p:outputLabel> Tipo de documento</p:outputLabel> 
+	            	<h:selectOneMenu id="tipoDocumentoIdentificacion" value="#{editarClienteBean.cliente.tipoDocumentoIdentificacion}" style="max-width:180px;">
+							<f:selectItem itemLabel="Seleccione ..." noSelectionOption="true"/>
+							<f:selectItem itemLabel="C.C." itemValue="21"/>
+							<f:selectItem itemLabel="C.Ext." itemValue="22"/>
+							<f:selectItem itemLabel="NIT." itemValue="23"/>
+					</h:selectOneMenu>
+	            	<p:outputLabel> Numero</p:outputLabel> 
+	                <p:inputMask mask="9?999999999" id="numeroDocumento" value="#{editarClienteBean.cliente.numeroDocumento}" style="min-width:170px;"/>  
+	                
+	                <p:outputLabel> Primer Nombre</p:outputLabel> 
+	                <p:inputText id="primerNombre" value="#{editarClienteBean.cliente.primerNombre}" style="min-width:170px;"/>  
+	                
+	                <p:outputLabel> Segundo Nombre</p:outputLabel> 
+	                <p:inputText id="segundoNombre" value="#{editarClienteBean.cliente.segundoNombre}" style="min-width:170px;"/>  
+	                
+	                <p:outputLabel> Primer Apellido </p:outputLabel> 
+	                <p:inputText id="prmierApellido"  value="#{editarClienteBean.cliente.primerApellido}" style="min-width:170px;"/>  
+	                
+	                <p:outputLabel> Segundo Apellido </p:outputLabel> 
+	                <p:inputText id="segundoApellido" value="#{editarClienteBean.cliente.segundoApellido}" style="min-width:170px;"/>  
+	                
+	                <p:outputLabel> Télefono </p:outputLabel> 
+	                <p:inputText id="telefono" value="#{editarClienteBean.cliente.telefonoSolicitante}" style="min-width:170px;"/> 
+	                
+	                <p:outputLabel> Celular </p:outputLabel> 
+	                <p:inputText id="celularSolicitante" value="#{editarClienteBean.cliente.celularSolicitante}" style="min-width:170px;"/>   
+	                
+	                <p:outputLabel> Correo </p:outputLabel> 
+	                <p:inputText id="correoSolicitante" value="#{editarClienteBean.cliente.correoElectronicoSolicitante}" style="min-width:170px;"/> 
+	                
+	                <p:outputLabel> </p:outputLabel> 
+	                <p:outputLabel> </p:outputLabel>        
+	            </p:panelGrid> 
+				
+				<!-- INFORMACION DEL CLIENTE CON NIT -->
+				<p:panelGrid rendered="#{editarClienteBean.tipoDocumento eq '23' }" columns="4" cellpading="5" >
+					
+					<p:outputLabel> Tipo de documento</p:outputLabel> 
+	            	<h:selectOneMenu value="#{editarClienteBean.cliente.tipoDocumentoIdentificacion}" style="max-width:180px;">
+							<f:selectItem itemLabel="Seleccione ..." noSelectionOption="true"/>
+							<f:selectItem itemLabel="C.C." itemValue="21"/>
+							<f:selectItem itemLabel="C.Ext." itemValue="22"/>
+							<f:selectItem itemLabel="NIT." itemValue="23"/>
+					</h:selectOneMenu>
+					
+					<p:outputLabel> Número</p:outputLabel> 
+					<p:inputMask  value="#{editarClienteBean.cliente.numeroDocumento}" converter="#{NITConverter}" style="min-width:170px;" mask="999999999-9" />
+					
+					<p:outputLabel>  Razón social </p:outputLabel> 
+					<p:inputText value="#{editarClienteBean.cliente.razonSocial}"  style="min-width:170px;" />
+					
+					<p:outputLabel> País de origen: </p:outputLabel> 
+					<h:selectOneMenu id="paisOrigen" value="#{editarClienteBean.cliente.paisOrigen}"  style="max-width:180px;" >
+							<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+							<f:selectItems value="#{editarClienteBean.paises}" />
+					</h:selectOneMenu>
+					
+					<p:outputLabel>  Clasificacion Fiscal </p:outputLabel> 
+					<h:selectOneMenu id="clasificacionFiscal" value="#{editarClienteBean.cliente.clasificacionFiscal}"  style="max-width:180px;"
+						label="Clasificación fiscal">
+						<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+						<f:selectItem itemLabel="Persona natural" itemValue="persona natural"/>
+						<f:selectItem itemLabel="Persona juridica" itemValue="persona juridica"/>
+					</h:selectOneMenu>
+					
+					<p:outputLabel> Regimen </p:outputLabel> 
+					<h:selectOneMenu id="regimen" value="#{editarClienteBean.cliente.regimen}"   style="max-width:180px;">
+						<f:selectItem itemLabel="Común" itemValue="comun"/>
+						<f:selectItem itemLabel="Simplificado" itemValue="simplificado"/>
+					</h:selectOneMenu>			
+				</p:panelGrid>
+				
+				<p:panelGrid cellpading="5" columns="4">
+					<p:outputLabel> Departamento: </p:outputLabel> 
+					<h:selectOneMenu id="departamentoSolicitante"
+                                value="#{editarClienteBean.departamentoCliente}"
+                               style="max-width:180px; margin-left:20px; margin-right:0px;" >
+						<p:ajax listener="#{editarClienteBean.onDepartamentoSolicitanteChanged}"
+								global="false" update=":edicionCliente:panelCiudad"  />
+						<f:selectItem itemLabel="Seleccione departamento" itemValue="" noSelectionOption="true" />
+						<f:selectItems value="#{editarClienteBean.departamentos}" />
+					</h:selectOneMenu>
+					
+					<p:panel id="panelCiudad" >
+						<p:panelGrid columns="2"  rendered="#{not empty editarClienteBean.departamentoCliente}">
+							<p:outputLabel style="margin-left:-20px;" > Ciudad: </p:outputLabel> 
+							<h:selectOneMenu id="ciudadSolicitante"
+	                             	value="#{editarClienteBean.cliente.divipola}"
+									converter="omnifaces.SelectItemsConverter"
+	                                label="Ciudad cliente" style="max-width:180px;margin-left:20px;">
+								<f:selectItems value="#{editarClienteBean.ciudadesSolicitante}" var="ciudad" itemLabel="#{ciudad.centroPoblado}" itemValue="#{ciudad}" />
+							</h:selectOneMenu>
+						</p:panelGrid>
+					</p:panel>
+				</p:panelGrid>	
+				
+				<p:panelGrid id="direccionSolicitante" columns="9">
+					<p:outputLabel value="Tipo Via: " styleClass="subLabel" />
+					<p:outputLabel value="Via: " styleClass="subLabel" />
+					<p:outputLabel value="Complemento Via: " styleClass="subLabel" />
+					<p:outputLabel value="  " styleClass="subLabel" />
+					<p:outputLabel value="Número: " styleClass="subLabel" />
+					<p:outputLabel value="Complemento Numero: " styleClass="subLabel" />
+					<p:outputLabel value="  " styleClass="subLabel" />
+					<p:outputLabel value="Placa: " styleClass="subLabel" />
+					<p:outputLabel value="Adicional: " styleClass="subLabel" />
+					<h:selectOneMenu id="tipoViaSolicitante" value="#{editarClienteBean.tipoViaSolicitante}" label="Tipo vía Dirección del solicitante" style="width:100px;">
+						<f:selectItem itemLabel="Seleccione ..." noSelectionOption="true" />
+						<f:selectItem itemLabel="Calle" itemValue="CL"/>
+						<f:selectItem itemLabel="Carrera" itemValue="KR"/>
+						<f:selectItem itemLabel="Diagonal" itemValue="DG"/>
+						<f:selectItem itemLabel="Transversal" itemValue="TV"/>
+						<f:selectItem itemLabel="Avenida" itemValue="AV"/>
+						<f:selectItem itemLabel="Avenida calle" itemValue="AC"/>
+						<f:selectItem itemLabel="Avenida carrera" itemValue="AK"/>
+						<f:selectItem itemLabel="Avenida autopista" itemValue="AU"/>
+						<f:selectItem itemLabel="Carretera" itemValue="CT"/>
+						<f:selectItem itemLabel="Circular" itemValue="CQ"/>
+						<f:selectItem itemLabel="Camino" itemValue="CN"/>
+					</h:selectOneMenu>
+					<p:inputMask id="numeroViaSolicitante" mask="9?99" value="#{editarClienteBean.numeroViaSolicitante}" label="Número via Dirección del Solicitante" style="width:30px;"/>
+					<p:autoComplete id="complementoViaSolicitante" value="#{editarClienteBean.complementoViaSolicitante}" label="Complemento Via Solicitud" style="width:150px;" multiple="true" forceSelection="true" maxlength="1" completeMethod="#{editarClienteBean.completarComplemento}" />
+					<p:outputLabel value=" # " styleClass="subLabel" style="left: -8px;position: relative;font-size: 18px !important;" />
+					<p:inputMask id="numeroViaGeneradoraSolicitante" mask="9?99" value="#{editarClienteBean.numeroViaGeneradoraSolicitante}" label="Número Via Generadora Dirección del Solicitante" style="width:30px;" />
+					<p:autoComplete id="complementoViaGeneradoraSolicitante" value="#{editarClienteBean.complementoViaGeneradoraSolicitante}" label="Complemento Via Generadora" style="width:150px;" multiple="true" forceSelection="true" maxlength="1" completeMethod="#{editarClienteBean.completarComplemento}" />
+					<p:outputLabel value=" - " styleClass="subLabel" style="left: -8px;position: relative;font-size: 18px !important;" />
+					<p:inputText id="placaSolicitante" value="#{editarClienteBean.placaSolicitante}" label="Placa Dirección del Solicitante" style="width:30px;" />
+					<p:inputText id="adicionalDireccionSolicitante" value="#{editarClienteBean.adicionalDireccionSolicitante}" label="Complemento Via" style="width:150px;" />
+			</p:panelGrid>
+				
+			</p:panel>
+			<p:panel rendered="#{not empty editarClienteBean.cliente}" >
+				<p:commandButton  id="guardar"
+					styleClass="button_green" value="Guardar" 
+					action="#{editarClienteBean.guardar()}"
+					update=":busquedaCliente:mensajes :edicionCliente" />	
+				<p:commandButton icon="ui-icon-circle-close" value="Cancelar"
+					action="#{editarClienteBean.cancelar()}" 
+					styleClass="button_red"/>
+			</p:panel>
+			 <p:blockUI block="datosCliente guardar" trigger="guardar" />
+			<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+		</h:form>
+	</ui:define>
+	
+	</ui:composition>
+</h:body>
+</html>

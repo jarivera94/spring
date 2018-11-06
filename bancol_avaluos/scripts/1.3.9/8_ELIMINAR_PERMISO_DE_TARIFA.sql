@@ -1,0 +1,1 @@
+delete from avaluos.permiso where nombre = 'Modificar Tarifas';

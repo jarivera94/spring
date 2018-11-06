@@ -1,0 +1,1 @@
+ALTER TABLE avaluos.avaluo ADD COLUMN avaluo_sisgen_id integer UNIQUE null;

@@ -1,0 +1,1168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:o="http://omnifaces.org/ui"
+    xmlns:of="http://omnifaces.org/functions"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet name="grid/grid.css" library="primefaces" />
+</h:head>
+<body>
+    <f:metadata>
+        <f:viewParam name="id" value="#{solicitudBean.avaluoDTO.id}" />
+        <f:viewAction action="#{solicitudBean.cargarSolicitud}" />
+    </f:metadata>
+    <ui:composition template="/template/bancol_avaluos_template.xhtml">
+		<ui:define name="content">
+		<div style="width: 94%;margin: 0px auto;">
+			<h1>Ingreso de solicitud de avalúo</h1>
+        </div>
+			<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+				<p:graphicImage  name="images/ajax-loader.gif" />
+			</p:dialog>
+			<h:form id="solicitud" onkeypress="if (event.keyCode == 13) {return false; }">
+				<!-- <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> -->
+				<p:growl id="growl" showDetail="true" sticky="true" autoUpdate="false" />
+				<p:panelGrid  rendered="#{ not listadoAvaluosBean.permisoAbogado }" columns="2" style="width: 99%">
+					<h:outputLabel for="soloAvaluo" value="Solo avalúo: " />
+					<p:inputSwitch
+							id="soloAvaluo"
+							value="#{solicitudBean.avaluoDTO.soloAvaluo}"
+							onLabel="Si" offLabel="No"
+							onIcon="ui-icon-check"
+							offIcon="ui-icon-close" >
+						<p:ajax async="true"
+								listener="#{solicitudBean.cambiarSoloAvaluo()}"
+								update=":solicitud" />
+					</p:inputSwitch>
+				</p:panelGrid>
+				<p:accordionPanel id="accordionPanel" >
+					<p:ajax event="tabChange" listener="#{solicitudBean.cambioDeTab}" global="false" />
+					<p:tab id="informacionSolicitud" title="Información de la solicitud">
+						<p:panel id="informacionEntidad" header="Información de la entidad" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="entidad" value="Entidad: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel rendered="#{listadoAvaluosBean.permisoAbogado }" for="motivo" value="Bancolombia" />
+										<h:selectOneMenu id="entidad"
+                                                value="#{solicitudBean.avaluoDTO.entidad}"
+                                                required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]}"
+                                                requiredMessage="Entidad es requerida"
+                                                converter="omnifaces.SelectItemsConverter"
+                                                rendered="#{not listadoAvaluosBean.permisoAbogado }"
+                                                label="Entidad"
+                                                disabled="#{not (listadoAvaluosBean.cambiarCamposClaves )}">
+											<p:ajax listener="#{solicitudBean.cambioEntidad}"
+                                                onstart="PF('datosPersonalesCargando').show()"
+                                                oncomplete="PF('datosPersonalesCargando').hide()"
+                                                update="@(.gia-entidad) :solicitud:guardar :solicitud:growl"
+                                                process="@this @(.gia-entidad) :solicitud:guardar"
+                                                global="false" />
+                                            <f:selectItem itemLabel="Seleccione ..." noSelectionOption="true"/>
+											<f:selectItems value="#{solicitudBean.entidades}" var="entidad" itemLabel="#{entidad.nombre}" itemValue="#{entidad}" />
+										</h:selectOneMenu>
+										
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="codigoExterno" value="Código Externo:" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask mask="9?999999999999"
+                                                id="codigoExterno"
+                                                value="#{solicitudBean.avaluoDTO.codigoExterno}"
+                                                required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]}"
+                                                requiredMessage="Codigo externo es requerido"
+                                                label="Codigo Externo"
+                                                disabled="#{not (listadoAvaluosBean.cambiarCamposClaves )}"
+                                                style="width: 99%" >
+											<p:ajax event="change"
+                                                listener="#{solicitudBean.validarCodigoExterno}"
+                                                onstart="$( '#solicitud\\:accordionPanel\\:codigoExterno' ).addClass('loadinggif');"
+                                                oncomplete="$( '#solicitud\\:accordionPanel\\:codigoExterno' ).removeClass('loadinggif');"
+                                                process="codigoExterno, entidad, motivo, idSisgen"
+                                                update=":solicitud:growl :solicitud:guardar personaRecibe"
+                                                global="false" />
+											<f:validateLength minimum="3" maximum="13"/>
+										</p:inputMask>
+									</p:column>
+								</p:row>
+								<p:row rendered="#{not empty facesContext.messageList and (not empty facesContext.getMessageList('solicitud:accordionPanel:entidad') or not empty facesContext.getMessageList('solicitud:accordionPanel:codigoExterno'))}">
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<p:message for="entidad" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<p:message for="codigoExterno" />
+									</p:column>
+								</p:row>
+								<p:row>
+								 <p:column styleClass="ui-widget-header">
+										<h:outputLabel for="motivo" value="Motivo del avalúo:" />
+									</p:column>
+									<p:column styleClass="ui-widget-header gia-entidad">
+										<h:outputLabel rendered="#{solicitudBean.mostrarMotivoMenu and listadoAvaluosBean.permisoAbogado }" for="motivo" value="Remates" />
+										<h:selectOneMenu id="motivo"
+                                            value="#{solicitudBean.avaluoDTO.motivo}"
+                                            required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]}"
+                                            requiredMessage="Motivo es requerido"
+                                            label="Motivo del avalúo"
+                                            style="width: 99%" 
+                                            styleClass="gia-entidad"
+                                            disabled="#{not (listadoAvaluosBean.cambiarCamposClaves )}"
+                                            rendered="#{solicitudBean.mostrarMotivoMenu and not listadoAvaluosBean.permisoAbogado }" >
+
+											<f:selectItems value="#{solicitudBean.motivosEntidad}" var="motivo" itemLabel="#{motivo.nombre}" itemValue="#{motivo.codigo}" />
+										</h:selectOneMenu>
+										
+										<h:outputLabel rendered="#{not solicitudBean.mostrarMotivoMenu }" for="motivo" value="#{solicitudBean.avaluoDTO.descripcionMotivo}" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="idSisgen" value="ID Sisgen:" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask mask="9?999999999999"
+                                                id="idSisgen"
+                                                value="#{solicitudBean.avaluoDTO.avaluoSisgenId}"
+                                                label="ID Sisgen"
+                                                disabled="#{not (listadoAvaluosBean.modificarIdSisgen)}"
+                                                style="width: 99%" >
+                                            <p:ajax event="change"
+                                                listener="#{solicitudBean.validarIdSisgen}"
+                                                onstart="$( '#solicitud\\:accordionPanel\\:idSisgen' ).addClass('loadinggif');"
+                                                oncomplete="$( '#solicitud\\:accordionPanel\\:idSisgen' ).removeClass('loadinggif');"
+                                                process="codigoExterno, entidad, motivo, idSisgen"
+                                                update=":solicitud:growl :solicitud:guardar personaRecibe"
+                                                global="false" />
+                                        	<f:validateLength minimum="3" maximum="13"/>
+										</p:inputMask>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<!-- end entiadad datos -->
+
+                        <p:panel style="margin-bottom:10px">
+                            <p:blockUI block="ciudad_solo_avaluo" widgetVar="bloquear_ciudad_solo_avaluo" />
+                            <p:panelGrid rendered="#{solicitudBean.avaluoDTO.soloAvaluo}"  columns="4" style="width: auto;">
+                                <p:outputLabel for="departamento_solo_avaluo" value="Departamento: " />
+                                <h:selectOneMenu id="departamento_solo_avaluo"
+                                                 value="#{solicitudBean.departamentoInmueble}"
+                                                 required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]}"
+                                                 requiredMessage="Departamento inmueble es requerido"
+                                                 label="Departamento Inmueble"
+                                                 style="width: 99%">
+                                    <p:ajax listener="#{solicitudBean.onDepartamentoInmuebleChanged}"
+                                            onstart="PF('bloquear_ciudad_solo_avaluo').show()"
+                                            oncomplete="PF('bloquear_ciudad_solo_avaluo').hide();"
+                                            update="ciudad_solo_avaluo" global="false" />
+                                    <f:selectItem itemLabel="Seleccione departamento" itemValue="" noSelectionOption="true" />
+                                    <f:selectItems value="#{solicitudBean.departamentos}" />
+                                </h:selectOneMenu>
+                                <p:outputLabel for="ciudad_solo_avaluo" value="Ciudad: " />
+                                <h:selectOneMenu id="ciudad_solo_avaluo"
+                                                 value="#{solicitudBean.avaluoDTO.divipola}"
+                                                 required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]}"
+                                                 requiredMessage="Ciudad inmueble es requerido"
+                                                 converter="omnifaces.SelectItemsConverter"
+                                                 label="Ciudad Inmueble"
+                                                 style="width: 99%">
+                                    <f:selectItems value="#{solicitudBean.ciudadesInmueble}" var="ciudad" itemLabel="#{ciudad.centroPoblado}" itemValue="#{ciudad}" />
+                                </h:selectOneMenu>
+                                <p:spacer rendered="#{not empty facesContext.messageList and (not empty facesContext.getMessageList('solicitud:accordionPanel:departamento_solo_avaluo'))}" height="30" />
+                                <p:message rendered="#{not empty facesContext.messageList and (not empty facesContext.getMessageList('solicitud:accordionPanel:departamento_solo_avaluo'))}" for="departamento_solo_avaluo" />
+                                <p:spacer rendered="#{not empty facesContext.messageList and (not empty facesContext.getMessageList('solicitud:accordionPanel:ciudad_solo_avaluo'))}" height="30" />
+                                <p:message rendered="#{not empty facesContext.messageList and (not empty facesContext.getMessageList('solicitud:accordionPanel:ciudad_solo_avaluo'))}" for="ciudad_solo_avaluo" />
+                            </p:panelGrid>
+                        </p:panel>
+
+						<p:panel id="datosAvaluo"
+                                 header="Datos para el avalúo"
+                                 styleClass="gia-entidad"
+                                 rendered="#{not solicitudBean.avaluoDTO.soloAvaluo}"
+                                 style="margin-bottom:10px">
+
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="tipoAvaluo" value="Tipo avalúo: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="tipoAvaluo"
+                                                value="#{solicitudBean.avaluoDTO.tipoAvaluo}"
+                                                converter="omnifaces.SelectItemsConverter"
+                                                rendered="#{solicitudBean.tiposAvaluo.size() > 1}"
+                                                required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]}"
+                                                requiredMessage="Tipo de avaluo es requerido"
+                                                label="Tipo avalúo"
+                                                style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." noSelectionOption="true"/>
+											<f:selectItems value="#{solicitudBean.tiposAvaluo}" var="tipoAvaluo" itemValue="#{tipoAvaluo}" itemLabel="#{tipoAvaluo.nombre}" />
+											<p:ajax event="change" update="@form" process="@form" listener="#{solicitudBean.cambioTipoAvaluo}"
+											global="false" onstart="$( '#solicitud\\:accordionPanel\\:tipoAvaluo' ).addClass('loadinggif');" oncomplete="$( '#solicitud\\:accordionPanel\\:tipoAvaluo' ).removeClass('loadinggif');" />
+										</h:selectOneMenu>
+                                        <h:outputText value="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre}"
+                                            rendered="#{solicitudBean.tiposAvaluo.size() eq 1}" />
+									</p:column>
+
+									<!-- VALOR SOLICITADO  -->
+									<p:column styleClass="ui-widget-header"  rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}">
+										<h:outputLabel for="valorSolicitado" value="Valor solicitado: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header"  rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}">
+										<p:inputNumber id="valorSolicitado"
+											value="#{solicitudBean.avaluoDTO.valorSolicitado}"
+											decimalSeparator=","
+											thousandSeparator="."
+											symbol="$"
+											symbolPosition="p"
+											decimalPlaces="0"
+											maxValue="999999999999"
+											label="Valor solicitado"
+											style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{(not empty facesContext.messageList and (not empty facesContext.getMessageList('solicitud:accordionPanel:tipoAvaluo')
+									or not empty facesContext.getMessageList('solicitud:accordionPanel:valorSolicitado'))) and solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates' }">
+									<p:column styleClass="ui-widget-header" colspan="2" >
+										<p:message for="tipoAvaluo" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="2" >
+										<p:message for="valorSolicitado" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="objetoAvaluo" value="Objeto del Avalúo:" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="objetoAvaluo"
+                                            value="#{solicitudBean.avaluoDTO.objetoDelAvaluo}"
+                                            converter="omnifaces.SelectItemsConverter"
+                                            required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]}"
+                                            requiredMessage="Objeto de avaluo es requerido"
+                                            label="Objeto del Avalúo"
+                                            rendered="#{solicitudBean.objetosAvaluo.size() > 1}"
+                                            style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." noSelectionOption="true"/>
+											<f:selectItems
+                                                value="#{solicitudBean.objetosAvaluo}"
+                                                var="objetoAvaluo" itemValue="#{objetoAvaluo}"
+                                                itemLabel="#{objetoAvaluo.nombre}"/>
+										</h:selectOneMenu>
+										
+                                        <h:outputText  value="#{solicitudBean.avaluoDTO.objetoDelAvaluo.nombre}"
+                                            rendered="#{empty solicitudBean.objetosAvaluo}" />
+									</p:column>
+									
+									<p:column colspan="2" />
+                                   
+								</p:row>
+								<p:row rendered="#{not empty facesContext.messageList and (not empty facesContext.getMessageList('solicitud:accordionPanel:objetoAvaluo') or not empty facesContext.getMessageList('solicitud:accordionPanel:motivo'))}">
+									<p:column styleClass="ui-widget-header" colspan="2" >
+										<p:message for="objetoAvaluo" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="2" >
+										<p:message for="motivo" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<!-- end datos avaluo  -->
+
+						<p:panel id="datosPersonales" style="margin-bottom:10px">
+                            <p:blockUI block="datosPersonales" widgetVar="datosPersonalesCargando">
+								<p:graphicImage name="images/ajax-loader2.gif"/>
+                            </p:blockUI>
+                            <p:outputLabel value="Datos Personales"
+                                    rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}"
+                                    style="font-size: 20px !important;"/>
+							<p:outputLabel value="Datos del Propietario"
+                                    rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre eq 'Remates'}"
+                                    style="font-size: 20px !important;"/>
+							<p:panelGrid id="documentoIdentificacion" style="width: 99%; margin-top: 10px;">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="tipoDocumentoId" value="Tipo de documento: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="tipoDocumentoId"
+														 value="#{solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion}"
+														 disabled="#{not solicitudBean.crearSolicitud }"
+                                                         required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]}"
+														 requiredMessage="Tipo Documento Solicitante es requerido"
+														 label="Tipo de documento de identificación" style="width: 99%">
+											<p:ajax
+                                                update="datosPersonales nombreCliente personaRecibe numeroDocumento"
+                                                onstart="PF('datosPersonalesCargando').show()"
+                                                oncomplete="PF('datosPersonalesCargando').hide()"
+											    listener="#{solicitudBean.cambioTipoDocumento()}"
+											    global="false" />
+											<f:selectItem itemLabel="Seleccione ..." noSelectionOption="true"/>
+											<f:selectItem itemLabel="C.C." itemValue="21"/>
+											<f:selectItem itemLabel="C.Ext." itemValue="22"/>
+											<f:selectItem itemLabel="NIT." itemValue="23"/>
+										</h:selectOneMenu>
+									</p:column>
+
+									<!-- sin nit  -->
+									<p:column styleClass="ui-widget-header" rendered="#{solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion ne '23'}">
+										<h:outputLabel for="numeroDocumento" value="Número de documento: " />
+									</p:column>
+
+									<p:column styleClass="ui-widget-header"
+											  rendered="#{solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion ne '23'}">
+										<p:inputMask id="numeroDocumento"
+											value="#{solicitudBean.avaluoDTO.cliente.numeroDocumento}"
+											label="Número de documento" style="width: 99%"
+											disabled="#{not solicitudBean.crearSolicitud }"
+											required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]}"
+											mask="9?999999999"
+											>
+											<p:ajax event="change" listener="#{solicitudBean.onClienteSeleccionado}"
+                                                update=":solicitud:growl, :solicitud:guardar, datosPersonales"
+                                                onstart="PF('datosPersonalesCargando').show()"
+                                                oncomplete="PF('datosPersonalesCargando').hide()"
+                                                global="false"/>
+										</p:inputMask>
+									</p:column>
+									<!-- con nit  -->
+									<p:column styleClass="ui-widget-header" rendered="#{solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '23'}">
+										<h:outputLabel for="numeroDocumento-nit" value="Número de documento: " />
+									</p:column>
+
+									<p:column styleClass="ui-widget-header"  rendered="#{solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '23'}">
+										<p:inputMask id="numeroDocumento-nit"
+											value="#{solicitudBean.avaluoDTO.cliente.numeroDocumento}"
+											converter="#{NITConverter}"
+											required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]}"
+											label="Número de documento" style="width: 99%"
+											disabled="#{not solicitudBean.crearSolicitud }"
+											mask="999999999-9"
+											>
+											<p:ajax event="change"
+                                                listener="#{solicitudBean.onClienteSeleccionado}" 
+                                                update=":solicitud:growl datosPersonales :solicitud:guardar"
+											    global="false"
+                                                onstart="PF('datosPersonalesCargando').show()"
+                                                oncomplete="PF('datosPersonalesCargando').hide()" />
+									 	</p:inputMask>
+									</p:column>
+
+								</p:row>
+
+								<p:row rendered="#{
+									not empty facesContext.messageList
+									and (not empty facesContext.getMessageList('solicitud:accordionPanel:tipoDocumentoId')
+									or (not empty facesContext.getMessageList('solicitud:accordionPanel:numeroDocumento' and solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion ne '23')
+									or ( not empty facesContext.getMessageList('solicitud:accordionPanel:numeroDocumento-nit')  and solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '23'  )  ))}">
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<p:message for="tipoDocumentoId"/>
+									</p:column>
+									<p:column rendered="#{not empty facesContext.messageList and not empty facesContext.getMessageList('solicitud:accordionPanel:numeroDocumento')}" styleClass="ui-widget-header" colspan="2">
+										<p:message for="numeroDocumento" />
+									</p:column>
+									<p:column rendered="#{not empty facesContext.messageList and not empty facesContext.getMessageList('solicitud:accordionPanel:numeroDocumento-nit')}" styleClass="ui-widget-header" colspan="2">
+										<p:message for="numeroDocumento-nit" />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{not empty solicitudBean.avaluosAnteriores}">
+									<p:column styleClass="ui-widget-header" colspan="4">
+										<h:outputText value="Cliente presenta avaluos" />
+										<p:spacer width="20px"/>
+										<p:commandButton update=":avaluoTabla" icon="ui-icon-search" oncomplete="PF('avaluosAnteriores').show()" process="@this" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+
+							<!-- NOMBRES DEL CLIENTE  -->
+							<p:panelGrid id="nombreCliente" style="width: 99%">
+
+								<p:row rendered="#{solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '23'}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="razonSocial" value="Razón social: " />
+									</p:column>
+
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<p:inputText id="razonSocial"
+										disabled="#{not solicitudBean.crearSolicitud }"
+                                            value="#{solicitudBean.avaluoDTO.cliente.razonSocial}"
+                                            required="#{(not empty param[guardar.clientId] or not empty param[asignarperito.clientId])
+                                                and solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '23'}" 
+                                            requiredMessage="Razón social es requerido" label="Razón social" style="width: 99%" />
+									</p:column>
+								</p:row>
+
+
+								<p:row rendered="#{not empty facesContext.messageList and not empty facesContext.getMessageList('solicitud:accordionPanel:razonSocial')}">
+									<p:column styleClass="ui-widget-header" colspan="4">
+										<p:message for="razonSocial" />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '21' or solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '22'}">
+									<p:column styleClass="ui-widget-header" >
+										<h:outputLabel for="primerNombre" value="Primer nombre: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText 
+										disabled="#{not solicitudBean.crearSolicitud }"									
+										id="primerNombre" value="#{solicitudBean.avaluoDTO.cliente.primerNombre}"
+                                            required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]
+                                                and (solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '21' or solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '22')}" 
+											requiredMessage="Primer nombre es requerido" label="Primer nombre" style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{not empty facesContext.messageList and not empty facesContext.getMessageList('solicitud:accordionPanel:primerNombre')}">
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<p:message for="primerNombre" />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '21' or solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '22'}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="segundoNombre" value="Segundo nombre: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="segundoNombre" disabled="#{not solicitudBean.crearSolicitud }" value="#{solicitudBean.avaluoDTO.cliente.segundoNombre}" label="Segundo nombre" style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '21' or solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '22'}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="primerApellido" value="Primer apellido: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="primerApellido" disabled="#{not solicitudBean.crearSolicitud }" value="#{solicitudBean.avaluoDTO.cliente.primerApellido}"
+                                           required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId] and (solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '21' or solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '22')}"
+											requiredMessage="Primer apellido es requerido" label="Primer apellido"  style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{not empty facesContext.messageList and not empty facesContext.getMessageList('solicitud:accordionPanel:primerApellido')}">
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<p:message for="primerApellido"/>
+									</p:column>
+								</p:row>
+								<p:row rendered="#{solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '21' or solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '22'}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="segundoApellido" value="Segundo apellido: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText disabled="#{not solicitudBean.crearSolicitud }" id="segundoApellido" value="#{solicitudBean.avaluoDTO.cliente.segundoApellido}" label="Segundo apellido" style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '23' and not solicitudBean.avaluoDTO.soloAvaluo}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="paisOrigen" value="País de origen: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="paisOrigen" value="#{solicitudBean.avaluoDTO.cliente.paisOrigen}" style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." noSelectionOption="true"/>
+											<f:selectItems value="#{solicitudBean.paises}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="clasificacionFiscal" value="Clasificación fiscal: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="clasificacionFiscal" value="#{solicitudBean.avaluoDTO.cliente.clasificacionFiscal}" label="Clasificación fiscal" style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." noSelectionOption="true"/>
+											<f:selectItem itemLabel="Persona natural" itemValue="persona natural"/>
+											<f:selectItem itemLabel="Persona juridica" itemValue="persona juridica"/>
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row rendered="#{solicitudBean.avaluoDTO.cliente.tipoDocumentoIdentificacion eq '23' and not solicitudBean.avaluoDTO.soloAvaluo}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="regimen" value="Régimen: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="regimen" value="#{solicitudBean.avaluoDTO.cliente.regimen}" style="width: 99%" >
+											<f:selectItem itemLabel="Común" itemValue="comun"/>
+											<f:selectItem itemLabel="Simplificado" itemValue="simplificado"/>
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="codigoCIIU" value="Código CIIU: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="codigoCIIU" value="#{solicitudBean.avaluoDTO.cliente.codigoCIIU}" label="Código CIIU" style="width: 99%" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+							<p:panelGrid id="datosCliente" rendered="#{not solicitudBean.avaluoDTO.soloAvaluo}" >
+								<p:row style="width: 200px !important">
+									<p:column rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}">
+										<h:outputLabel for="celular" value="Celular: " />
+									</p:column>
+									<p:column rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}" style="width: 20% !important;">
+										<p:inputMask id="celular" mask="999-999-9999" value="#{solicitudBean.avaluoDTO.cliente.celularSolicitante}"
+										label="Celular Solicitud" validatorMessage="Celular debe tener 10 digitos" requiredMessage="Celular es requerido" style="width: 70%;">
+											<f:validateRegex pattern="\d{3}[\-]\d{3}[\-]\d{4}" />
+											<p:ajax update="msgCelular" event="blur" global="false"/>
+										</p:inputMask>
+									</p:column>
+									<p:column rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}" style="width: 150px !important;">
+										<h:outputLabel for="telefono" value="(Cod. Area)+Teléfono: " />
+									</p:column>
+									<p:column rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}" style="width: 20% !important;">
+										<p:inputText id="telefono" value="#{solicitudBean.avaluoDTO.cliente.telefonoSolicitante}" 
+										requiredMessage="Telefono es requerido" label="Teléfonos Solicitud" style="width: 70%;"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<p:message id="msgCelular" for="celular"/>
+									</p:column>
+									<p:column styleClass="ui-widget-header"	colspan="2">
+										<p:message for="telefono" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}" style="width: 150px !important;"> 
+										<h:outputLabel for="correoElectronico" value="Correo Electrónico: " />
+									</p:column>
+									<p:column rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}" style="width: 150px !important;">
+										<p:inputText id="correoElectronico" value="#{solicitudBean.avaluoDTO.cliente.correoElectronicoSolicitante}"
+											label="Correo Electrónico" 
+											validatorMessage="Correo invalido" style="width: 70%;">
+											<p:ajax event="change" onstart="$( '#solicitud\\:accordionPanel\\:correoElectronico' ).addClass('loadinggif');"
+											oncomplete="$( '#solicitud\\:accordionPanel\\:correoElectronico' ).removeClass('loadinggif');" global="false"
+											process="datosCliente" update="msgCorreoSolicitante" />
+											<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="2">
+										<p:message id="msgCorreoSolicitante" for="correoElectronico"/>
+									</p:column>
+								</p:row>
+
+								<!-- direcccion solicitante  -->
+								<p:row  rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}">
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="direccionSolicitante" value="Dirección del solicitante: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<p:panelGrid id="direccionSolicitante" columns="9">
+											<p:outputLabel value="Tipo Via: " styleClass="subLabel" />
+											<p:outputLabel value="Via: " styleClass="subLabel" />
+											<p:outputLabel value="Complemento Via: " styleClass="subLabel" />
+											<p:outputLabel value="  " styleClass="subLabel" />
+											<p:outputLabel value="Número: " styleClass="subLabel" />
+											<p:outputLabel value="Complemento Numero: " styleClass="subLabel" />
+											<p:outputLabel value="  " styleClass="subLabel" />
+											<p:outputLabel value="Placa: " styleClass="subLabel" />
+											<p:outputLabel value="Adicional: " styleClass="subLabel" />
+											<h:selectOneMenu id="tipoViaSolicitante" value="#{solicitudBean.tipoViaSolicitante}" label="Tipo vía Dirección del solicitante" style="width:100px;">
+														<f:selectItem itemLabel="Seleccione ..." noSelectionOption="true" />
+														<f:selectItem itemLabel="Calle" itemValue="CL"/>
+														<f:selectItem itemLabel="Carrera" itemValue="KR"/>
+														<f:selectItem itemLabel="Diagonal" itemValue="DG"/>
+														<f:selectItem itemLabel="Transversal" itemValue="TV"/>
+														<f:selectItem itemLabel="Avenida" itemValue="AV"/>
+														<f:selectItem itemLabel="Avenida calle" itemValue="AC"/>
+														<f:selectItem itemLabel="Avenida carrera" itemValue="AK"/>
+														<f:selectItem itemLabel="Avenida autopista" itemValue="AU"/>
+														<f:selectItem itemLabel="Carretera" itemValue="CT"/>
+														<f:selectItem itemLabel="Circular" itemValue="CQ"/>
+														<f:selectItem itemLabel="Camino" itemValue="CN"/>
+													</h:selectOneMenu>
+											<p:inputMask id="numeroViaSolicitante" mask="9?99" value="#{solicitudBean.numeroViaSolicitante}" label="Número via Dirección del Solicitante" style="width:30px;">
+													</p:inputMask>
+											<p:autoComplete id="complementoViaSolicitante" value="#{solicitudBean.complementoViaSolicitante}" label="Complemento Via Solicitud" style="width:150px;" multiple="true" forceSelection="true" maxlength="1" completeMethod="#{solicitudBean.completarComplemento}" />
+											<p:outputLabel value=" # " styleClass="subLabel" style="left: -8px;position: relative;font-size: 18px !important;" />
+											<p:inputMask id="numeroViaGeneradoraSolicitante" mask="9?99" value="#{solicitudBean.numeroViaGeneradoraSolicitante}" label="Número Via Generadora Dirección del Solicitante" style="width:30px;" >
+													</p:inputMask>
+											<p:autoComplete id="complementoViaGeneradoraSolicitante" value="#{solicitudBean.complementoViaGeneradoraSolicitante}" label="Complemento Via Generadora" style="width:150px;" multiple="true" forceSelection="true" maxlength="1" completeMethod="#{solicitudBean.completarComplemento}" />
+											<p:outputLabel value=" - " styleClass="subLabel" style="left: -8px;position: relative;font-size: 18px !important;" />
+											<p:inputText id="placaSolicitante" value="#{solicitudBean.placaSolicitante}" label="Placa Dirección del Solicitante" style="width:30px;">
+													</p:inputText>
+											<p:inputText id="adicionalDireccionSolicitante" value="#{solicitudBean.adicionalDireccionSolicitante}" label="Complemento Via" style="width:150px;">
+													</p:inputText>
+											<!--  se quitan los mensajes de obligatoriedad de la direccion del cliente
+											<p:row rendered="#{(not empty facesContext.messageList and (not empty facesContext.getMessageList('solicitud:accordionPanel:tipoViaSolicitante')
+												or not empty facesContext.getMessageList('solicitud:accordionPanel:numeroViaSolicitante') or not empty facesContext.getMessageList('solicitud:accordionPanel:numeroViaGeneradoraSolicitante')
+												or not empty facesContext.getMessageList('solicitud:accordionPanel:placaSolicitante')))  and solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates' }">
+												<p:column styleClass="ui-widget-header">
+													<p:message for="tipoViaSolicitante" />
+												</p:column>
+												<p:column styleClass="ui-widget-header" colspan="2" >
+													<p:message for="numeroViaSolicitante" />
+												</p:column>
+												<p:column styleClass="ui-widget-header" colspan="2" >
+													<p:message for="numeroViaGeneradoraSolicitante" />
+												</p:column>
+												<p:column styleClass="ui-widget-header" colspan="2" >
+													<p:message for="placaSolicitante" />
+												</p:column>
+												
+											</p:row>
+											-->
+										</p:panelGrid>
+									</p:column>
+								</p:row>
+
+
+								<p:row rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}">
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="departamentoSolicitante" value="Departamento del solicitante: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="departamentoSolicitante"
+                                                value="#{solicitudBean.departamentoCliente}"
+                                                required="#{not solicitudBean.avaluoDTO.soloAvaluo and (not empty param[guardar.clientId] or not empty param[asignarperito.clientId])}"
+                                                style="width: 99%" 
+											validatorMessage="Departamento de solicitante es erroneo" requiredMessage="Departamento de solicitante es requerido">
+											<p:ajax listener="#{solicitudBean.onDepartamentoSolicitanteChanged}"
+												global="false" update=":solicitud:accordionPanel:ciudadSolicitante"
+												onstart="$( '#solicitud\\:accordionPanel\\:ciudadSolicitante' ).addClass('loadinggif');"
+												oncomplete="$( '#solicitud\\:accordionPanel\\:ciudadSolicitante' ).removeClass('loadinggif');" />
+											<f:selectItem itemLabel="Seleccione departamento" itemValue="" noSelectionOption="true" />
+											<f:selectItems value="#{solicitudBean.departamentos}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="ciudadSolicitante" value="Ciudad del solicitante: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="ciudadSolicitante"
+                                                value="#{solicitudBean.avaluoDTO.cliente.divipola}"
+                                                required="#{not solicitudBean.avaluoDTO.soloAvaluo and (not empty param[guardar.clientId] or not empty param[asignarperito.clientId])}"
+											    validatorMessage="Ciudad de solicitante es erroneo"
+                                                requiredMessage="Ciudad de solicitante es requerido"
+											    converter="omnifaces.SelectItemsConverter"
+                                                label="Ciudad cliente" style="width: 99%">
+											<f:selectItems value="#{solicitudBean.ciudadesSolicitante}" var="ciudad" itemLabel="#{ciudad.centroPoblado}" itemValue="#{ciudad}" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+
+								<p:row rendered="#{(not empty facesContext.messageList and (not empty facesContext.getMessageList('solicitud:accordionPanel:departamentoSolicitante')
+									or not empty facesContext.getMessageList('solicitud:accordionPanel:ciudadSolicitante')))  and solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}">
+									<p:column styleClass="ui-widget-header" colspan="2" >
+										<p:message for="departamentoSolicitante" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="2" >
+										<p:message for="ciudadSolicitante" />
+									</p:column>
+								</p:row>
+
+							</p:panelGrid>
+							<p:panelGrid id="informacionBancolombia" style="width: 99%" rendered="#{not solicitudBean.avaluoDTO.soloAvaluo}" >
+								<p:row rendered="#{solicitudBean.entidadBancolombia and solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}" styleClass="ui-widget-header">
+									<p:column styleClass="ui-widget-header" colspan="4">
+										<h2>Bancolombia</h2>
+									</p:column>
+								</p:row>
+								<p:row rendered="#{solicitudBean.entidadBancolombia and solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="empleadoEntidad" value="Empleado de Entidad: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="empleadoEntidad" value="#{solicitudBean.avaluoDTO.cliente.empleadoEntidad}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="clienteExterior" value="Cliente en el exterior: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="clienteExterior" value="#{solicitudBean.avaluoDTO.cliente.clienteExterior}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+							<p:panelGrid style="width: 99%" rendered="#{not solicitudBean.avaluoDTO.soloAvaluo}" >
+								<p:row rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="segmento" value="Segmento: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<h:selectOneMenu
+                                                id="segmento"
+                                                value="#{solicitudBean.avaluoDTO.cliente.segmento}"
+                                                label="Segmento"
+                                                styleClass="gia-entidad"
+                                                converter="omnifaces.SelectItemsConverter" >
+                                            <f:selectItem itemLabel="Seleccione ..." itemValue="#{null}" noSelectionOption="true"/>
+											<f:selectItems value="#{solicitudBean.segmentos}" var="segmento" itemLabel="#{segmento.nombre}" itemValue="#{segmento}" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+					<p:tab id="informacionInmuebleTab" title="Información del inmueble" rendered="#{not solicitudBean.avaluoDTO.soloAvaluo}" >
+
+						<p:panel id="informacionInmueble" header="Información del inmueble" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="tipoInmueble" value="Tipo del inmueble: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<h:selectOneMenu id="tipoInmueble"
+                                                value="#{solicitudBean.avaluoDTO.tipoDeInmueble}"
+                                                converter="omnifaces.SelectItemsConverter"
+                                                required="#{not solicitudBean.avaluoDTO.soloAvaluo and (not empty param[guardar.clientId] or not empty param[asignarperito.clientId])}"
+                                                requiredMessage="Tipo inmueble es requerido"
+                                                label="Tipo del inmueble"
+                                                style="width: 99%">
+											<f:selectItem itemLabel="Seleccione ..." itemValue="null" noSelectionOption="true"/>
+											<f:selectItems value="#{solicitudBean.tiposInmueble}" var="tipoInmueble" itemValue="#{tipoInmueble}" itemLabel="#{tipoInmueble.nombre}" />
+										</h:selectOneMenu>
+									</p:column>
+									<!--
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="matriculaInmobiliariaPrincipal1" value="Matricula inmobiliaria principal: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="matriculaInmobiliariaPrincipal1" value="#{solicitudBean.avaluoDTO.matriculaInmobiliariaPrincipal1}" label="Matricula Inmobiliaria Principal" style="width: 99%" >
+										</p:inputText>
+									</p:column>
+									 -->
+								</p:row>
+								<p:row rendered="#{not empty facesContext.messageList and not empty facesContext.getMessageList('solicitud:accordionPanel:tipoInmueble')}">
+									<p:column styleClass="ui-widget-header" colspan="4" >
+										<p:message for="tipoInmueble" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}">
+										<h:outputLabel for="repetirDireccion" value="¿Repetir dirección del cliente? " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3" rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}">
+										<p:selectBooleanCheckbox id="repetirDireccion" value="#{solicitudBean.repetirDireccionCliente}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:99%">
+											<p:ajax event="change" resetValues="true" listener="#{solicitudBean.onRepetirDireccion}"
+											process="@this,:solicitud:accordionPanel:direccionSolicitante, :solicitud:accordionPanel:departamentoSolicitante, :solicitud:accordionPanel:ciudadSolicitante"
+											update=":solicitud:accordionPanel:direccion,:solicitud:accordionPanel:departamento,:solicitud:accordionPanel:ciudadInmueble"
+											global="false"
+											onstart="$( '#solicitud\\:accordionPanel\\:repetirDireccion' ).addClass('loadinggif');"
+											oncomplete="$( '#solicitud\\:accordionPanel\\:repetirDireccion' ).removeClass('loadinggif');"/>
+										</p:selectBooleanCheckbox>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="direccion" value="Dirección: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<p:panelGrid id="direccion" columns="9">
+											<p:outputLabel value="Tipo Via: " styleClass="subLabel" />
+											<p:outputLabel value="Via: " styleClass="subLabel" />
+											<p:outputLabel value="Complemento Via: " styleClass="subLabel" />
+											<p:outputLabel value="  " styleClass="subLabel" />
+											<p:outputLabel value="Número: " styleClass="subLabel" />
+											<p:outputLabel value="Complemento Numero: " styleClass="subLabel" />
+											<p:outputLabel value="  " styleClass="subLabel" />
+											<p:outputLabel value="Placa: " styleClass="subLabel" />
+											<p:outputLabel value="Adicional: " styleClass="subLabel" />
+											<h:selectOneMenu id="tipoVia" value="#{solicitudBean.avaluoDTO.tipoVia}" label="Tipo vía Inmueble" style="width:100px;">
+														<f:selectItem itemLabel="Seleccione ..." noSelectionOption="true"/>
+														<f:selectItem itemLabel="Calle" itemValue="CL"/>
+														<f:selectItem itemLabel="Carrera" itemValue="KR"/>
+														<f:selectItem itemLabel="Diagonal" itemValue="DG"/>
+														<f:selectItem itemLabel="Transversal" itemValue="TV"/>
+														<f:selectItem itemLabel="Avenida" itemValue="AV"/>
+														<f:selectItem itemLabel="Avenida calle" itemValue="AC"/>
+														<f:selectItem itemLabel="Avenida carrera" itemValue="AK"/>
+														<f:selectItem itemLabel="Avenida autopista" itemValue="AU"/>
+														<f:selectItem itemLabel="Carretera" itemValue="CT"/>
+														<f:selectItem itemLabel="Circular" itemValue="CQ"/>
+														<f:selectItem itemLabel="Camino" itemValue="CN"/>
+													</h:selectOneMenu>
+											<p:inputMask id="numeroVia" mask="9?99" value="#{solicitudBean.avaluoDTO.numeroVia}" label="Número via Inmueble" style="width:30px;">
+													</p:inputMask>
+											<p:autoComplete id="complementoVia" value="#{solicitudBean.complementoVia}" label="Complemento Via" style="width:150px;" multiple="true" forceSelection="true" maxlength="1" completeMethod="#{solicitudBean.completarComplemento}" />
+											<p:outputLabel value=" # " styleClass="subLabel" style="left: -8px;position: relative;font-size: 18px !important;" />
+											<p:inputMask id="numeroViaGeneradora" mask="9?99" value="#{solicitudBean.avaluoDTO.numeroViaGeneradora}" label="Número de via generadora Inmueble" style="width:30px;" >
+													</p:inputMask>
+											<p:autoComplete id="complementoViaGeneradora" value="#{solicitudBean.complementoViaGeneradora}" label="Complemento Via Generadora" style="width:150px;" multiple="true" forceSelection="true" maxlength="1" completeMethod="#{solicitudBean.completarComplemento}" />
+											<p:outputLabel value=" - " styleClass="subLabel" style="left: -8px;position: relative;font-size: 18px !important;" />
+											<p:inputText id="placa" value="#{solicitudBean.avaluoDTO.placa}" style="width:30px;">
+													</p:inputText>
+											<p:inputText id="adicionalDireccion" value="#{solicitudBean.avaluoDTO.adicionalDireccion}" label="Adicional" style="width:150px;" />
+											<p:row rendered="#{solicitudBean.errorDireccionInmueble}"> 
+												<p:column colspan="6"> <p:messages for="errorMessageInmueble" id="messageErrorDireccion" showDetail="true" closable="true" />  </p:column> 
+											</p:row>
+										</p:panelGrid>
+									</p:column>
+								</p:row>
+								<p:row rendered="#{not empty solicitudBean.avaluosDireccion}">
+									<p:column styleClass="ui-widget-header" colspan="3" >
+										<p:spacer height="0"/>
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<h:outputText value="Inmueble presenta avaluos" />
+										<p:commandButton update=":tablaAvaluosDireccion" icon="ui-icon-search" oncomplete="PF('avaluosDireccion').show()" process="@this" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="conjunto" value="Nombre del conjunto: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="conjunto" value="#{solicitudBean.avaluoDTO.conjunto}" label="Conjunto" style="width: 99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="barrio" value="Barrio: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="barrio" value="#{solicitudBean.avaluoDTO.barrio}" label="Barrio" style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="departamento" value="Departamento: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="departamento"
+                                                value="#{solicitudBean.departamentoInmueble}"
+                                                required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]}"
+                                                requiredMessage="Departamento inmueble es requerido"
+                                                label="Departamento Inmueble"
+                                                style="width: 99%">
+											<p:ajax listener="#{solicitudBean.onDepartamentoInmuebleChanged}"
+											onstart="$( '#solicitud\\:accordionPanel\\:ciudadInmueble' ).addClass('loadinggif');"
+											oncomplete="$( '#solicitud\\:accordionPanel\\:ciudadInmueble' ).removeClass('loadinggif');"
+											update="ciudadInmueble" global="false" />
+											<f:selectItem itemLabel="Seleccione departamento" itemValue="" noSelectionOption="true" />
+											<f:selectItems value="#{solicitudBean.departamentos}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="ciudadInmueble" value="Ciudad: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="ciudadInmueble"
+                                                value="#{solicitudBean.avaluoDTO.divipola}"
+                                                required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]}"
+                                                requiredMessage="Ciudad inmueble es requerido"
+                                                converter="omnifaces.SelectItemsConverter"
+                                                label="Ciudad Inmueble"
+                                                style="width: 99%">
+<!-- 											<f:selectItem itemLabel="Select ciudad" itemValue="" noSelectionOption="true" /> -->
+											<f:selectItems value="#{solicitudBean.ciudadesInmueble}" var="ciudad" itemLabel="#{ciudad.centroPoblado}" itemValue="#{ciudad}" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row rendered="#{not empty facesContext.messageList and (not empty facesContext.getMessageList('solicitud:accordionPanel:departamento') or not empty facesContext.getMessageList('solicitud:accordionPanel:ciudadInmueble'))}">
+									<p:column styleClass="ui-widget-header" colspan="2" >
+										<p:message for="departamento" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="2" >
+										<p:message for="ciudadInmueble" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel id="personaRecibe" header="Persona que recibirá al perito" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header" >
+										<h:outputLabel for="repetirCliente" value="¿Repetir datos del cliente? " rendered="#{solicitudBean.mostrarRepetirDatosCliente}"/>
+									</p:column>
+									<p:column styleClass="ui-widget-header" >
+										<p:selectBooleanCheckbox id="repetirCliente" value="#{solicitudBean.repetirDatosCliente}" rendered="#{solicitudBean.mostrarRepetirDatosCliente}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px">
+											<p:ajax event="change" resetValues="true" listener="#{solicitudBean.onRepetirDatosCliente}"
+											process="repetirCliente, :solicitud:accordionPanel:nombreCliente,:solicitud:accordionPanel:telefono, :solicitud:accordionPanel:correoElectronico"
+											update=":solicitud:accordionPanel:personaRecibe"
+											global="false"
+											onstart="$( '#solicitud\\:accordionPanel\\:repetirCliente' ).addClass('loadinggif');"
+											oncomplete="$( '#solicitud\\:accordionPanel\\:repetirCliente' ).removeClass('loadinggif');"/>
+										</p:selectBooleanCheckbox>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="nombreRecibe" value="Nombre: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="nombreRecibe"
+                                                value="#{solicitudBean.avaluoDTO.nombreRecibe}"
+                                                required="#{not solicitudBean.avaluoDTO.soloAvaluo and (not empty param[guardar.clientId] or not empty param[asignarperito.clientId])}"
+                                                requiredMessage="Nombre quien recibe es requerido"
+                                                label="Nombre quien recibe"
+                                                style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{not empty facesContext.messageList and not empty facesContext.getMessageList('solicitud:accordionPanel:nombreRecibe')}">
+									<p:column styleClass="ui-widget-header" colspan="2" >
+										<p:message for="nombreRecibe"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="telefonoRecibe" value="(Cod. Area)+Teléfono: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="telefonoRecibe" value="#{solicitudBean.avaluoDTO.telefonoRecibe}" label="Teléfonos quien recibe" style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{not empty facesContext.messageList and not empty facesContext.getMessageList('solicitud:accordionPanel:telefonoRecibe')}">
+									<p:column styleClass="ui-widget-header" colspan="2" >
+										<p:message for="telefonoRecibe" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="correoElectronicoRecibe" value="Correo electrónico: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="correoElectronicoRecibe" value="#{solicitudBean.avaluoDTO.correoElectronicoRecibe}" label="Correo electrónico quien recibe" validatorMessage="Correo electrónico no válido" style="width: 99%" >
+											<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+											<p:ajax update="msgCorreoRecibe" event="change" global="false"/>
+										</p:inputText>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="2" >
+										<p:message id="msgCorreoRecibe" for="correoElectronicoRecibe" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel id="informacionAsesor"
+                                rendered="#{not solicitudBean.tipoAvaluoRemate}"
+                                header="Información del asesor"
+                                styleClass="gia-entidad"
+                                style="margin-bottom:10px">
+
+							<p:panelGrid style="width: 99%" rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}" >
+								<p:row>
+									<!-- CORREO ELECTRONICO  -->
+									<p:column styleClass="ui-widget-header" >
+										<h:outputLabel for="correoElectronicoAsesor" value="Correo electrónico: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}">
+										<p:inputText
+											id="correoElectronicoAsesor"
+											value="#{solicitudBean.asesorDTO.correo}"
+											label="Correo electrónico asesor"  
+											validatorMessage="Correo electronico no valido" >
+											<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+										    <p:ajax event="blur" listener="#{solicitudBean.autocompletarAsesor()}"
+										    update="informacionAsesor :solicitud:growl :solicitud:guardar"
+										    global="false"
+											onstart="$( '#solicitud\\:accordionPanel\\:correoElectronicoAsesor' ).addClass('loadinggif');"
+											oncomplete="$( '#solicitud\\:accordionPanel\\:correoElectronicoAsesor' ).removeClass('loadinggif');"/>
+										</p:inputText>
+									</p:column>
+									<!-- SUCURSAL DEL ASESOR -->
+									<p:column styleClass="ui-widget-header" rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}">
+										<h:outputLabel for="sucursalAsesor" value="Sucursal: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="#{solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates'}">
+										<p:autoComplete id="sucursalAsesor"
+											forceSelection="true"
+											value="#{solicitudBean.asesorDTO.sucursal}"
+											var="sucursal"
+											itemLabel="#{sucursal.nombreCompuesto}"
+											itemValue="#{sucursal}"
+											required="#{not solicitudBean.avaluoDTO.soloAvaluo and (not empty param[guardar.clientId] or not empty param[asignarperito.clientId])}"
+											requiredMessage="Sucursal asesor es requerida"
+											completeMethod="#{solicitudBean.autocompletarSucursal}" style="width: 99%">
+                                               <o:converter converterId="omnifaces.ListConverter" list="#{solicitudBean.sucursales}" /> 
+                                        </p:autoComplete>
+									</p:column>
+								</p:row>
+								<p:row rendered="#{(not empty facesContext.messageList and ( not empty facesContext.getMessageList('solicitud:accordionPanel:sucursalAsesor')))  and solicitudBean.avaluoDTO.tipoAvaluo.nombre ne 'Remates' }">
+									<p:column styleClass="ui-widget-header" colspan="2" >
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="2" >
+										<p:message for="sucursalAsesor" />
+									</p:column>
+								</p:row>
+								<p:row>
+								    <!-- NOMBRE DEL ASESOR  -->
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="nombreAsesor" value="Nombre: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="nombreAsesor"
+											value="#{solicitudBean.asesorDTO.nombre}"
+											required="#{not solicitudBean.avaluoDTO.soloAvaluo and (not empty param[guardar.clientId] or not empty param[asignarperito.clientId])}"
+											requiredMessage="Nombre asesor es requerido"
+											style="width: 99%" >
+										</p:inputText>
+									</p:column>
+									<!-- CELULAR DEL ASESOR  -->
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="celularAsesor" value="Celular asesor: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="celularAsesor" mask="999-999-9999"
+										value="#{solicitudBean.asesorDTO.celular}" label="Celular asesor" style="width: 99%"
+										validatorMessage="Celular: 10 digitos (no requerido)">
+											<f:validateRegex pattern="\d{3}[\-]\d{3}[\-]\d{4}" />
+											<p:ajax update="msgCelularAsesor" event="blur" global="false"/>
+										</p:inputMask>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<p:message for="nombreAsesor"/>
+									</p:column>
+									<p:column>
+										<p:messages id="msgCelularAsesor" for="celularAsesor" closable="true" escape="false" style="font-size: 10px;"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="telefonoAsesor" value="(Cod. Area)+Teléfono: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" colspan="3">
+										<p:inputText id="telefonoAsesor" value="#{solicitudBean.asesorDTO.telefono}" label="Teléfonos" style="width: 99%" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:outputPanel id="panelSecuestre">
+							<p:panel header="Información Secuestre" rendered="#{solicitudBean.tipoAvaluoRemate}" >
+								<p:panelGrid style="width: 99%">
+									<p:row>
+										<p:column>
+											<p:outputLabel value="Nombre:" />
+										</p:column>
+										<p:column>
+											<p:inputText value="#{solicitudBean.avaluoDTO.nombreSecuestre}" style="width:90%;" />
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column>
+											<p:outputLabel value="(Cod. Area)+Telefono:" />
+										</p:column>
+										<p:column>
+											<p:inputText value="#{solicitudBean.avaluoDTO.telefonoSecuestre}" style="width:90%;"/>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column>
+											<p:outputLabel value="Email:" />
+										</p:column>
+										<p:column>
+											<p:inputText id="emailSecuestre" value="#{solicitudBean.avaluoDTO.emailSecuestre}" validatorMessage="Formato de Correo No Valido" label="Email Secuestre" style="width:90%;">
+												<p:ajax event="blur" update="msgEmailSecuestre"
+												global="false"
+												onstart="$( '#solicitud\\:accordionPanel\\:emailSecuestre' ).addClass('loadinggif');"
+												oncomplete="$( '#solicitud\\:accordionPanel\\:emailSecuestre' ).removeClass('loadinggif');"/>
+												<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+											</p:inputText>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column styleClass="ui-widget-header" colspan="2">
+											<p:message id="msgEmailSecuestre" for="emailSecuestre"/>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column>
+											<p:outputLabel value="Celular:" />
+										</p:column>
+										<p:column>
+											<p:inputMask id="celularSecuestre" value="#{solicitudBean.avaluoDTO.celularSecuestre}" mask="999-999-9999"
+												validatorMessage="Celular debe tener 10 digitos" label="Celular Secuestre"
+												style="width:90%;">
+												<f:validateRegex pattern="\d{3}[\-]\d{3}[\-]\d{4}" />
+												<p:ajax update="msgCelularSecuestre" event="blur" global="false"/>
+											</p:inputMask>
+										</p:column>
+									</p:row>
+									<p:row>
+										<p:column styleClass="ui-widget-header" colspan="2">
+											<p:message id="msgCelularSecuestre" for="celularSecuestre"/>
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</p:panel>
+						</p:outputPanel>
+						<p:panel id="observaciones" header="Observaciones" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesSolicitante" value="Observaciones del solicitante: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea rows="5" cols="30" id="observacionesSolicitante" value="#{solicitudBean.avaluoDTO.observacionesSolicitante}" label="Observaciones del solicitante" style="width: 99%" counter="display" maxlength="2000" counterTemplate="{0} caracteres faltantes."/>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText id="display" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+				</p:accordionPanel>
+                <p:outputPanel id="guardar"
+                        styleClass="contenedorBotones">
+                    <p:commandButton value="Guardar" icon="ui-icon-disk"
+	                    styleClass="button_green"
+	                    binding="#{guardar}"
+	                    action="#{solicitudBean.guardarSolicitud()}"
+	                    rendered="#{not solicitudBean.ocultarBotonGuardar}"
+	                    update=":solicitud:accordionPanel :solicitud:growl" />
+                    <p:spacer width="30px"></p:spacer>
+                    <p:commandButton value="Cancelar"
+                        icon="ui-icon-closethick"
+                        styleClass="button_red"
+                        immediate="true"
+                        action="#{solicitudBean.cancelarSolicitud()}" />
+                    <p:spacer width="30px"></p:spacer>
+                    <p:commandButton value="Asignar perito"
+                        icon="ui-icon-disk"
+                        binding="#{asignarperito}"
+                        action="#{solicitudBean.asignarPerito()}"
+                        update=":solicitud:accordionPanel :solicitud:growl"
+                        rendered="#{listadoAvaluosBean.asignarPerito and not solicitudBean.ocultarBotonGuardar}" />
+                </p:outputPanel>
+
+				<input type="hidden"
+					name="${_csrf.parameterName}"
+					value="${_csrf.token}"/>
+			</h:form>
+			<p:dialog widgetVar="avaluosAnteriores" modal="true" closeOnEscape="true" >
+				<p:panel id="avaluoTabla" header="Avaluos" style="margin-bottom:10px">
+					<p:dataTable var="avaluo" value="#{solicitudBean.avaluosAnteriores}" >
+						<p:column headerText="Código externo">
+							<h:outputText value="#{avaluo.codigoExterno}" />
+						</p:column>
+						<p:column headerText="Fecha avaluo">
+							<h:outputText value="#{avaluo.fechaEstado}" />
+						</p:column>
+						<p:column headerText="Tipo de avalúo">
+							<h:outputText value="#{avaluo.tipoAvaluo.nombre}" />
+						</p:column>
+						<p:column headerText="Valor avaluo">
+							<h:outputText value="#{avaluo.valorTotalAvaluo}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</p:dialog>
+			<p:dialog widgetVar="avaluosDireccion" modal="true" closeOnEscape="true" >
+				<p:panel id="tablaAvaluosDireccion" header="Avaluos del inmueble" style="margin-bottom:10px">
+					<p:dataTable var="avaluo" value="#{solicitudBean.avaluosDireccion}" >
+						<p:column headerText="Código externo">
+							<h:outputText value="#{avaluo.codigoExterno}" />
+						</p:column>
+						<p:column headerText="Fecha avaluo">
+							<h:outputText value="#{avaluo.estado.fechaEstado}" />
+						</p:column>
+						<p:column headerText="Tipo de avalúo">
+							<h:selectOneMenu disabled="true" value="#{avaluo.tipoAvaluo}" >
+								<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+								<f:selectItems value="#{solicitudBean.tiposAvaluo}" var="tipoAvaluo" itemLabel="#{tipoAvaluo.nombre}" itemValue="#{tipoAvaluo}" />
+							</h:selectOneMenu>
+						</p:column>
+						<p:column headerText="Valor avaluo">
+							<h:outputText value="#{avaluo.valorTotalAvaluo}" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</p:dialog>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

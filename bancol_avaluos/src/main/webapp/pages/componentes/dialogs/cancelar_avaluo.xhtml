@@ -1,0 +1,39 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog header="Advertencia" widgetVar="confirmacionCancelar"
+		modal="false" showEffect="fade" hideEffect="fade" resizable="false">
+		<h:form id="formConfirmarCancelarAvaluo"
+			style="width: 440px; height: 120px;">
+			<h:graphicImage id="imgWarning" name="images/icon_warning.png"
+				style="width:90px; height:90px;position: absolute;" />
+			<h:outputText value="¿Estas seguro que deseas cancelar el avalúo?"
+				style="font-size: 16px; font-weight: bold;position: relative; float: right; top: 10px;" />
+			<br />
+			<h:outputText value="Esta acción no se puede deshacer!"
+				style="font-size: 13px; font-weight: normal;position: absolute; left: 110px; top: 50px;" />
+			<h:panelGrid columns="2"
+				style="width: 55%; position: relative; top: 70px; float: right;">
+				<p:commandButton value="Regresar"
+					oncomplete="PF('confirmacionCancelar').hide();"
+					icon="ui-icon-arrowthick-1-w" />
+				<p:commandButton id="cancelarAvaluo" value="Cancelar avalúo"
+					action="#{listadoAvaluosBean.cancelarAvaluo()}"
+					oncomplete="PF('confirmacionCancelar').hide();"
+					styleClass="button_red" style="float: right; " icon="ui-icon-check"
+					update=":form:avaluoTabla, :formBtnAccion" />
+				<p:blockUI block="formConfirmarCancelarAvaluo"
+					trigger="cancelarAvaluo">
+					<p:graphicImage name="images/ajax-loader2.gif" />
+				</p:blockUI>
+			</h:panelGrid>
+			<input type="hidden" name="${_csrf.parameterName}"
+				value="${_csrf.token}" />
+		</h:form>
+	</p:dialog>
+
+</ui:composition>

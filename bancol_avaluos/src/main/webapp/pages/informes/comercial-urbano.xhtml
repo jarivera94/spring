@@ -1,0 +1,2957 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet name="grid/grid.css" library="primefaces" />
+</h:head> 
+<body> 
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+
+		<ui:define name="content">
+            <!--script async="true" defer="true" src="http://maps.google.com/maps/api/js?client=AIzaSyBk_T1aF3u4MVbKcP_OKsGnqK1YDO2K5t8&amp;v=3.21&amp;callback=initMap" type="text/javascript"></script-->
+            <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+			<h1>Informe de avaluo comercial urbano</h1>
+			<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+				<p:graphicImage  name="images/ajax-loader.gif" />
+			</p:dialog>
+			<h:form id="informeComercialUrbano">
+				<p:growl id="growl" showDetail="true" sticky="true" autoUpdate="true" />
+				<p:accordionPanel id="tabHost" activeIndex="-1">
+					<p:ajax event="tabChange" listener="#{informeComercialUrbanoBean.cambioDeTab}" />
+					<p:tab id="informacionBasica" title="Información básica">
+						<p:panel id="datosPersonales" header="Datos del cliente" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="tipoDocumentoId" value="Tipo de documento de identificación: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="tipoDocumentoId" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.tipoDocumentoIdentificacion}" style="width: 99%" required="#{not empty param[enviar.clientId]}">
+											<p:ajax update="datosPersonales"/>
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="C.C." itemValue="21"/>
+											<f:selectItem itemLabel="C.Ext." itemValue="22"/>
+											<f:selectItem itemLabel="NIT." itemValue="23"/>
+										</h:selectOneMenu>
+									</p:column>
+									<p:column rendered="#{informeComercialUrbanoBean.avaluoComercialDTO.entidad ne 'Bancolombia'}" colspan="2" styleClass="ui-widget-header">
+										<p:spacer height="0"/>
+									</p:column>
+									<p:column rendered="#{informeComercialUrbanoBean.avaluoComercialDTO.entidad eq 'Bancolombia'}" styleClass="ui-widget-header">
+										<h:outputLabel for="segmento" value="Segmento: " />
+									</p:column>
+									<p:column rendered="#{informeComercialUrbanoBean.avaluoComercialDTO.entidad eq 'Bancolombia'}" styleClass="ui-widget-header">
+										<h:selectOneMenu id="segmento" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.segmento}" label="Segmento" style="width:99%">
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Personal" itemValue="1"/>
+											<f:selectItem itemLabel="Personal Plus" itemValue="2"/>
+											<f:selectItem itemLabel="Preferencial" itemValue="3"/>
+											<f:selectItem itemLabel="Banco Colombia" itemValue="4"/>
+											<f:selectItem itemLabel="Pyme" itemValue="5"/>
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="numeroDocumentoCliente" value="Número de documento: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="numeroDocumentoCliente" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.numeroDocumento}" label="Número de documento" required="#{not empty param[enviar.clientId]}" style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.tipoDocumentoIdentificacion eq '23'}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="razonSocial" value="Razón social: " />
+									</p:column>
+									<p:column colspan="3" styleClass="ui-widget-header">
+										<p:inputText id="razonSocial" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.razonSocial}" required="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.tipoDocumentoIdentificacion eq '23' and not empty param[enviar.clientId]}" label="Razón social" style="width:99%" />
+									</p:column>
+									<p:column rendered="false" styleClass="ui-widget-header">
+										<p:message for="razonSocial"/>
+									</p:column>
+								</p:row>
+								<p:row rendered="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.tipoDocumentoIdentificacion ne '23'}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="nombreApellidosCliente" value="Nombre del cliente: " />
+									</p:column>
+									<p:column colspan="5" styleClass="ui-widget-header">
+										<p:inputText id="nombreApellidosCliente" value="#{informeComercialUrbanoBean.nombresApellidosCliente}" required="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.tipoDocumentoIdentificacion ne '23' and not empty param[enviar.clientId]}" label="Primer nombre" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row rendered="false">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="paisOrigen" value="País de origen: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="paisOrigen" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.paisOrigen}" style="width:99%" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItems value="#{informeComercialUrbanoBean.paises}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="clasificacionFiscal" value="Clasificación fiscal: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="clasificacionFiscal" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.clasificacionFiscal}" label="Clasificación fiscal" required="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.tipoDocumentoIdentificacion ne '23' and not empty param[enviar.clientId]}" style="width:99%">
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Persona natural" itemValue="persona natural"/>
+											<f:selectItem itemLabel="Persona juridica" itemValue="persona juridica"/>
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row rendered="false">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="regimen" value="Régimen: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="regimen" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.regimen}" required="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.tipoDocumentoIdentificacion ne '23' and not empty param[enviar.clientId]}" style="width:99%" >
+											<f:selectItem itemLabel="Común" itemValue="comun"/>
+											<f:selectItem itemLabel="Simplificado" itemValue="simplificado"/>
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="codigoCIIU" value="Código CIIU: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="codigoCIIU" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.codigoCIIU}" required="false" label="Código CIIU" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="telefono" value="(Cod. Area)+Teléfono: " />
+									</p:column>
+									<p:column colspan="3" styleClass="ui-widget-header">
+										<p:inputText id="telefono" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.telefonoSolicitante}" required="#{not empty param[enviar.clientId]}" label="Teléfonos" style="width:99%"/>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="celular" value="Celular: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="celular" mask="999-999-9999" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.celularSolicitante}" label="Celular" style="width:99%" required="#{not empty param[enviar.clientId]}" validatorMessage="Celular debe tener 10 digitos">
+											<f:validateRegex pattern="\d{3}[\-]\d{3}[\-]\d{4}" />
+											<p:ajax update="msgCelular" event="keyup" />
+										</p:inputMask>
+									</p:column>
+									<p:column>
+										<p:message id="msgCelular" for="celular" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="correoElectronico" value="Correo Electrónico: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="correoElectronico" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.correoElectronicoSolicitante}" required="#{not empty param[enviar.clientId]}" label="Correo Electrónico" style="width:99%">
+											<p:ajax event="change" update=":informeComercialUrbano:growl" ></p:ajax>
+											<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+										</p:inputText>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="departamentoSolicitante" value="Departamento del solicitante: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="departamentoSolicitante" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.departamentoDeContactoSolicitante}" label="Departamento del solicitante" required="#{not empty param[enviar.clientId]}" style="width:99%">
+											<p:ajax listener="#{informeComercialUrbanoBean.onDepartamentoChanged('solicitante', informeComercialUrbanoBean.avaluoComercialDTO.cliente.departamentoDeContactoSolicitante)}" update="ciudadSolicitante" />
+											<f:selectItem itemLabel="Seleccione departamento" itemValue="" noSelectionOption="true" />
+											<f:selectItems value="#{informeComercialUrbanoBean.departamentos}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="ciudadSolicitante" value="Ciudad del solicitante: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="ciudadSolicitante" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cliente.ciudadDeContactoSolicitante}" required="#{not empty param[enviar.clientId]}" style="width:99%">
+											<f:selectItem itemLabel="Seleccionar ciudad" itemValue="" noSelectionOption="true" />
+											<f:selectItems value="#{informeComercialUrbanoBean.ciudadesSolicitante}" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="direccionSolicitante" value="Dirección del solicitante: " />
+									</p:column>
+									<p:column colspan="5" styleClass="ui-widget-header">
+										<p:panelGrid id="direccionSolicitante">
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="Tipo via" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="Número via" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="Complemento via" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="Núm. Via Generadora" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="Complemento Via Generadora" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="Placa" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="Complemento Placa" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel value="Adicional" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:selectOneMenu id="tipoViaCliente" value="#{informeComercialUrbanoBean.tipoViaCliente}" required="#{not empty param[enviar.clientId]}" style="width:100px;">
+														<f:selectItem itemLabel="Calle" itemValue="CL"/>
+														<f:selectItem itemLabel="Carrera" itemValue="KR"/>
+														<f:selectItem itemLabel="Diagonal" itemValue="DG"/>
+														<f:selectItem itemLabel="Transversal" itemValue="TV"/>
+														<f:selectItem itemLabel="Avenida" itemValue="AV"/>
+														<f:selectItem itemLabel="Avenida calle" itemValue="AC"/>
+														<f:selectItem itemLabel="Avenida carrera" itemValue="AK"/>
+														<f:selectItem itemLabel="Avenida autopista" itemValue="AU"/>
+														<f:selectItem itemLabel="Carretera" itemValue="CT"/>
+														<f:selectItem itemLabel="Circular" itemValue="CQ"/>
+														<f:selectItem itemLabel="Camino" itemValue="CN"/>
+													</h:selectOneMenu>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputMask id="numeroViaCliente" mask="9?99" value="#{informeComercialUrbanoBean.numeroViaCliente}" required="#{not empty param[enviar.clientId]}" style="width:30px;" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:autoComplete id="complementoViaCliente" value="#{informeComercialUrbanoBean.complementoViaCliente}" label="Complemento Via" style="width:150px;" multiple="true" forceSelection="true" completeMethod="#{informeComercialUrbanoBean.completarComplemento}" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputMask id="numeroViaGeneradoraCliente" mask="9?99" value="#{informeComercialUrbanoBean.numeroViaGeneradoraCliente}" required="#{not empty param[enviar.clientId]}" style="width:30px;" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:autoComplete id="complementoViaGeneradoraCliente" value="#{informeComercialUrbanoBean.complementoViaGeneradoraCliente}" label="Complemento Via Generadora" style="width:120px;" multiple="true" forceSelection="true" completeMethod="#{informeComercialUrbanoBean.completarComplemento}" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="placaCliente" value="#{informeComercialUrbanoBean.placaCliente}" required="#{not empty param[enviar.clientId]}" style="width:30px;" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="complementoPlacaCliente" value="#{informeComercialUrbanoBean.complementoPlacaCliente}" label="Complemento Via" style="width:120px;" >
+														<f:validateRegex pattern="^$|^[A-Za-z]{4,11} [a-zA-Z0-9]{1,}( [A-Za-z]{4,11} [a-zA-Z0-9]{1,})*$" />
+													</p:inputText>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="adicionalDireccionCliente" value="#{informeComercialUrbanoBean.adicionalDireccionCliente}" label="Complemento Via" style="width:150px;" />
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column colspan="2" styleClass="ui-widget-header">
+													<p:spacer height="0"/>
+												</p:column>
+												<p:column rendered="false" styleClass="ui-widget-header">
+													<p:message id="messageComplementoViaCliente" for="complementoViaCliente"/>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:spacer height="0"/>
+												</p:column>
+												<p:column rendered="false" styleClass="ui-widget-header">
+													<p:message id="messagecomplementoViaGeneradoraCliente" for="complementoViaGeneradoraCliente"/>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:spacer height="0"/>
+												</p:column>
+												<p:column colspan="2" rendered="false" styleClass="ui-widget-header">
+													<p:message id="messageComplementoPlacaCliente" for="complementoPlacaCliente"/>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="tipoInmueble" value="Tipo del inmueble" />
+									</p:column>
+									<p:column colspan="5" styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesTipoInmueble" value="Observaciones de tipo del inmueble" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="tipoInmueble" value="#{informeComercialUrbanoBean.avaluoComercialDTO.tipoDeInmueble}" label="Tipo de inmueble" style="width: 99%" converter="omnifaces.SelectItemsConverter" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItems value="#{informeComercialUrbanoBean.tiposInmueble}" var="tipoInmueble" itemValue="#{tipoInmueble}" itemLabel="#{tipoInmueble.nombre}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column colspan="5" styleClass="ui-widget-header">
+										<p:inputText id="observacionesTipoInmueble" value="#{informeComercialUrbanoBean.avaluoComercialDTO.observacionesTipoInmueble}" style="width: 99%"/>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel id="ubicacionDelPredio" header="Ubicación del predio" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="departamento" value="Departamento: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="departamento" value="#{informeComercialUrbanoBean.avaluoComercialDTO.departamento}" required="#{not empty param[enviar.clientId]}" style="width:99%">
+											<p:ajax listener="#{informeComercialUrbanoBean.onDepartamentoChanged('predio', informeComercialUrbanoBean.avaluoComercialDTO.departamento)}" update="municipio" />
+											<f:selectItem itemLabel="Seleccione departamento" itemValue="" noSelectionOption="true" />
+											<f:selectItems value="#{informeComercialUrbanoBean.departamentos}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="municipio" value="Municipio: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="municipio" value="#{informeComercialUrbanoBean.avaluoComercialDTO.ciudad}" required="#{not empty param[enviar.clientId]}" style="width:99%">
+											<f:selectItem itemLabel="Seleccionar ciudad" itemValue="" noSelectionOption="true" />
+											<f:selectItems value="#{informeComercialUrbanoBean.ciudadesPredio}" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="vereda" value="Vereda: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="vereda" value="#{informeComercialUrbanoBean.avaluoComercialDTO.vereda}" style="width: 99%"/>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="nombrePredio" value="Nombre del predio: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="nombrePredio" value="#{informeComercialUrbanoBean.avaluoComercialDTO.nombrePredio}" style="width: 99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="4" styleClass="ui-widget-header">
+										<h:outputLabel for="localizacion" value="Localización: " />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="4" styleClass="ui-widget-header">
+										<p:inputText id="localizacion" value="#{informeComercialUrbanoBean.avaluoComercialDTO.localizacion}" style="width: 99%"/>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel id="informacionDelAvaluo" header="Información del avalúo" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column colspan="4" styleClass="ui-widget-header">
+										<h:outputLabel for="objetoDelAvaluo" value="Objeto del avaluo: " />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="4" styleClass="ui-widget-header">
+										<h:selectOneMenu id="objetoDelAvaluo" value="#{informeComercialUrbanoBean.avaluoComercialDTO.objetoDelAvaluo}" required="#{not empty param[enviar.clientId]}" style="width:99%">
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Originación" itemValue="1"/>
+											<f:selectItem itemLabel="Actualización" itemValue="2"/>
+											<f:selectItem itemLabel="Reconsideración" itemValue="3"/>
+											<f:selectItem itemLabel="Corrección" itemValue="4"/>
+											<f:selectItem itemLabel="Remate" itemValue="5"/>
+											<f:selectItem itemLabel="Dación en  Pago" itemValue="6"/>
+											<f:selectItem itemLabel="Desafectación" itemValue="7"/>
+											<f:selectItem itemLabel="Normalización" itemValue="8"/>
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="4" styleClass="ui-widget-header">
+										<h:outputLabel for="destinatarioDeLaValuacion" value="Destinatario de la valuación: " />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="4" styleClass="ui-widget-header">
+										<p:inputText id="destinatarioDeLaValuacion" value="#{informeComercialUrbanoBean.avaluoComercialDTO.destinatarioDeLaValuacion}" style="width: 99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="usoInmueble" value="Uso actual del inmueble: " />
+									</p:column>
+									<p:column colspan="3" styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesUsoInmueble" value="Observaciones del uso actual del inmueble: " />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="usoInmueble" value="#{informeComercialUrbanoBean.avaluoComercialDTO.usoActualDelInmueble}" label="Uso actual del inmueble" required="#{not empty param[enviar.clientId]}">
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Vivienda" itemValue="1"/>
+											<f:selectItem itemLabel="Comercio" itemValue="2"/>
+											<f:selectItem itemLabel="Bodega" itemValue="3"/>
+											<f:selectItem itemLabel="Oficina" itemValue="4"/>
+											<f:selectItem itemLabel="V. Multihabitacional" itemValue="5"/>
+											<f:selectItem itemLabel="Otro" itemValue="6"/>
+											<f:selectItem itemLabel="Educación" itemValue="80"/>
+											<f:selectItem itemLabel="Salud" itemValue="81"/>
+											<f:selectItem itemLabel="Hotelero" itemValue="82"/>
+											<f:selectItem itemLabel="Industrial" itemValue="83"/>
+											<f:selectItem itemLabel="Iglesia" itemValue="84"/>
+											<f:selectItem itemLabel="Parqueadero" itemValue="85"/>
+											<f:selectItem itemLabel="Auditorio" itemValue="86"/>
+											<f:selectItem itemLabel="Instalación Deportiva" itemValue="87"/>
+										</h:selectOneMenu>
+									</p:column>
+									<p:column colspan="3" styleClass="ui-widget-header">
+										<p:inputText id="observacionesUsoInmueble" value="#{informeComercialUrbanoBean.avaluoComercialDTO.observacionesUsoActualDelInmueble}" style="width: 99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="usoProyectadoDelInmueble" value="Uso proyectado del inmueble: " />
+									</p:column>
+									<p:column colspan="3" styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesUsoProyectadoDelInmueble" value="Observaciones del uso proyectado del inmueble: " />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="usoProyectadoDelInmueble" value="#{informeComercialUrbanoBean.avaluoComercialDTO.usoProyectadoDelInmueble}" required="#{not empty param[enviar.clientId]}" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Vivienda" itemValue="1"/>
+											<f:selectItem itemLabel="Comercio" itemValue="2"/>
+											<f:selectItem itemLabel="Bodega" itemValue="3"/>
+											<f:selectItem itemLabel="Oficina" itemValue="4"/>
+											<f:selectItem itemLabel="V. Multihabitacional" itemValue="5"/>
+											<f:selectItem itemLabel="Otro" itemValue="6"/>
+											<f:selectItem itemLabel="Educación" itemValue="80"/>
+											<f:selectItem itemLabel="Salud" itemValue="81"/>
+											<f:selectItem itemLabel="Hotelero" itemValue="82"/>
+											<f:selectItem itemLabel="Industrial" itemValue="83"/>
+											<f:selectItem itemLabel="Iglesia" itemValue="84"/>
+											<f:selectItem itemLabel="Parqueadero" itemValue="85"/>
+											<f:selectItem itemLabel="Auditorio" itemValue="86"/>
+											<f:selectItem itemLabel="Instalación Deportiva" itemValue="87"/>
+										</h:selectOneMenu>
+									</p:column>
+									<p:column colspan="3" styleClass="ui-widget-header">
+										<p:inputText id="observacionesUsoProyectadoDelInmueble" value="#{informeComercialUrbanoBean.avaluoComercialDTO.observacionesUsoProyectadoDelInmueble}" style="width: 99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="periodoDeMercadeo" value="Periodo de mercadeo" />
+									</p:column>
+									<p:column colspan="3" styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesPeriodoDeMercadeo" value="Observaciones de periodo de mercadeo" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="periodoDeMercadeo" mask="9?9" value="#{informeComercialUrbanoBean.avaluoComercialDTO.periodoDeMercadeo}" />
+										<p:spacer width="10px" height="0"/>
+										<h:outputText value="Meses" />
+									</p:column>
+									<p:column colspan="3" styleClass="ui-widget-header">
+										<p:inputText id="observacionesPeriodoDeMercadeo" value="#{informeComercialUrbanoBean.avaluoComercialDTO.observacionesPeriodoDeMercadeo}" style="width: 99%"/>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+					<p:tab id="titulacion" title="Titulación">
+						<p:panel id="inmuebles" header="Inmuebles" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column colspan="4" styleClass="ui-widget-header">
+										<p:carousel id="inmueblesCarousel" itemStyle="height:700px;width:1200px;" numVisible="1" effect="easeInStrong" style="margin-bottom:0" value="#{informeComercialUrbanoBean.avaluoComercialDTO.inmuebles}" var="inmueble" rendered="#{not empty informeComercialUrbanoBean.avaluoComercialDTO.inmuebles and not informeComercialUrbanoBean.editarInmueble}" >
+											<p:panelGrid>
+												<p:row>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="matriculaInmobiliaria" value="Matrícula inmobiliaria" />
+													</p:column>
+													<p:column colspan="2" styleClass="ui-widget-header">
+														<h:outputText id="matriculaInmobiliaria" value="#{inmueble.matriculaInmobiliaria}" />
+													</p:column>
+													<p:column colspan="2" rendered="#{informeComercialUrbanoBean.matriculaInmobiliariaTieneavaluos}" styleClass="ui-widget-header">
+														<h:outputText value="Inmueble presenta avaluos" />
+													</p:column>
+													<p:column colspan="2" rendered="#{not informeComercialUrbanoBean.matriculaInmobiliariaTieneavaluos}" styleClass="ui-widget-header">
+														<p:spacer height="0"/>
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="cedulaCatastral" value="Cédula catastral" />
+													</p:column>
+													<p:column colspan="2" styleClass="ui-widget-header">
+														<h:outputText id="cedulaCatastral" value="#{inmueble.cedulaCatastral}" />
+													</p:column>
+													<p:column rendered="#{informeComercialUrbanoBean.cedulaCatastralTieneavaluos}" styleClass="ui-widget-header">
+														<h:outputText value="Inmueble presenta avaluos" />
+													</p:column>
+													<p:column rendered="#{not informeComercialUrbanoBean.cedulaCatastralTieneavaluos}" styleClass="ui-widget-header">
+														<p:spacer height="0"/>
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:commandButton icon="ui-icon-pencil" actionListener="#{informeComercialUrbanoBean.editarInmueble(inmueble)}" update=":informeComercialUrbano:tabHost:nuevoInmueble" process=":informeComercialUrbano:tabHost:inmueblesCarousel" />
+														<p:commandButton icon="ui-icon-trash" actionListener="#{informeComercialUrbanoBean.borrarInmueble(inmueble)}" styleClass="button_red" update=":informeComercialUrbano:tabHost:inmuebles" process=":informeComercialUrbano:tabHost:inmueblesCarousel" />
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column colspan="10" styleClass="ui-widget-header">
+														<p:dataTable id="propietarios" var="propietario" value="#{inmueble.propietarios}" editable="true" style="margin-bottom:20px">
+															<f:facet name="header">
+																Propietarios
+															</f:facet>
+															<p:ajax event="rowEdit" listener="#{informeComercialUrbanoBean.editarPropietario}" />
+															<p:ajax event="rowEditCancel" listener="#{informeComercialUrbanoBean.cancelarPropietario}" />
+															<p:column headerText="Porcentaje de propiedad">
+																<p:cellEditor>
+																	<f:facet name="output">
+																		<h:outputText value="#{propietario.porcentajeDePropiedad}" >
+																			<f:convertNumber type="percent" locale="en_US" />
+																		</h:outputText>
+																	</f:facet>
+																	<f:facet name="input">
+																		<p:inputMask id="porcentajeDePropiedad" mask="9?99" value="#{propietario.porcentajeDePropiedad}" style="width:100%" />
+																	</f:facet>
+																</p:cellEditor>
+															</p:column>
+															<p:column headerText="Nombres y apellidos">
+																<p:cellEditor>
+																	<f:facet name="output"><h:outputText value="#{propietario.nombresApellidosPropietario}" /></f:facet>
+																	<f:facet name="input"><p:inputText id="nombresApellidosPropietario" value="#{propietario.nombresApellidosPropietario}" style="width:100%"/></f:facet>
+																</p:cellEditor>
+															</p:column>
+															<p:column headerText="Tipo de documento">
+																<p:cellEditor>
+																	<f:facet name="output"><h:outputText value="#{propietario.tipoDocumentoIdentificacion}" /></f:facet>
+																	<f:facet name="input"><h:selectOneMenu id="tipoDocumentoIdentificacion" value="#{propietario.tipoDocumentoIdentificacion}" style="width: 99%">
+																		<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+																		<f:selectItem itemLabel="C.C." itemValue="21"/>
+																		<f:selectItem itemLabel="C.Ext." itemValue="22"/>
+																		<f:selectItem itemLabel="NIT." itemValue="23"/>
+																	</h:selectOneMenu></f:facet>
+																</p:cellEditor>
+															</p:column>
+															<p:column headerText="Número de documento">
+																<p:cellEditor>
+																	<f:facet name="output"><h:outputText value="#{propietario.numeroDocumento}" /></f:facet>
+																	<f:facet name="input"><p:inputText value="#{propietario.numeroDocumento}" style="width:100%;" /></f:facet>
+																</p:cellEditor>
+															</p:column>
+														</p:dataTable>
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="noEsccritura" value="No. de escritura" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText id="noEsccritura" value="#{inmueble.numeroDeEscritura}" style="width: 50px" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="noNotaria" value="No. de notaria" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText id="noNotaria" value="#{inmueble.numeroDeNotariaEscritura}" style="width: 50px" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:outputLabel for="departamentoEscrituraInmueble" value="Departamento" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText id="departamentoEscrituraInmueble" value="#{inmueble.departamentoEscritura}" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:outputLabel for="municipioEscrituraInmueble" value="Municipio" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText id="municipioEscrituraInmueble" value="#{inmueble.municipioEscritura}" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="fechaEscritura" value="Fecha escritura" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText id="fechaEscritura" value="#{inmueble.fechaEscritura}" >
+															<f:convertDateTime type="date" pattern="dd-MMM-yyyy"/>
+														</h:outputText>
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="chip" value="Chip" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputText id="chip" value="#{inmueble.numeroDeEscritura}" style="width: 50px" />
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column colspan="10" styleClass="ui-widget-header">
+														<h2>Mapa</h2>
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column colspan="10" styleClass="ui-widget-header">
+														<p:gmap center="#{informeComercialUrbanoBean.centroMapa}" zoom="13" type="HYBRID" style="width:99%;height:350px" model="#{informeComercialUrbanoBean.mapModel}">
+														</p:gmap>
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column colspan="2" styleClass="ui-widget-header">
+														<p:spacer height="0"/>
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="latitudInmueble" value="Latitud: " />
+													</p:column>
+													<p:column colspan="2" styleClass="ui-widget-header">
+														<h:outputText id="latitudInmueble" value="#{inmueble.latitud}" label="Latitud" style="width:99" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:spacer height="0"/>
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="longitudInmueble" value="Longitud: " />
+													</p:column>
+													<p:column colspan="2" styleClass="ui-widget-header">
+														<h:outputText id="longitudInmueble" value="#{inmueble.longitud}" label="Longitud" style="width:99" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:spacer height="0"/>
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+										</p:carousel>
+										<h:outputLabel value="No existen inmuebles" rendered="#{empty informeComercialUrbanoBean.avaluoComercialDTO.inmuebles}" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel id="nuevoInmueble" rendered="#{not informeComercialUrbanoBean.avaluoEnRevision}" style="margin-bottom:10px; margin-left:10px" >
+							<f:facet name="header">
+								<h:outputText rendered="#{informeComercialUrbanoBean.nuevoInmueble and not informeComercialUrbanoBean.editarInmueble}" value="Nuevo inmueble" />
+								<h:outputText rendered="#{informeComercialUrbanoBean.editarInmueble and not informeComercialUrbanoBean.nuevoInmueble}" value="Editar inmueble" />
+							</f:facet>
+							<p:panelGrid id="agregarNuevoInmueble" rendered="#{informeComercialUrbanoBean.nuevoInmueble or informeComercialUrbanoBean.editarInmueble}" style="width: 80%;">
+								<p:effect type="slide" event="load" >
+									<f:param name="direction" value="'up'" />
+								</p:effect>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="matriculaInmobiliariaNuevo" value="Matrícula inmobiliaria" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputText id="matriculaInmobiliariaNuevo" value="#{informeComercialUrbanoBean.inmueble.matriculaInmobiliaria}" />
+									</p:column>
+									<p:column colspan="2" rendered="#{informeComercialUrbanoBean.matriculaInmobiliariaTieneavaluos}" styleClass="ui-widget-header">
+										<h:outputText value="Inmueble presenta avaluos" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="cedulaCatastralNuevo" value="Cédula catastral" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputText id="cedulaCatastralNuevo" value="#{informeComercialUrbanoBean.inmueble.cedulaCatastral}" />
+									</p:column>
+									<p:column colspan="2" rendered="#{informeComercialUrbanoBean.cedulaCatastralTieneavaluos}" styleClass="ui-widget-header">
+										<h:outputText value="Inmueble presenta avaluos" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="10" styleClass="ui-widget-header">
+										<p:fragment autoUpdate="true">
+											<p:dataTable id="propietariosNuevo" var="propietario" value="#{informeComercialUrbanoBean.inmueble.propietarios}" style="margin-bottom:20px">
+												<f:facet name="header">
+													Propietarios
+												</f:facet>
+												<p:column headerText="Porcentaje de propiedad">
+													<h:outputText value="#{propietario.porcentajeDePropiedad}" >
+														<f:convertNumber type="percent" locale="en_US" />
+													</h:outputText>
+												</p:column>
+												<p:column headerText="Nombres y apellidos">
+													<h:outputText value="#{propietario.nombresApellidosPropietario}" />
+												</p:column>
+												<p:column headerText="Tipo de documento">
+													<h:outputText value="#{propietario.tipoDocumentoIdentificacion}" />
+												</p:column>
+												<p:column headerText="Número de documento">
+													<h:outputText value="#{propietario.numeroDocumento}" />
+												</p:column>
+												<p:column headerText="Borrar">
+													<p:commandButton icon="ui-icon-trash" title="Borrar propietario"
+													actionListener="#{informeComercialUrbanoBean.borrarPropietario(propietario)}" />
+												</p:column>
+											</p:dataTable>
+											<p:panelGrid id="propietarioForm" rendered="#{informeComercialUrbanoBean.nuevoPropietario}">
+												<p:row>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="porcentajeDePropiedad" value="Porcentaje de propiedad" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:inputMask id="porcentajeDePropiedad" mask="9?99" value="#{informeComercialUrbanoBean.propietario.porcentajeDePropiedad}" style="width: 30px" >
+															<p:ajax event="change" listener="#{informeComercialUrbanoBean.verificarPorcentajePropiedad(informeComercialUrbanoBean.propietario.porcentajeDePropiedad)}" />
+														</p:inputMask>
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="nombresApellidosPropietario" value="Nombres y apellidos" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:inputText id="nombresApellidosPropietario" value="#{informeComercialUrbanoBean.propietario.nombresApellidosPropietario}" style="width:100%"/>
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="tipoDocumentoIdentificacion" value="Tipo de documento" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:selectOneMenu id="tipoDocumentoIdentificacion" value="#{informeComercialUrbanoBean.propietario.tipoDocumentoIdentificacion}" style="width: 99%">
+															<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+															<f:selectItem itemLabel="C.C." itemValue="21"/>
+															<f:selectItem itemLabel="C.Ext." itemValue="22"/>
+															<f:selectItem itemLabel="NIT." itemValue="23"/>
+														</h:selectOneMenu>
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="numeroDocumento" value="Número de documento" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:inputText id="numeroDocumento" value="#{informeComercialUrbanoBean.propietario.numeroDocumento}" />
+													</p:column>
+													<p:column rendered="#{not informeComercialUrbanoBean.propietariosCienPorciento}" styleClass="ui-widget-header">
+														<p:commandButton value="Guardar" actionListener="#{informeComercialUrbanoBean.agregarPropietario}" />
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+											<p:commandButton icon="ui-icon-plusthick" value="Agregar propietario" actionListener="#{informeComercialUrbanoBean.agregarPropietario}" rendered="#{not informeComercialUrbanoBean.nuevoPropietario and not informeComercialUrbanoBean.propietariosCienPorciento}" />
+										</p:fragment>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="noEscrituraNuevo" value="No. de escritura" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="noEscrituraNuevo" mask="9?99999" value="#{informeComercialUrbanoBean.inmueble.numeroDeEscritura}" style="width: 50px" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="noNotariaNuevo" value="No. de notaria" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="noNotariaNuevo" mask="9?99" value="#{informeComercialUrbanoBean.inmueble.numeroDeNotariaEscritura}" style="width: 50px" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="departamentoEscrituraInmuebleNuevo" value="Departamento" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="departamentoEscrituraInmuebleNuevo" value="#{informeComercialUrbanoBean.inmueble.departamentoEscritura}" style="width:99%">
+											<p:ajax listener="#{informeComercialUrbanoBean.onDepartamentoChanged('inmueble', informeComercialUrbanoBean.inmueble.departamentoEscritura)}" update="municipioEscrituraInmuebleNuevo" />
+											<f:selectItem itemLabel="Seleccione departamento" itemValue="" noSelectionOption="true" />
+											<f:selectItems value="#{informeComercialUrbanoBean.departamentos}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="municipioEscrituraInmuebleNuevo" value="Municipio" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="municipioEscrituraInmuebleNuevo" value="#{informeComercialUrbanoBean.inmueble.municipioEscritura}" style="width:99%">
+											<f:selectItem itemLabel="Seleccionar municipio" itemValue="" noSelectionOption="true" />
+											<f:selectItems value="#{informeComercialUrbanoBean.ciudadesInmueble}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="fechaEscrituraNueva" value="Fecha escritura" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:calendar id="fechaEscrituraNueva" navigator="true" value="#{informeComercialUrbanoBean.inmueble.fechaEscritura}" showOn="button" timeZone="GMT-5" pattern="dd-MMM-yyyy" yearRange="c-90:c+0" locale="es" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="10" styleClass="ui-widget-header">
+										<h2>Mapa</h2>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="10" styleClass="ui-widget-header">
+										<p:gmap center="#{informeComercialUrbanoBean.centroMapa}" zoom="13" type="HYBRID" style="width:99%;height:400px" model="#{informeComercialUrbanoBean.mapModel}">
+											<p:ajax event="markerDrag" listener="#{informeComercialUrbanoBean.onMarkerDrag}" update="latitudInmuebleNuevo, longitudInmuebleNuevo" process="@parent" />
+										</p:gmap>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:spacer height="0"/>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="latitudInmuebleNuevo" value="Latitud: " />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputText id="latitudInmuebleNuevo" value="#{informeComercialUrbanoBean.inmueble.latitud}" label="Latitud" style="width:99" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:spacer height="0"/>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="longitudInmuebleNuevo" value="Longitud: " />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputText id="longitudInmuebleNuevo" value="#{informeComercialUrbanoBean.inmueble.longitud}" label="Longitud" style="width:99" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:spacer height="0"/>
+									</p:column>
+								</p:row>
+								<p:row >
+									<p:column styleClass="ui-widget-header">
+										<p:commandButton value="Guardar" icon="ui-icon-disk" actionListener="#{informeComercialUrbanoBean.guardarInmueble}" update="nuevoInmueble, inmuebles" process="agregarNuevoInmueble" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:commandButton value="Cancelar" icon="ui-icon-trash" actionListener="#{informeComercialUrbanoBean.cancelarNuevoInmueble}" styleClass="button_red" update="nuevoInmueble" process="agregarNuevoInmueble" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+							<p:panelGrid rendered="#{not informeComercialUrbanoBean.nuevoInmueble and not informeComercialUrbanoBean.editarInmueble}">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:commandButton value="Agregar nuevo inmueble" icon="ui-icon-plusthick" actionListener="#{informeComercialUrbanoBean.agregarInmueble}" process="nuevoInmueble" update="nuevoInmueble" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel id="documentosConsultadosPanel" header="Documentos consultados" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<h:outputLabel for="documentosConsultados" value="Documentos consultados: " />
+								</p:row>
+								<p:row>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:selectManyMenu id="documentosConsultados" showCheckbox="true" filter="true" filterMatchMode="contains" value="#{informeComercialUrbanoBean.documentosConsultados}" required="#{not empty param[enviar.clientId]}" style="width:99%">
+											<f:selectItem itemLabel="Certificado Catastral" itemValue="1"/>
+											<f:selectItem itemLabel="Impuesto Predial" itemValue="2"/>
+											<f:selectItem itemLabel="Certificado de Libertad y Tradición" itemValue="3"/>
+											<f:selectItem itemLabel="Escritura" itemValue="4"/>
+										</p:selectManyMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="fechaAporteDeDocumentos" value="Fecha aporte de documentos: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:calendar id="fechaAporteDeDocumentos" value="#{informeComercialUrbanoBean.avaluoComercialDTO.fechaAporteDeDocumentos}" showOn="button" timeZone="GMT-5" pattern="dd-MMM-yyyy" locale="es" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanCheckbox value="#{informeComercialUrbanoBean.otrosDocumentos}" >
+											<p:ajax update="inmuebles" />
+										</p:selectBooleanCheckbox>
+										<h:outputLabel value="Otros documentos: " />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{informeComercialUrbanoBean.otrosDocumentos}">
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="otrosDocumentos" value="#{informeComercialUrbanoBean.avaluoComercialDTO.otrosDocumentos}" style="width: 99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="4" styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesDeTitulacion" value="Observaciones de titulación: " />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="4" styleClass="ui-widget-header">
+										<p:inputText id="observacionesDeTitulacion" value="#{informeComercialUrbanoBean.avaluoComercialDTO.observacionesDeTitulacion}" style="width: 99%"/>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+					<p:tab id="caracteristicasGeneralesSector" title="Características Generales del Sector">
+						<p:panel id="descripcionGeneralMunicipio" header="Descripción general del municipio y sector" style="margin-bottom:10px">
+							<p:inputTextarea rows="5" cols="30" id="descripcionGeneralMunicipioOSector" value="#{informeComercialUrbanoBean.avaluoComercialDTO.descripcionGeneralMunicipioOSector}" label="Descripción general del sector" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="ubicacionSector" header="Ubicación del sector" style="margin-bottom:10px">
+							<p:inputTextarea rows="5" cols="30" id="ubicacionDelSector" value="#{informeComercialUrbanoBean.avaluoComercialDTO.ubicacionDelSector}" label="Ubicación del sector" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="limitesDelSector" header="Límites del sector" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="limiteNorte" value="Límite norte" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="limiteNorte" value="#{informeComercialUrbanoBean.avaluoComercialDTO.limiteNorte}" label="Límite norte" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="limiteSur" value="Límite sur" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="limiteSur" value="#{informeComercialUrbanoBean.avaluoComercialDTO.limiteSur}" label="Límite sur" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="limiteOriente" value="Límite oriente" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="limiteOriente" value="#{informeComercialUrbanoBean.avaluoComercialDTO.limiteOriente}" label="Límite oriente" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="limiteOccidente" value="Límite occidente" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="limiteOccidente" value="#{informeComercialUrbanoBean.avaluoComercialDTO.limiteOccidente}" label="Límite occidente" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel id="barriosCercanosPanel" header="Barrios cercanos" style="margin-bottom:10px">
+							<p:inputText id="barriosCercanos" value="#{informeComercialUrbanoBean.avaluoComercialDTO.barriosCercanos}" label="Barrios cercanos" style="width:99%"/>
+						</p:panel>
+						<p:panel id="usoPredominanteSector" header="Uso predominante del sector" style="margin-bottom:10px">
+							<p:inputText id="usoPredominanteDelSector" value="#{informeComercialUrbanoBean.avaluoComercialDTO.usoPredominanteDelSector}" label="Uso predominante del sector" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="caracteristicasSocioEconomicasPanel" header="Características socio económicas" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="estrato" value="Estrato" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="caracteristicasSocioEconomicas" value="Características socio económicas" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estrato" value="#{informeComercialUrbanoBean.avaluoComercialDTO.estrato}" required="#{not empty param[enviar.clientId]}" label="Estrato" style="width:100px" >
+											<f:selectItem itemLabel="No aplica" itemValue="#{null}" noSelectionOption="true"/>
+											<f:selectItem itemLabel="1" itemValue="1"/>
+											<f:selectItem itemLabel="2" itemValue="2"/>
+											<f:selectItem itemLabel="3" itemValue="3"/>
+											<f:selectItem itemLabel="4" itemValue="4"/>
+											<f:selectItem itemLabel="5" itemValue="5"/>
+											<f:selectItem itemLabel="6" itemValue="6"/>
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="caracteristicasSocioEconomicas" value="#{informeComercialUrbanoBean.avaluoComercialDTO.caracteristicasSocioEconomicas}" label="Características socio económicas" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel id="viasAccesoPrincipal" header="Vias de acceso principal" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:dataTable id="viasDeAccesoPrincipal" var="viaDeAcceso" value="#{informeComercialUrbanoBean.viasAccesoPrincipal}" editable="true" style="margin-bottom:20px">
+											<f:facet name="header">
+												Vias de acceso
+											</f:facet>
+											<p:ajax event="rowEdit" listener="#{informeComercialUrbanoBean.editarViaAcceso}" />
+											<p:ajax event="rowEditCancel" listener="#{informeComercialUrbanoBean.cancelarViaAcceso}" />
+											<p:column headerText="Trayecto(Km)">
+												<p:cellEditor>
+													<f:facet name="output">
+														<h:outputText value="#{viaDeAcceso.trayecto}" />
+													</f:facet>
+													<f:facet name="input">
+														<p:inputText value="#{viaDeAcceso.trayecto}" converter="javax.faces.BigDecimal" />
+													</f:facet>
+												</p:cellEditor>
+											</p:column>
+											<p:column headerText="Via">
+												<p:cellEditor>
+													<f:facet name="output"><h:outputText value="#{viaDeAcceso.via}" /></f:facet>
+													<f:facet name="input"><p:inputText id="viaInput" value="#{viaDeAcceso.via}" style="width:100%"/></f:facet>
+												</p:cellEditor>
+											</p:column>
+											<p:column headerText="Descripción">
+												<p:cellEditor>
+													<f:facet name="output"><h:outputText value="#{viaDeAcceso.descripcion}" /></f:facet>
+													<f:facet name="input"><p:inputText value="#{viaDeAcceso.descripcion}" style="width:100%"/></f:facet>
+												</p:cellEditor>
+											</p:column>
+											<p:column headerText="Estado">
+												<p:cellEditor>
+													<f:facet name="output"><h:outputText value="#{viaDeAcceso.estado.value}" /></f:facet>
+													<f:facet name="input"><h:selectOneMenu id="estado" value="#{viaDeAcceso.estado}" >
+														<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+													</h:selectOneMenu></f:facet>
+												</p:cellEditor>
+											</p:column>
+											<p:column style="width:32px">
+												<p:rowEditor />
+											</p:column>
+											<p:column headerText="Borrar">
+												<p:commandButton icon="ui-icon-trash" title="Borrar via de acceso" actionListener="#{informeComercialUrbanoBean.borrarViaAcceso(informeComercialUrbanoBean.viasAccesoPrincipal, viaDeAcceso)}" update=":informeComercialUrbano:tabHost:viasAccesoPrincipal" process=":informeComercialUrbano:tabHost:viasAccesoPrincipal" />
+											</p:column>
+										</p:dataTable>
+										<p:panelGrid style="width: 99%" rendered="#{informeComercialUrbanoBean.nuevaViaAccesoPrincipal}">
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel for="trayectoPrincipalNuevo" value="Trayecto(Km)" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="trayectoPrincipalNuevo" value="#{informeComercialUrbanoBean.viaAccesoPrincipal.trayecto}" converter="javax.faces.BigDecimal" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel for="viaPrincipalNuevo" value="Via" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="viaPrincipalNuevo" value="#{informeComercialUrbanoBean.viaAccesoPrincipal.via}" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel for="descripcionPrincipalNuevo" value="Descripción" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="descripcionPrincipalNuevo" value="#{informeComercialUrbanoBean.viaAccesoPrincipal.descripcion}" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel for="estadoPrincipalNuevo" value="Estado" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:selectOneMenu id="estadoPrincipalNuevo" value="#{informeComercialUrbanoBean.viaAccesoPrincipal.estado}" required="true">
+														<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+													</h:selectOneMenu>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:commandButton icon="ui-icon-disk" actionListener="#{informeComercialUrbanoBean.agregarViaAccesoPrincipal(informeComercialUrbanoBean.viasAccesoPrincipal, informeComercialUrbanoBean.viaAccesoPrincipal)}" update=":informeComercialUrbano:tabHost:viasAccesoPrincipal" process=":informeComercialUrbano:tabHost:viasAccesoPrincipal" />
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+										<p:commandButton icon="ui-icon-plusthick" value="Agregar nueva via de acceso" actionListener="#{informeComercialUrbanoBean.agregarViaAccesoPrincipal(informeComercialUrbanoBean.viasAccesoPrincipal, informeComercialUrbanoBean.viaAccesoPrincipal)}" rendered="#{not informeComercialUrbanoBean.nuevaViaAccesoPrincipal}" update=":informeComercialUrbano:tabHost:viasAccesoPrincipal" process=":informeComercialUrbano:tabHost:viasAccesoPrincipal" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesViasDeAcceso" value="Observaciones de vias de acceso" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="observacionesViasDeAcceso" value="#{informeComercialUrbanoBean.avaluoComercialDTO.observacionesViasDeAcceso}" label="Observaciones de vias de acceso" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel id="viasAccesoSecundario" header="Vias de acceso secundario" style="margin-bottom:10px">
+							<p:dataTable id="viasDeAccesoSecundario" var="viaDeAcceso" value="#{informeComercialUrbanoBean.viasAccesoSecundario}" editable="true" style="margin-bottom:20px">
+								<f:facet name="header">
+									Vias de acceso
+								</f:facet>
+								<p:ajax event="rowEdit" listener="#{informeComercialUrbanoBean.editarViaAcceso}" />
+								<p:ajax event="rowEditCancel" listener="#{informeComercialUrbanoBean.cancelarViaAcceso}" />
+								<p:column headerText="Trayecto(Km)">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{viaDeAcceso.trayecto}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{viaDeAcceso.trayecto}" converter="javax.faces.BigDecimal" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Via">
+									<p:cellEditor>
+										<f:facet name="output"><h:outputText value="#{viaDeAcceso.via}" /></f:facet>
+										<f:facet name="input"><p:inputText id="viaInput" value="#{viaDeAcceso.via}" style="width:100%"/></f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Descripción">
+									<p:cellEditor>
+										<f:facet name="output"><h:outputText value="#{viaDeAcceso.descripcion}" /></f:facet>
+										<f:facet name="input"><p:inputText value="#{viaDeAcceso.descripcion}" style="width:100%"/></f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Estado">
+									<p:cellEditor>
+										<f:facet name="output"><h:outputText value="#{viaDeAcceso.estado.value}" /></f:facet>
+										<f:facet name="input"><h:selectOneMenu id="estado" value="#{viaDeAcceso.estado}" >
+											<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+										</h:selectOneMenu></f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column style="width:32px">
+									<p:rowEditor />
+								</p:column>
+								<p:column headerText="Borrar">
+									<p:commandButton icon="ui-icon-trash" title="Borrar via de acceso" actionListener="#{informeComercialUrbanoBean.borrarViaAcceso(informeComercialUrbanoBean.viasAccesoSecundario, viaDeAcceso)}" update=":informeComercialUrbano:tabHost:viasAccesoSecundario" process=":informeComercialUrbano:tabHost:viasAccesoSecundario"/>
+								</p:column>
+							</p:dataTable>
+							<p:panelGrid style="width: 99%" rendered="#{informeComercialUrbanoBean.nuevaViaAccesoSecundaria}">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="trayectoSecundarioNuevo" value="Trayecto(Km)" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="trayectoSecundarioNuevo" value="#{informeComercialUrbanoBean.viaAccesoSecundaria.trayecto}" converter="javax.faces.BigDecimal" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="viaSecundarioNuevo" value="Via" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="viaSecundarioNuevo" value="#{informeComercialUrbanoBean.viaAccesoSecundaria.via}" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="descripcionSecundarioNuevo" value="Descripción" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="descripcionSecundarioNuevo" value="#{informeComercialUrbanoBean.viaAccesoSecundaria.descripcion}" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="estadoSecundarioNuevo" value="Estado" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estadoSecundarioNuevo" value="#{informeComercialUrbanoBean.viaAccesoSecundaria.estado}" required="true" label="Estado (Via acceso secundaria)">
+											<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:commandButton icon="ui-icon-disk" actionListener="#{informeComercialUrbanoBean.agregarViaAccesoSecundaria(informeComercialUrbanoBean.viasAccesoSecundario, informeComercialUrbanoBean.viaAccesoSecundaria)}" update=":informeComercialUrbano:tabHost:viasAccesoSecundario" process=":informeComercialUrbano:tabHost:viasAccesoSecundario"/>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+							<p:commandButton icon="ui-icon-plusthick" value="Agregar nueva via de acceso" actionListener="#{informeComercialUrbanoBean.agregarViaAccesoSecundaria(informeComercialUrbanoBean.viasAccesoSecundario, informeComercialUrbanoBean.viaAccesoSecundaria)}" rendered="#{not informeComercialUrbanoBean.nuevaViaAccesoSecundaria}" update=":informeComercialUrbano:tabHost:viasAccesoSecundario" process=":informeComercialUrbano:tabHost:viasAccesoSecundario" />
+						</p:panel>
+						<p:panel id="estadoConservacion" header="Estado de conservación" style="margin-bottom:10px">
+							<p:inputTextarea id="estadoDeConservacionSectorRural" value="#{informeComercialUrbanoBean.avaluoComercialDTO.estadoDeConservacionSectorRural}" rows="3" label="Estado de conservación" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="usoSuelo" header="Uso del suelo" style="margin-bottom:10px">
+							<p:inputText id="usoDelSuelo" value="#{informeComercialUrbanoBean.avaluoComercialDTO.usoDelSuelo}" label="Uso del suelo" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="infraestructuraUrbanisticaPanel" header="Infraestructura urbanistica" style="margin-bottom:10px">
+							<p:inputText id="infraestructuraUrbanistica" value="#{informeComercialUrbanoBean.avaluoComercialDTO.infraestructuraUrbanistica}" label="Infraestructura urbanistica" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="amoblamientoUrbanoPanel" header="Amoblamiento urbano" style="margin-bottom:10px">
+							<p:inputText id="amoblamientoUrbano" value="#{informeComercialUrbanoBean.avaluoComercialDTO.amoblamientoUrbano}" label="Amoblamiento urbano" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="andenesYSardinelesPanel" header="Andenes y sardineles" style="margin-bottom:10px">
+							<p:inputText id="andenesYSardineles" value="#{informeComercialUrbanoBean.avaluoComercialDTO.andenesYSardineles}" label="Andenes y sardineles" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="zonasVerdesPanel" header="Zonas verdes" style="margin-bottom:10px">
+							<p:inputText id="zonasVerdes" value="#{informeComercialUrbanoBean.avaluoComercialDTO.zonasVerdes}" label="Zonas verdes" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="topografiaPanel" header="Topografía" style="margin-bottom:10px">
+							<p:inputText id="topografia" value="#{informeComercialUrbanoBean.avaluoComercialDTO.topografia}" label="Topografía" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="alumbradoPublicoPanel" header="Alumbrado público" style="margin-bottom:10px">
+							<p:inputText id="alumbradoPublico" value="#{informeComercialUrbanoBean.avaluoComercialDTO.alumbradoPublico}" label="Alumbrado público" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="serviciosPublicos" header="Servicios públicos" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="alcantarillado" value="Alcantarillado" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="alcantarillado" value="#{informeComercialUrbanoBean.avaluoComercialDTO.alcantarillado}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" converter="javax.faces.Boolean" />
+									</p:column>
+									<p:column colspan="3" styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesServiciosPublicos" value="Observaciones servicios públicos" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="acueducto" value="Acueducto" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="acueducto" value="#{informeComercialUrbanoBean.avaluoComercialDTO.acueducto}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" converter="javax.faces.Boolean" />
+									</p:column>
+									<p:column rowspan="4" colspan="3" styleClass="ui-widget-header">
+										<p:inputTextarea id="observacionesServiciosPublicos" value="#{informeComercialUrbanoBean.avaluoComercialDTO.observacionesServiciosPublicos}" rows="3" label="Observaciones servicios públicos" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="energia" value="Energia" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="energia" value="#{informeComercialUrbanoBean.avaluoComercialDTO.energia}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="gas" value="Gas" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="gas" value="#{informeComercialUrbanoBean.avaluoComercialDTO.gas}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="telefonoEnElSector" value="(Cod. Area)+Teléfono" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="telefonoEnElSector" value="#{informeComercialUrbanoBean.avaluoComercialDTO.telefono}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel id="transportePublicoPanel" header="Transporte público" style="margin-bottom:10px">
+							<p:inputTextarea rows="5" cols="30" id="transportePublico" value="#{informeComercialUrbanoBean.avaluoComercialDTO.transportePublico}" label="Transporte público" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="cubrimientoPanel" header="Cubrimiento" style="margin-bottom:10px">
+							<p:inputText id="cubrimiento" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cubrimiento}" label="Cubrimiento" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="frecuenciaPanel" header="Frecuencia" style="margin-bottom:10px">
+							<p:inputText id="frecuencia" value="#{informeComercialUrbanoBean.avaluoComercialDTO.frecuencia}" label="Frecuencia" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+					</p:tab>
+					<p:tab id="normatividadUrbanisticaTab" title="Normatividad urbanística">
+						<p:panel id="normatividadUrbanisticaPanel" header="Normatividad urbanística" style="margin-bottom:10px">
+							<p:inputTextarea rows="5" cols="30" id="normatividad" value="#{informeComercialUrbanoBean.avaluoComercialDTO.normatividad}" label="Normatividad" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+					</p:tab>
+					<p:tab id="caracteristicasGeneralesInmueble" title="Características generales del inmueble">
+						<p:panel id="descripcionInmueble" header="Descripción del inmueble" style="margin-bottom:10px">
+							<p:inputTextarea rows="5" cols="30" id="descripcionDelInmueble" value="#{informeComercialUrbanoBean.avaluoComercialDTO.descripcionDelInmueble}" label="Descripción del inmueble" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="localizacionEspecifacaInmueble" header="Localización específica del inmueble" style="margin-bottom:10px">
+							<p:inputTextarea rows="5" cols="30" id="localizacionEspecifacaDelInmueble" value="#{informeComercialUrbanoBean.avaluoComercialDTO.localizacionEspecifacaDelInmueble}" label="Localización específica del inmueble" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="linderosDelInmueble" header="Linderos del inmueble" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="linderoNorte" value="Lindero del norte" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputText id="linderoNorte" value="#{informeComercialUrbanoBean.avaluoComercialDTO.linderoNorte}" label="Lindero norte" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="linderoSur" value="Lindero sur" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="linderoSur" value="#{informeComercialUrbanoBean.avaluoComercialDTO.linderoSur}" label="Lindero sur" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="linderoOriente" value="Lindero oriente" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="linderoOriente" value="#{informeComercialUrbanoBean.avaluoComercialDTO.linderoOriente}" label="Lindero oriente" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="linderoOccidente" value="Lindero occidente" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="linderoOccidente" value="#{informeComercialUrbanoBean.avaluoComercialDTO.linderoOccidente}" label="Lindero occidente" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel id="fuente" header="Fuente" style="margin-bottom:10px">
+							<p:inputText id="fuenteLinderos" value="#{informeComercialUrbanoBean.avaluoComercialDTO.fuenteLinderos}" label="Fuente" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="viasAcceso" header="Vias de acceso" style="margin-bottom:10px">
+							<p:dataTable id="viasDeAcceso" var="viaDeAcceso" value="#{informeComercialUrbanoBean.viasAccesoInmueble}" editable="true" style="margin-bottom:20px">
+								<f:facet name="header">
+									Vias de acceso
+								</f:facet>
+								<p:ajax event="rowEdit" listener="#{informeComercialUrbanoBean.editarViaAcceso}" />
+								<p:ajax event="rowEditCancel" listener="#{informeComercialUrbanoBean.cancelarViaAcceso}" />
+								<p:column headerText="Trayecto(Km)">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{viaDeAcceso.trayecto}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{viaDeAcceso.trayecto}" style="width:100%;" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Via">
+									<p:cellEditor>
+										<f:facet name="output"><h:outputText value="#{viaDeAcceso.via}" /></f:facet>
+										<f:facet name="input"><p:inputText id="viaInput" value="#{viaDeAcceso.via}" style="width:100%"/></f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Descripción">
+									<p:cellEditor>
+										<f:facet name="output"><h:outputText value="#{viaDeAcceso.descripcion}" /></f:facet>
+										<f:facet name="input"><p:inputText value="#{viaDeAcceso.descripcion}" style="width:100%"/></f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Estado">
+									<p:cellEditor>
+										<f:facet name="output"><h:outputText value="#{viaDeAcceso.estado.value}" /></f:facet>
+										<f:facet name="input"><h:selectOneMenu id="estado" value="#{viaDeAcceso.estado}" >
+											<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+										</h:selectOneMenu></f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column style="width:32px">
+									<p:rowEditor />
+								</p:column>
+								<p:column headerText="Borrar">
+									<p:commandButton icon="ui-icon-trash" title="Borrar via de acceso" actionListener="#{informeComercialUrbanoBean.borrarViaAcceso(informeComercialUrbanoBean.viasAccesoInmueble, viaAcceso)}" update=":informeComercialUrbano:tabHost:viasAcceso" process=":informeComercialUrbano:tabHost:viasAcceso" />
+								</p:column>
+							</p:dataTable>
+							<p:panelGrid style="width: 99%" rendered="#{informeComercialUrbanoBean.nuevaViaAcceso}">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="trayectoNuevo" value="Trayecto(Km)" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="trayectoNuevo" value="#{informeComercialUrbanoBean.viaAcceso.trayecto}" converter="javax.faces.BigDecimal" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="via" value="Via" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="via" value="#{informeComercialUrbanoBean.viaAcceso.via}" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="descripcion" value="Descripción" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="descripcion" value="#{informeComercialUrbanoBean.viaAcceso.descripcion}" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="estado" value="Estado" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estado" value="#{informeComercialUrbanoBean.viaAcceso.estado}" >
+											<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:commandButton icon="ui-icon-disk" actionListener="#{informeComercialUrbanoBean.agregarViaAcceso(informeComercialUrbanoBean.viasAccesoInmueble, informeComercialUrbanoBean.viaAcceso)}" update=":informeComercialUrbano:tabHost:viasAcceso" process=":informeComercialUrbano:tabHost:viasAcceso" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+							<p:commandButton icon="ui-icon-plusthick" value="Agregar nueva via de acceso" actionListener="#{informeComercialUrbanoBean.agregarViaAcceso(informeComercialUrbanoBean.viasAccesoInmueble, informeComercialUrbanoBean.viaAcceso)}" rendered="#{not informeComercialUrbanoBean.nuevaViaAcceso}" update=":informeComercialUrbano:tabHost:viasAcceso" process=":informeComercialUrbano:tabHost:viasAcceso" />
+						</p:panel>
+						<p:panel id="propiedadHorizontalPanel" header="Propiedad horizontal" style="margin-bottom:10px">
+							<p:selectBooleanButton id="propiedadHorizontal" value="#{informeComercialUrbanoBean.avaluoComercialDTO.propiedadHorizontal}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" required="#{not empty param[enviar.clientId]}" style="width:100px" converter="javax.faces.Boolean" >
+								<p:ajax event="change" update="propiedadHorizontalPanel" process="propiedadHorizontal" />
+							</p:selectBooleanButton>
+							<p:outputPanel rendered="#{informeComercialUrbanoBean.avaluoComercialDTO.propiedadHorizontal}">
+								<p:inputText id="descripcionDeLaPropiedadHorizontal" value="#{informeComercialUrbanoBean.avaluoComercialDTO.descripcionDeLaPropiedadHorizontal}" label="Descripción de la propiedad horizontal" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+								<p:panel header="Edad" >
+									<p:panelGrid style="width: 99%">
+										<p:row>
+											<p:column styleClass="ui-widget-header">
+												<h:outputLabel for="vidaUtil" value="Vida útil" />
+											</p:column>
+											<p:column styleClass="ui-widget-header">
+												<p:inputMask id="vidaUtil" mask="9?99" value="#{informeComercialUrbanoBean.avaluoComercialDTO.vidaUtil}" label="Vida útil" style="width:99%" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column styleClass="ui-widget-header">
+												<h:outputLabel for="vidaDelInmueble" value="Vida del inmueble" />
+											</p:column>
+											<p:column styleClass="ui-widget-header">
+												<p:inputMask id="vidaDelInmueble" mask="9?99" value="#{informeComercialUrbanoBean.avaluoComercialDTO.vidaDelInmueble}" label="Vida del inmueble" style="width:99%" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column styleClass="ui-widget-header">
+												<h:outputLabel for="vidaRemanente" value="Vida remanente" />
+											</p:column>
+											<p:column styleClass="ui-widget-header">
+												<p:inputMask id="vidaRemanente" mask="9?99" value="#{informeComercialUrbanoBean.avaluoComercialDTO.vidaRemanente}" label="Vida remanente" style="width:99%" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column styleClass="ui-widget-header">
+												<p:inputTextarea rows="5" cols="30" id="justificacionVidaUtil" value="#{informeComercialUrbanoBean.avaluoComercialDTO.justificacionVidaUtil}" label="Justificación vida útil" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</p:panel>
+								<p:panel header="Especificaciones constructivas" >
+									<p:panelGrid style="width: 99%" >
+										<p:row>
+											<p:column styleClass="ui-widget-header">
+												<h:outputLabel for="estructura_propiedad_horizontal" value="Estructura" />
+											</p:column>
+											<p:column styleClass="ui-widget-header">
+												<h:selectOneMenu id="estructura_propiedad_horizontal" value="#{informeComercialUrbanoBean.avaluoComercialDTO.estructuraEdificio}" label="Estructura" >
+													<f:selectItem itemLabel="Seleccione ..." itemValue="#{null}" noSelectionOption="true"/>
+													<f:selectItem itemLabel="Muro de carga" itemValue="1" />
+													<f:selectItem itemLabel="Mamposteria Estructural" itemValue="2" />
+													<f:selectItem itemLabel="Tradicional" itemValue="3" />
+													<f:selectItem itemLabel="Metalica" itemValue="4" />
+													<f:selectItem itemLabel="Industrializada" itemValue="5" />
+													<f:selectItem itemLabel="Otros" itemValue="6" />
+												</h:selectOneMenu>
+											</p:column>
+											<p:column styleClass="ui-widget-header">
+												<h:outputLabel for="placasDeEntrepiso" value="Placas de entrepiso" />
+											</p:column>
+											<p:column styleClass="ui-widget-header">
+												<h:selectOneMenu id="placasDeEntrepiso" value="#{informeComercialUrbanoBean.avaluoComercialDTO.placasDeEntrepiso}" label="Placas de entrepiso" style="width: 99%">
+													<f:selectItem itemLabel="Seleccione ..." itemValue="#{null}" noSelectionOption="true"/>
+													<f:selectItem itemLabel="Concreto Reforzado" itemValue="1" />
+													<f:selectItem itemLabel="Concreto Pretensado" itemValue="2" />
+													<f:selectItem itemLabel="Apoyada en Madera" itemValue="3" />
+													<f:selectItem itemLabel="Lamina de Acero" itemValue="4" />
+													<f:selectItem itemLabel="Otras" itemValue="5" />
+												</h:selectOneMenu>
+											</p:column>
+											<p:column styleClass="ui-widget-header">
+												<h:outputLabel for="fachada_propiedad_horizontal" value="Fachada" />
+											</p:column>
+											<p:column styleClass="ui-widget-header">
+												<h:selectOneMenu id="fachada_propiedad_horizontal" mask="9999" value="#{informeComercialUrbanoBean.avaluoComercialDTO.fachada}" label="Fachada" style="width: 99%" >
+													<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+													<f:selectItem itemLabel="Ladrillo a la vista" itemValue="41" />
+													<f:selectItem itemLabel="Pañete y pintura" itemValue="42" />
+													<f:selectItem itemLabel="Graniplast" itemValue="43" />
+													<f:selectItem itemLabel="Flotante" itemValue="44" />
+													<f:selectItem itemLabel="Concreto Texturado" itemValue="45" />
+													<f:selectItem itemLabel="Otros" itemValue="46" />
+												</h:selectOneMenu>
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="2" styleClass="ui-widget-header">
+												<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.avaluoComercialDTO.descripcionEstructura}" label="Descripción de estructura" style="width: 99%" />
+											</p:column>
+											<p:column colspan="2" styleClass="ui-widget-header">
+												<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.avaluoComercialDTO.observacionesPlacasEntrePiso}" label="Observaciones de las placas de entrepiso" style="width: 99%" />
+											</p:column>
+											<p:column colspan="2" styleClass="ui-widget-header">
+												<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.avaluoComercialDTO.descripcionFachada}" label="Descripción de la fachada" style="width: 99%" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column styleClass="ui-widget-header">
+												<h:outputLabel for="cubierta_propiedad_horizontal" value="Cubierta" />
+											</p:column>
+											<p:column colspan="2" styleClass="ui-widget-header">
+												<h:selectOneMenu id="cubierta_propiedad_horizontal" value="#{informeComercialUrbanoBean.avaluoComercialDTO.cubierta}" label="Cubierta" >
+													<f:selectItem itemLabel="Seleccione ..." itemValue="#{null}" noSelectionOption="true"/>
+													<f:selectItem itemLabel="Placa concreto imp." itemValue="1" />
+													<f:selectItem itemLabel="Teja plástica" itemValue="2" />
+													<f:selectItem itemLabel="Teja de barro" itemValue="3" />
+													<f:selectItem itemLabel="Teja fibrocemento" itemValue="4" />
+													<f:selectItem itemLabel="Teja metálica" itemValue="5" />
+													<f:selectItem itemLabel="Otros" itemValue="6" />
+												</h:selectOneMenu>
+											</p:column>
+											<p:column styleClass="ui-widget-header">
+												<h:outputLabel for="escaleras" value="Placas de entrepiso" />
+											</p:column>
+											<p:column colspan="2" styleClass="ui-widget-header">
+												<h:selectOneMenu id="escaleras" value="#{informeComercialUrbanoBean.avaluoComercialDTO.placasDeEntrepiso}" label="Placas de entrepiso" style="width: 99%">
+													<f:selectItem itemLabel="Seleccione ..." itemValue="#{null}" noSelectionOption="true"/>
+													<f:selectItem itemLabel="Concreto Reforzado" itemValue="1" />
+													<f:selectItem itemLabel="Concreto Pretensado" itemValue="2" />
+													<f:selectItem itemLabel="Apoyada en Madera" itemValue="3" />
+													<f:selectItem itemLabel="Lamina de Acero" itemValue="4" />
+													<f:selectItem itemLabel="Otras" itemValue="5" />
+												</h:selectOneMenu>
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="3" styleClass="ui-widget-header">
+												<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.avaluoComercialDTO.descripcionCubierta}" label="Descripción de cubierta" style="width: 99%" />
+											</p:column>
+											<p:column colspan="3" styleClass="ui-widget-header">
+												<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.avaluoComercialDTO.descripcionEscaleras}" label="Observaciones de las escaleras" style="width: 99%" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="6" styleClass="ui-widget-header">
+												<h:outputLabel for="estructuraTexto" value="Estructura" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="6" styleClass="ui-widget-header">
+												<p:inputTextarea id="estructuraTexto" rows="2" value="#{informeComercialUrbanoBean.avaluoComercialDTO.estructura}" label="Estructura" style="width: 99%" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="6" styleClass="ui-widget-header">
+												<h:outputLabel for="categoriaAcabados" value="Categoría de acabados" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="6" styleClass="ui-widget-header">
+												<p:inputTextarea id="categoriaAcabados" rows="2" value="#{informeComercialUrbanoBean.avaluoComercialDTO.categoriaAcabados}" label="Categoría de acabados" style="width: 99%" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="6" styleClass="ui-widget-header">
+												<h:outputLabel for="distribucion" value="Distribución" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="6" styleClass="ui-widget-header">
+												<p:inputTextarea id="distribucion" rows="2" value="#{informeComercialUrbanoBean.avaluoComercialDTO.distribucion}" label="Distribución" style="width: 99%" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="6" styleClass="ui-widget-header">
+												<h:outputLabel for="estadoDeConservacion" value="Estado de conservación sector rural" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="6" styleClass="ui-widget-header">
+												<p:inputTextarea id="estadoDeConservacion" rows="2" value="#{informeComercialUrbanoBean.avaluoComercialDTO.estadoDeConservacion}" label="Estado de conservación sector rural" style="width: 99%" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="6" styleClass="ui-widget-header">
+												<h:outputLabel for="equipamientoComunal" value="Equipamiento comunal" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="6" styleClass="ui-widget-header">
+												<p:inputTextarea id="equipamientoComunal" rows="2" value="#{informeComercialUrbanoBean.avaluoComercialDTO.equipamientoComunal}" label="Equipamiento comunal" style="width: 99%" />
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</p:panel>
+							</p:outputPanel>
+						</p:panel>
+					</p:tab>
+					<p:tab id="caracteristicasLote" title="Características del lote">
+						<p:panel id="caracteristicasFisicas" header="Características físicas" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="relieve" value="Relieve" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="relieve" value="#{informeComercialUrbanoBean.avaluoComercialDTO.relieve}" label="Relieve" style="width:99%">
+											<f:selectItem itemLabel="Plano" itemValue="1"/>
+											<f:selectItem itemLabel="Accidentada" itemValue="2"/>
+											<f:selectItem itemLabel="Inclinado" itemValue="3"/>
+											<f:selectItem itemLabel="Ligera" itemValue="4"/>
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="formaGeometrica" value="Forma geométrica" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="formaGeometrica" value="#{informeComercialUrbanoBean.avaluoComercialDTO.formaGeometrica}" style="width:99%">
+											<f:selectItem itemLabel="Triangulo" itemValue="1"/>
+											<f:selectItem itemLabel="Decágono" itemValue="2"/>
+											<f:selectItem itemLabel="Octógono" itemValue="3"/>
+											<f:selectItem itemLabel="Heptágono" itemValue="4"/>
+											<f:selectItem itemLabel="Hexágono" itemValue="5"/>
+											<f:selectItem itemLabel="Pentágono" itemValue="6"/>
+											<f:selectItem itemLabel="Rectángulo" itemValue="7"/>
+											<f:selectItem itemLabel="Cuadrado" itemValue="8"/>
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="regular" value="Regular/Irregular" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanCheckbox id="regular" value="#{informeComercialUrbanoBean.avaluoComercialDTO.regular}" onLabel="Regular" offLabel="Irregular" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" converter="javax.faces.Boolean" >
+											<p:ajax listener="#{informeComercialUrbanoBean.cambioRegular}" />
+										</p:selectBooleanCheckbox>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel id="areas" header="Áreas totales del lote" style="margin-bottom:10px">
+							<f:facet name="header">
+								Área total
+							</f:facet>
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="frente" value="Frente" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="frente" value="#{informeComercialUrbanoBean.avaluoComercialDTO.frente}" label="Frente" required="#{not empty param[enviar.clientId]}" style="width:99%" >
+											<p:ajax event="change" listener="#{informeComercialUrbanoBean.calcularRelacionFrenteFondo}" update="areas" />
+										</p:inputText>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="metros" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="fondo" value="Fondo" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="fondo" value="#{informeComercialUrbanoBean.avaluoComercialDTO.fondo}" label="Fondo" required="#{not empty param[enviar.clientId]}" style="width:99%" >
+											<p:ajax event="change" listener="#{informeComercialUrbanoBean.calcularRelacionFrenteFondo}" update="areas" />
+										</p:inputText>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="metros" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="relacionFrenteFondo" value="Relación Frente/Fondo" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="relacionFrenteFondo" value="#{informeComercialUrbanoBean.avaluoComercialDTO.relacionFrenteFondo}" label="Relación Frente/Fondo" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="metros" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="9" styleClass="ui-widget-header">
+										<p:remoteCommand name="actualizarTerrenos" update=":informeComercialUrbano:tabHost:resumenAreasConstruidas, :informeComercialUrbano:tabHost:valorRazonableInmueble, :informeComercialUrbano:tabHost:areasValorProporcional" />
+										<p:outputPanel id="areasNoConstruidasPanel" rendered="#{not informeComercialUrbanoBean.avaluoComercialDTO.propiedadHorizontal}">
+											<p:dataTable var="area" value="#{informeComercialUrbanoBean.areasNoConstruidas}" editable="true" style="margin-bottom:20px">
+												<f:facet name="header">
+													Distribución del areas no construidas
+												</f:facet>
+												<p:ajax event="rowEdit" listener="#{informeComercialUrbanoBean.editarArea}" oncomplete="actualizarTerrenos();" />
+												<p:ajax event="rowEditCancel" listener="#{informeComercialUrbanoBean.cancelarArea}" />
+												<p:column headerText="Nombre">
+													<p:cellEditor>
+														<f:facet name="output"><h:outputText value="#{area.nombre}" /></f:facet>
+														<f:facet name="input"><p:inputText value="#{area.nombre}" style="width:100%;" /></f:facet>
+													</p:cellEditor>
+												</p:column>
+												<p:column headerText="Descripción">
+													<p:cellEditor>
+														<f:facet name="output"><h:outputText value="#{area.descripcion}" /></f:facet>
+														<f:facet name="input"><p:inputText value="#{area.descripcion}" style="width:100%"/></f:facet>
+													</p:cellEditor>
+												</p:column>
+												<p:column headerText="Unidad de medida">
+													<p:cellEditor>
+														<f:facet name="output"><h:outputText value="#{area.unidadDeMedida.value}" /></f:facet>
+														<f:facet name="input"><h:selectOneMenu value="#{area.unidadDeMedida}" style="width:100%" >
+															<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+															<f:selectItems value="#{informeComercialUrbanoBean.unidadesDeMedida}" var="unidadDeMedida" itemValue="#{unidadDeMedida}" itemLabel="#{unidadDeMedida.value}" />
+														</h:selectOneMenu></f:facet>
+													</p:cellEditor>
+												</p:column>
+												<p:column headerText="Area">
+													<p:cellEditor>
+														<f:facet name="output"><h:outputText value="#{area.area}" /></f:facet>
+														<f:facet name="input"><p:inputText value="#{area.area}" style="width:100%"/></f:facet>
+													</p:cellEditor>
+												</p:column>
+												<p:column style="width:32px">
+													<p:rowEditor />
+												</p:column>
+												<p:column headerText="Borrar">
+													<p:commandButton icon="ui-icon-trash" title="Borrar area de terreno" actionListener="#{informeComercialUrbanoBean.borrarArea(informeComercialUrbanoBean.areasNoConstruidas, area)}" update=":informeComercialUrbano:tabHost:areasNoConstruidasPanel, :informeComercialUrbano:tabHost:resumenAreasConstruidas, :informeComercialUrbano:tabHost:valorRazonableInmueble, :informeComercialUrbano:tabHost:valorProporcional" process=":informeComercialUrbano:tabHost:areasNoConstruidasPanel"/>
+												</p:column>
+											</p:dataTable>
+											<p:panelGrid style="width: 99%" rendered="#{informeComercialUrbanoBean.nuevaArea}">
+												<p:row>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="nombreAreaNoConstruidaNueva" value="Nombre" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:inputText id="nombreAreaNoConstruidaNueva" value="#{informeComercialUrbanoBean.area.nombre}" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="descripcionAreaNoConstruidaNueva" value="Descripción" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:inputText id="descripcionAreaNoConstruidaNueva" value="#{informeComercialUrbanoBean.area.descripcion}" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="unidadDeMedidaAreaNoConstruidaNueva" value="Unida de medida" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:selectOneMenu id="unidadDeMedidaAreaNoConstruidaNueva" value="#{informeComercialUrbanoBean.area.unidadDeMedida}" style="width:100%" >
+															<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+															<f:selectItems value="#{informeComercialUrbanoBean.unidadesDeMedida}" var="unidadDeMedida" itemValue="#{unidadDeMedida}" itemLabel="#{unidadDeMedida.value}" />
+														</h:selectOneMenu>
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<h:outputLabel for="areaAreaNoConstruidaNueva" value="Area" />
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:inputText id="areaAreaNoConstruidaNueva" value="#{informeComercialUrbanoBean.area.area}" style="width:100%"/>
+													</p:column>
+													<p:column styleClass="ui-widget-header">
+														<p:commandButton icon="ui-icon-disk" actionListener="#{informeComercialUrbanoBean.agregarArea(informeComercialUrbanoBean.areasNoConstruidas, informeComercialUrbanoBean.area, '1')}" process=":informeComercialUrbano:tabHost:areasNoConstruidasPanel" update=":informeComercialUrbano:tabHost:areasNoConstruidasPanel, :informeComercialUrbano:tabHost:resumenAreasConstruidas, :informeComercialUrbano:tabHost:valorRazonableInmueble, :informeComercialUrbano:tabHost:valorProporcional" />
+													</p:column>
+												</p:row>
+											</p:panelGrid>
+											<p:commandButton icon="ui-icon-plusthick" value="Agregar nueva área" actionListener="#{informeComercialUrbanoBean.agregarArea(informeComercialUrbanoBean.areasNoConstruidas, informeComercialUrbanoBean.area, '1')}" rendered="#{not informeComercialUrbanoBean.nuevaArea}" update=":informeComercialUrbano:tabHost:areasNoConstruidasPanel" process=":informeComercialUrbano:tabHost:areasNoConstruidasPanel" />
+										</p:outputPanel>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="9">
+										<h:outputLabel for="observacionDistribucionDeAreasNoConstruidas" value="Observaciones de distribución de áreas no construidas" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="9">
+										<p:inputTextarea id="observacionDistribucionDeAreasNoConstruidas" rows="2" value="#{informeComercialUrbanoBean.avaluoComercialDTO.observacionDistribucionDeAreasNoConstruidas}" label="Observaciones de distribución de áreas no construidas" style="width: 99%" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+					<p:tab id="caracteristicasConstruccion" title="Características de la construcción">
+						<p:panel id="caracteristicasConstruccionPanel" header="Características de la construcción" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="nombreDeLaConstruccion" value="Nombre de la construcción" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="nombreDeLaConstruccion" value="#{informeComercialUrbanoBean.areaConstruccion.nombre}" label="Nombre de la construcción" required="#{not empty param[guardarAreaConstruccion.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<h:outputLabel for="descripcionDeLaConstruccion" value="Descripción de la construcción" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="5" cols="30" id="descripcionDeLaConstruccion" value="#{informeComercialUrbanoBean.areaConstruccion.descripcion}" label="Descripción de la construcción" required="#{not empty param[guardarAreaConstruccion.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="usoDelInmueble" value="Uso del inmueble: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="usoDelInmueble" value="#{informeComercialUrbanoBean.areaConstruccion.usoDelInmueble}" required="#{not empty param[enviar.clientId]}" style="width:99%" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="#{null}" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Unifamiliar" itemValue="1" />
+											<f:selectItem itemLabel="Bifamiliar" itemValue="2" />
+											<f:selectItem itemLabel="Multifamiliar" itemValue="3" />
+											<f:selectItem itemLabel="Viv. Subdividida" itemValue="4" />
+											<f:selectItem itemLabel="Industrial" itemValue="5" />
+											<f:selectItem itemLabel="Comercial" itemValue="6" />
+											<f:selectItem itemLabel="Ed. Oficinas" itemValue="7" />
+											<f:selectItem itemLabel="Otro" itemValue="8" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="numeroDePisos" value="Número de pisos" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="descripcionNumeroDePisos" value="Observaciones de número de pisos" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="numeroDePisos" value="#{informeComercialUrbanoBean.areaConstruccion.numeroDePisos}" label="Número de pisos" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea id="descripcionNumeroDePisos" rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionNumeroDePisos}" label="Descripción de número de pisos" style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="numeroDeSotanos" value="Número de sontanos" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesNumeroDeSotanos" value="Observaciones de número de sotanos" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="numeroDeSotanos" value="#{informeComercialUrbanoBean.areaConstruccion.numeroDeSotanos}" label="Número de sontanos" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea id="observacionesNumeroDeSotanos" rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.observacionesNumeroDeSotanos}" label="Observaciones de número de sotanos" style="width: 99%" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel id="edad" header="Edad" style="margin-bottom:10px" >
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="anoDeConstruccion" value="Año de construcción" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="anoDeConstruccion" mask="9999" value="#{informeComercialUrbanoBean.areaConstruccion.anoDeConstruccion}" label="Año de construcción" style="width: 99%" >
+											<p:ajax event="change" update=":informeComercialUrbano:tabHost:edad" listener="#{informeComercialUrbanoBean.calcularVetustez}" process=":informeComercialUrbano:tabHost:edad" />
+										</p:inputMask>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="vidaUtilConstruccion" value="Vida útil" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="vidaUtilConstruccion" mask="9?99" value="#{informeComercialUrbanoBean.avaluoComercialDTO.vidaUtilConstruccion}" label="Vida útil (construcción)" style="width:99%" >
+											<p:ajax event="change" update=":informeComercialUrbano:tabHost:edad" listener="#{informeComercialUrbanoBean.calcularVidaRemanente}" process=":informeComercialUrbano:tabHost:edad" />
+										</p:inputMask>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Años" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="vidaDelInmuebleConstruccion" value="Vida del inmueble" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="vidaDelInmuebleConstruccion" mask="9?99" value="#{informeComercialUrbanoBean.avaluoComercialDTO.vidaDelInmuebleConstruccion}" label="Vida del inmueble (construcción)" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Años" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="vidaRemanenteConstruccion" value="Vida remanente" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="vidaRemanenteConstruccion" mask="9?99" value="#{informeComercialUrbanoBean.avaluoComercialDTO.vidaRemanenteConstruccion}" label="Vida remanente (construcción)" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputText value="Años" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="6" styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesEdad" value="Observaciones de la edad" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="6" styleClass="ui-widget-header">
+										<p:inputText id="observacionesEdad" value="#{informeComercialUrbanoBean.avaluoComercialDTO.observacionesEdad}" style="width: 99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="estadoDeLaConstruccion" value="Estado de la construcción" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estadoDeLaConstruccion" value="#{informeComercialUrbanoBean.areaConstruccion.estadoDeLaConstruccion}" style="width:99%" >
+											<p:ajax update=":informeComercialUrbano:tabHost:edad" process=":informeComercialUrbano:tabHost:edad" />
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Nueva" itemValue="1" />
+											<f:selectItem itemLabel="Usada" itemValue="2" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="#{informeComercialUrbanoBean.areaConstruccion.estadoDeLaConstruccion eq '2'}">
+										<h:outputLabel for="remodelado" value="Remodelado: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="#{informeComercialUrbanoBean.areaConstruccion.estadoDeLaConstruccion eq '2'}">
+										<p:selectBooleanButton id="remodelado" value="#{informeComercialUrbanoBean.avaluoComercialDTO.remodelado}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:80px" converter="javax.faces.Boolean" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="#{informeComercialUrbanoBean.areaConstruccion.estadoDeLaConstruccion eq '1'}">
+										<h:outputLabel for="porcentajeDeAvance" value="Porcentaje de avance" />
+									</p:column>
+									<p:column styleClass="ui-widget-header" rendered="#{informeComercialUrbanoBean.areaConstruccion.estadoDeLaConstruccion eq '1'}">
+										<p:slider for="porcentajeDeAvance" display="porcentajeDeAvanceSalida" step="1" minValue="0" maxValue="100" />
+										<h:inputHidden id="porcentajeDeAvance" value="#{informeComercialUrbanoBean.areaConstruccion.porcentajeAvance}" />
+										<h:outputText id="porcentajeDeAvanceSalida" label="Porcentaje de avance" value="#{informeComercialUrbanoBean.areaConstruccion.porcentajeAvance} %" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="6" styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesEstadoDeLaConstruccion" value="Observaciones del estado de la construcción" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="6" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" cols="30" id="observacionesEstadoDeLaConstruccion" value="#{informeComercialUrbanoBean.areaConstruccion.observacionesEstadoDeLaConstruccion}" label="Observaciones del estado de la construcción" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="estadoConservacionConstruccion" value="Estado de la Conservación " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estadoConservacionConstruccion" value="#{informeComercialUrbanoBean.areaConstruccion.estadoConservacionConstruccion}" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Optimo" itemValue="1" />
+											<f:selectItem itemLabel="Bueno" itemValue="2" />
+											<f:selectItem itemLabel="Regular" itemValue="3" />
+											<f:selectItem itemLabel="Malo" itemValue="4" />
+											<f:selectItem itemLabel="Demolición" itemValue="5" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="6" styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesEstadoDeLaConservacion" value="Observaciones del estado de la conservación" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="6" styleClass="ui-widget-header">
+										<p:inputText id="observacionesEstadoDeLaConservacion" value="#{informeComercialUrbanoBean.areaConstruccion.observacionesEstadoDeLaConservacion}" label="Observaciones del estado de la conservación" style="width: 99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="estadoDeObra" value="Estado de obra" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estadoDeObra" value="#{informeComercialUrbanoBean.areaConstruccion.estadoDeObra}" style="width: 99%">
+											<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="pisos" value="Pisos" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="pisos" value="#{informeComercialUrbanoBean.areaConstruccion.pisos}" style="width: 99%">
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Reforzado" itemValue="1"/>
+											<f:selectItem itemLabel="No Reforzado" itemValue="2"/>
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="estructura" value="Estructura" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estructura" value="#{informeComercialUrbanoBean.areaConstruccion.estructura}" label="Estructura" style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Paneles prefabricados" itemValue="4" />
+											<f:selectItem itemLabel="Mampostería no reforzada " itemValue="9" />
+											<f:selectItem itemLabel="Bahareque" itemValue="18" />
+											<f:selectItem itemLabel="Pórticos" itemValue="1" />
+											<f:selectItem itemLabel="Sistema dual o combinado" itemValue="3" />
+											<f:selectItem itemLabel="Reticular celulado" itemValue="5" />
+											<f:selectItem itemLabel="Desconocido" itemValue="6" />
+											<f:selectItem itemLabel="Pórticos arriostrados" itemValue="11" />
+											<f:selectItem itemLabel="Pórticos y paneles en madera" itemValue="14" />
+											<f:selectItem itemLabel="Adobe" itemValue="16" />
+											<f:selectItem itemLabel="Tapia" itemValue="17" />
+											<f:selectItem itemLabel="Muros" itemValue="2" />
+											<f:selectItem itemLabel="Mampostería confinada" itemValue="7" />
+											<f:selectItem itemLabel="Mampostería reforzada" itemValue="8" />
+											<f:selectItem itemLabel="Pórticos no arriostrados" itemValue="12" />
+											<f:selectItem itemLabel="No disponible" itemValue="21" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionEstadoDeObra}" label="Descripción del estado de obra" style="width: 99%" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionPisos}" label="Descripción de pisos" style="width: 99%" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionEstructura}" label="Descripción de estructura" style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="reparados" value="Reparados" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="reparados" value="#{informeComercialUrbanoBean.areaConstruccion.reparados}" label="Reparados" style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="No disponible" itemValue="1" />
+											<f:selectItem itemLabel="Reparados" itemValue="2" />
+											<f:selectItem itemLabel="No Reparados" itemValue="3" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="cubierta" value="Cubierta: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="cubierta" value="#{informeComercialUrbanoBean.areaConstruccion.cubierta}" label="Cubierta" style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Placa concreto imp." itemValue="1" />
+											<f:selectItem itemLabel="Teja plástica" itemValue="2" />
+											<f:selectItem itemLabel="Teja de barro" itemValue="3" />
+											<f:selectItem itemLabel="Teja fibrocemento" itemValue="4" />
+											<f:selectItem itemLabel="Teja metálica" itemValue="5" />
+											<f:selectItem itemLabel="Otros" itemValue="6" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="fachada" value="Fachada: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="fachada" value="#{informeComercialUrbanoBean.areaConstruccion.fachada}" label="Fachada" style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Ladrillo a la vista" itemValue="41" />
+											<f:selectItem itemLabel="Pañete y pintura" itemValue="42" />
+											<f:selectItem itemLabel="Graniplast" itemValue="43" />
+											<f:selectItem itemLabel="Flotante" itemValue="44" />
+											<f:selectItem itemLabel="Concreto Texturado" itemValue="45" />
+											<f:selectItem itemLabel="Otros" itemValue="46" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionReparados}" label="Descripción de reparados" style="width: 99%" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionCubierta}" label="Descripción de cubierta" style="width: 99%" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionFachada}" label="Descripción de fachada" style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="tipoDeFachada" value="Tipo de fachada" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="tipoDeFachada" value="#{informeComercialUrbanoBean.areaConstruccion.tipoDeFachada}" label="Tipo de fachada" style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Sencilla (menor de 3m)" itemValue="1" />
+											<f:selectItem itemLabel="Normal (3m - 6m)" itemValue="2" />
+											<f:selectItem itemLabel="Lujosa (mayor de 6m)" itemValue="3" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="ventaneria" value="Ventaneria" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="ventaneria" value="#{informeComercialUrbanoBean.areaConstruccion.ventaneria}" label="Ventaneria" style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Madera" itemValue="1" />
+											<f:selectItem itemLabel="Acero" itemValue="2" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="danosPrevios" value="Daños previos: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="danosPrevios" value="#{informeComercialUrbanoBean.areaConstruccion.danosPrevios}" label="Daños previos" style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="No disponible" itemValue="1" />
+											<f:selectItem itemLabel="Con daños previos" itemValue="2" />
+											<f:selectItem itemLabel="Sin daños previos" itemValue="3" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionTipoDeFachada}" label="Descripción de tipo de fachada" style="width: 99%" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionVentaneria}" label="Descripción de ventaneria" style="width: 99%" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionDanosPrevios}" label="Observaciones de daños previos" style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="estructuraReforzada" value="Estructura reforzada" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estructuraReforzada" value="#{informeComercialUrbanoBean.areaConstruccion.estructuraReforzada}" label="Estructura reforzada" style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Trabes coladas en sitio" itemValue="2" />
+											<f:selectItem itemLabel="Trabes prefabricadas" itemValue="3" />
+											<f:selectItem itemLabel="No tiene trabes" itemValue="4" />
+											<f:selectItem itemLabel="No disponible" itemValue="1" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="materialDeConstruccion" value="Material de constructor" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="materialDeConstruccion" value="#{informeComercialUrbanoBean.areaConstruccion.materialDeConstruccion}" label="Material de constructor" style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Adobe, bahareque o tapia" itemValue="31" />
+											<f:selectItem itemLabel="Madera" itemValue="30" />
+											<f:selectItem itemLabel="Mixtas u Otro" itemValue="32" />
+											<f:selectItem itemLabel="Mampostería" itemValue="28" />
+											<f:selectItem itemLabel="Concreto Reforzado" itemValue="27" />
+											<f:selectItem itemLabel="Acero" itemValue="29" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="iluminacion" value="Iluminación: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="iluminacion" value="#{informeComercialUrbanoBean.areaConstruccion.iluminacion}" label="Iluminación" style="width: 99%" >
+											<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionEstructuraReforzada}" label="Descripción de estructura reforzada" style="width: 99%" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionMaterialDeConstruccion}" label="Descripción de material de construcción" style="width: 99%" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionIluminacion}" label="Descripción de la iluminación" style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="ventilacion" value="Ventilación: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="ventilacion" value="#{informeComercialUrbanoBean.areaConstruccion.ventilacion}" label="Ventilación" style="width: 99%" >
+											<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="irregularidadPlanta" value="Irregularidad Planta: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="irregularidadPlanta" value="#{informeComercialUrbanoBean.areaConstruccion.irregularidadPlanta}" label="Irregularidad Planta" style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Sin irregularidad" itemValue="3" />
+											<f:selectItem itemLabel="No disponible" itemValue="2" />
+											<f:selectItem itemLabel="Con irregularidad" itemValue="1" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="irregularidadAltura" value="Irregularidad Planta: " />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="irregularidadAltura" value="#{informeComercialUrbanoBean.areaConstruccion.irregularidadAltura}" label="Irregularidad Planta" style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Sin irregularidad" itemValue="3" />
+											<f:selectItem itemLabel="No disponible" itemValue="2" />
+											<f:selectItem itemLabel="Con irregularidad" itemValue="1" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionVentilacion}" label="Observaciones de la ventilación" style="width: 99%" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionIrregularidadDePlanta}" label="Descripción irregularidad de la planta" style="width: 99%" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" value="#{informeComercialUrbanoBean.areaConstruccion.descripcionIrregularidadAltura}" label="Descripción irregularidad de la altura" style="width: 99%" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel header="Dependencias" >
+							<p:panelGrid style="width: 99%" >
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="salas" value="Salas" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="salas" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.salas}" label="Salas" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="comedores" value="Comedores" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputMask id="comedores" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.comedores}" label="Comedores" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="estudios" value="Estudios" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputMask id="estudios" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.estudios}" label="Estudios" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="jardines" value="Jardines" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="jardines" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.jardines}" label="Jardines" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="banoSocial" value="Baños sociales" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputMask id="banoSocial" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.banoSocial}" label="Baños sociales" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="estarHabitacion" value="Estar habitaciones" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputMask id="estarHabitacion" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.estarHabitacion}" label="Estar habitaciones" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="habitaciones" value="Habitaciones" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="habitaciones" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.habitaciones}" label="Habitaciones" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="depositos" value="Depositos" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputMask id="depositos" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.depositos}" label="Depositos" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="banosPrivados" value="Baños privados" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputMask id="banosPrivados" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.banosPrivados}" label="Baños privados" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="cocinas" value="Cocinas" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="cocinas" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.cocinas}" label="Cocinas" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="cuartoServicio" value="Cuartos servicio" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputMask id="cuartoServicio" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.cuartoDeServicio}" label="Cuartos servicio" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="oficinas" value="Oficinas" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputMask id="oficinas" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.oficinas}" label="Oficinas" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="banoServicio" value="Baños de servicio" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="banoServicio" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.banoServicio}" label="Baños de servicio" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="patioInterno" value="Patios internos" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputMask id="patioInterno" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.patioInterno}" label="Patios internos" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="terrazas" value="Terrazas" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputMask id="terrazas" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.terrazas}" label="Terrazas" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="bodegas" value="Bodegas" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="bodegas" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.bodegas}" label="Bodegas" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="zonaDeRopas" value="Zona de ropas" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputMask id="zonaDeRopas" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.zonaDeRopas}" label="Baño servicio" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="balcones" value="Balcones" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputMask id="balcones" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.balcones}" label="Balcones" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="closeths" value="Closets" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="closeths" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.closeths}" label="Closets" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="locales" value="Locales" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputMask id="locales" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.locales}" label="Locales" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="zonasVerdesPrivadas" value="Zonas verdes privadas: " />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:inputMask id="zonasVerdesPrivadas" mask="9?9" value="#{informeComercialUrbanoBean.areaConstruccion.zonasVerdesPrivadas}" label="Zona verde privada" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="6" styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesDependencias" value="Observaciones de las dependencias" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="8" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" cols="30" id="observacionesDependencias" value="#{informeComercialUrbanoBean.areaConstruccion.observacionesDependencias}" label="Observaciones de las dependencias" style="width:99%"/>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:panel header="Acabados" >
+							<p:panelGrid style="width: 99%" >
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="Acabados" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="Pisos" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="Muros" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="Techos" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="C. Metal" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="C. Madera" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="Baños" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="Cocina" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="Estado" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estadoAcabadosPisos" value="#{informeComercialUrbanoBean.areaConstruccion.estadoAcabadosPisos}" style="width:99%" >
+											<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estadoAcabadosMuros" value="#{informeComercialUrbanoBean.areaConstruccion.estadoAcabadosMuros}" style="width:99%" >
+											<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estadoAcabadosTechos" value="#{informeComercialUrbanoBean.areaConstruccion.estadoAcabadosTechos}" style="width:99%" >
+											<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estadoAcabadosCarpinteriaMadera" value="#{informeComercialUrbanoBean.areaConstruccion.estadoAcabadosCarpinteriaMadera}" style="width:99%" >
+											<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estadoAcabadosCarpinteriaMetal" value="#{informeComercialUrbanoBean.areaConstruccion.estadoAcabadosCarpinteriaMetal}" style="width:99%" >
+											<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+										</h:selectOneMenu>								
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estadoAcabadosBanos" value="#{informeComercialUrbanoBean.areaConstruccion.estadoAcabadosBanos}" style="width:99%" >
+											<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="estadoAcabadosCocina" value="#{informeComercialUrbanoBean.areaConstruccion.estadoAcabadosCocina}" style="width:99%" >
+											<f:selectItems value="#{informeComercialUrbanoBean.mbr}" var="mbr" itemValue="#{mbr}" itemLabel="#{mbr.value}" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="Calidad" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" cols="30" id="calidadAcabadosPisos" value="#{informeComercialUrbanoBean.areaConstruccion.calidadAcabadosPisos}" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" cols="30" id="calidadAcabadosMuros" value="#{informeComercialUrbanoBean.areaConstruccion.calidadAcabadosMuros}" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" cols="30" id="calidadAcabadosTechos" value="#{informeComercialUrbanoBean.areaConstruccion.calidadAcabadosTechos}" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" cols="30" id="calidadAcabadosCarpinteriaMetal" value="#{informeComercialUrbanoBean.areaConstruccion.calidadAcabadosCarpinteriaMetal}" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" cols="30" id="calidadAcabadosCarpinteriaMadera" value="#{informeComercialUrbanoBean.areaConstruccion.calidadAcabadosCarpinteriaMadera}" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" cols="30" id="calidadAcabadosBanos" value="#{informeComercialUrbanoBean.areaConstruccion.calidadAcabadosBanos}" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" cols="30" id="calidadAcabadosCocina" value="#{informeComercialUrbanoBean.areaConstruccion.calidadAcabadosCocina}" style="width:99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="8" styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" cols="30" id="observacionesAcabados" value="#{informeComercialUrbanoBean.areaConstruccion.observacionesAcabados}" label="Observaciones de acabados" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="alcantarilladoConstruccion" value="Alcantarillado" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="alcantarilladoConstruccion" value="#{informeComercialUrbanoBean.avaluoComercialDTO.alcantarilladoConstruccion}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" converter="javax.faces.Boolean" />
+									</p:column>
+									<p:column colspan="6" styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesServiciosPublicosConstruccion" value="Observaciones servicios públicos" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="acueductoConstruccion" value="Acueducto" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="acueductoConstruccion" value="#{informeComercialUrbanoBean.avaluoComercialDTO.acueductoConstruccion}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" converter="javax.faces.Boolean" />
+									</p:column>
+									<p:column rowspan="4" colspan="6" styleClass="ui-widget-header">
+										<p:inputTextarea id="observacionesServiciosPublicosConstruccion" value="#{informeComercialUrbanoBean.avaluoComercialDTO.observacionesServiciosPublicosConstruccion}" rows="3" label="Observaciones servicios públicos" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="energiaConstruccion" value="Energia" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="energiaConstruccion" value="#{informeComercialUrbanoBean.avaluoComercialDTO.energiaConstruccion}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="gasConstruccion" value="Gas" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="gasConstruccion" value="#{informeComercialUrbanoBean.avaluoComercialDTO.gasConstruccion}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="telefonoConstruccion" value="(Cod. Area)+Teléfono" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="telefonoConstruccion" value="#{informeComercialUrbanoBean.avaluoComercialDTO.telefonoConstruccion}" onLabel="Si" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:100px" converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:remoteCommand name="actualizarConstrucciones" update=":informeComercialUrbano:tabHost:areasConstruidasPanel, :informeComercialUrbano:tabHost:resumenAreasConstruidas, :informeComercialUrbano:tabHost:valorRazonableInmueble, :informeComercialUrbano:tabHost:areasValorProporcionalConstruccion, :informeComercialUrbano:tabHost:costoReposicion, :informeComercialUrbano:tabHost:valorResidual"/>
+						<p:panel id="areasConstruidasPanel" header="Área construida" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="frenteConstruido" value="Frente" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="frenteConstruido" value="#{informeComercialUrbanoBean.avaluoComercialDTO.frenteConstruido}" label="Frente" required="#{not empty param[enviar.clientId]}" style="width:99%" >
+											<p:ajax event="change" listener="#{informeComercialUrbanoBean.calcularRelacionFrenteFondo}" update="areas" />
+										</p:inputText>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="metros" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="fondoConstruido" value="Fondo" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="fondoConstruido" value="#{informeComercialUrbanoBean.avaluoComercialDTO.fondoConstruido}" label="Fondo" required="#{not empty param[enviar.clientId]}" style="width:99%" >
+											<p:ajax event="change" listener="#{informeComercialUrbanoBean.calcularRelacionFrenteFondo}" update="areas" />
+										</p:inputText>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="metros" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="relacionFrenteFondoConstruido" value="Relación Frente/Fondo" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputText id="relacionFrenteFondoConstruido" value="#{informeComercialUrbanoBean.avaluoComercialDTO.relacionFrenteFondoConstruido}" label="Relación Frente/Fondo" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="metros" />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{informeComercialUrbanoBean.avaluoComercialDTO.propiedadHorizontal}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="areaPrivadaConstruido" value="Área privada" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="areaPrivadaConstruido" mask="9?99999" value="#{informeComercialUrbanoBean.avaluoComercialDTO.areaPrivadaConstruido}" label="Área privada" required="#{not empty param[enviar.clientId]}" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="metros" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="coeficienteDeCopropiedadConstruido" value="Coeficiente de copropiedad" />
+									</p:column>
+									<p:column colspan="2" styleClass="ui-widget-header">
+										<p:slider for="coeficienteDeCopropiedadConstruido" display="coeficienteDeCopropiedadConstruidoSalida" step="1" minValue="0" maxValue="100" />
+										<h:inputHidden id="coeficienteDeCopropiedadConstruido" value="#{informeComercialUrbanoBean.avaluoComercialDTO.coeficienteDeCopropiedadConstruido}" />
+										<h:outputText id="coeficienteDeCopropiedadConstruidoSalida" label="Coeficiente de copropiedad" value="#{informeComercialUrbanoBean.avaluoComercialDTO.coeficienteDeCopropiedadConstruido} %" />
+									</p:column>
+								</p:row>
+								<p:row rendered="#{not informeComercialUrbanoBean.avaluoComercialDTO.propiedadHorizontal}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="areaTotalConstruida" value="Área total construida" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="areaTotalConstruida" mask="9?99999" value="#{informeComercialUrbanoBean.avaluoComercialDTO.areaTotalConstruida}" label="Área total construida" required="#{not empty param[enviar.clientId]}" style="width:99%" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel value="metros" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="fuenteConstruido" value="Fuente" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="9" styleClass="ui-widget-header">
+										<p:inputText id="fuenteConstruido" value="#{informeComercialUrbanoBean.avaluoComercialDTO.fuenteConstruido}" label="Fuente" style="width: 99%"/>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="9" styleClass="ui-widget-header">
+										<p:dataTable id="areasConstruidas" var="areaConstruida" value="#{informeComercialUrbanoBean.areasConstruidas}" editable="#{true}" editMode="cell" style="margin-bottom:20px">
+											<f:facet name="header">
+												Distribución de areas construidas
+											</f:facet>
+											<p:ajax event="cellEdit" listener="#{informeComercialUrbanoBean.editarArea}" update=":informeComercialUrbano:growl" oncomplete="actualizarConstrucciones();" />
+											<p:column headerText="Nombre">
+												<h:outputText value="#{areaConstruida.nombre}" />
+											</p:column>
+											<p:column headerText="Descripción">
+												<h:outputText value="#{areaConstruida.descripcion}" />
+											</p:column>
+											<p:column headerText="Unidad de medida">
+												<p:cellEditor>
+													<f:facet name="output"><h:outputText value="#{areaConstruida.unidadDeMedida.value}" /></f:facet>
+													<f:facet name="input"><h:selectOneMenu value="#{areaConstruida.unidadDeMedida}" style="width:100%" >
+														<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+														<f:selectItems value="#{informeComercialUrbanoBean.unidadesDeMedida}" var="unidadDeMedida" itemValue="#{unidadDeMedida}" itemLabel="#{unidadDeMedida.value}" />
+													</h:selectOneMenu></f:facet>
+												</p:cellEditor>
+											</p:column>
+											<p:column headerText="Area">
+												<p:cellEditor>
+													<f:facet name="output"><h:outputText value="#{areaConstruida.area}" /></f:facet>
+													<f:facet name="input"><p:inputText value="#{areaConstruida.area}" style="width:100%"/></f:facet>
+												</p:cellEditor>
+											</p:column>
+											<p:column headerText="Coeficiente de copropiedad" rendered="#{informeComercialUrbanoBean.avaluoComercialDTO.propiedadHorizontal}">
+												<p:cellEditor>
+													<f:facet name="output"><h:outputText value="#{areaConstruida.coeficienteCopropiedad}" /></f:facet>
+													<f:facet name="input"><p:inputText value="#{areaConstruida.coeficienteCopropiedad}" style="width:100%"/></f:facet>
+												</p:cellEditor>
+											</p:column>
+											<p:column headerText="Borrar">
+												<p:commandButton icon="ui-icon-trash" styleClass="button_red" title="Borrar area de construcción" actionListener="#{informeComercialUrbanoBean.borrarArea(informeComercialUrbanoBean.areasConstruidas, areaConstruida)}" update=":informeComercialUrbano:tabHost:areasConstruidasPanel, :informeComercialUrbano:tabHost:resumenAreasConstruidas, :informeComercialUrbano:tabHost:valorRazonableInmueble, :informeComercialUrbano:tabHost:valorProporcional, :informeComercialUrbano:tabHost:costoReposicion, :informeComercialUrbano:tabHost:valorResidual" process=":informeComercialUrbano:tabHost:areasConstruidasPanel"/>
+											</p:column>
+										</p:dataTable>
+										<p:panelGrid style="width: 99%" rendered="#{informeComercialUrbanoBean.nuevaArea}">
+											<p:row>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel for="nombreAreaConstruidaNueva" value="Nombre" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="nombreAreaConstruidaNueva" value="#{informeComercialUrbanoBean.area.nombre}" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel for="descripcionAreaConstruidaNueva" value="Descripción" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="descripcionAreaConstruidaNueva" value="#{informeComercialUrbanoBean.area.descripcion}" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel for="unidadDeMedidaAreaConstruidaNueva" value="Unida de medida" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:selectOneMenu id="unidadDeMedidaAreaConstruidaNueva" value="#{informeComercialUrbanoBean.area.unidadDeMedida}" style="width:100%" >
+														<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+														<f:selectItems value="#{informeComercialUrbanoBean.unidadesDeMedida}" var="unidadDeMedida" itemValue="#{unidadDeMedida}" itemLabel="#{unidadDeMedida.value}" />
+													</h:selectOneMenu>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<h:outputLabel for="areaConstruidaNueva" value="Area" />
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:inputText id="areaConstruidaNueva" value="#{informeComercialUrbanoBean.area.area}" style="width:100%"/>
+												</p:column>
+												<p:column styleClass="ui-widget-header">
+													<p:commandButton icon="ui-icon-disk" actionListener="#{informeComercialUrbanoBean.agregarArea(informeComercialUrbanoBean.areasConstruidas, informeComercialUrbanoBean.area, '2')}" update=":informeComercialUrbano:tabHost:areasConstruidasPanel, :informeComercialUrbano:tabHost:resumenAreasConstruidas, :informeComercialUrbano:tabHost:valorRazonableInmueble" process=":informeComercialUrbano:tabHost:areasConstruidasPanel" />
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+										<p:commandButton value="Agregar nueva area de construcción" icon="ui-icon-plusthick" actionListener="#{informeComercialUrbanoBean.agregarArea(informeComercialUrbanoBean.areasConstruidas, informeComercialUrbanoBean.area, '2')}" rendered="#{not informeComercialUrbanoBean.nuevaArea}" update=":informeComercialUrbano:tabHost:areasConstruidasPanel" process=":informeComercialUrbano:tabHost:areasConstruidasPanel" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="9">
+										<h:outputLabel for="observacionesDistribucionAreasConstruidas" value="Observaciones de distribución de áreas construidas" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header" colspan="9">
+										<p:inputText id="observacionesDistribucionAreasConstruidas" rows="2" value="#{informeComercialUrbanoBean.avaluoComercialDTO.observacionesDistribucionAreasConstruidas}" label="Observaciones de distribución de áreas construidas" style="width: 99%" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>							
+						</p:panel>
+					</p:tab>
+					<p:tab id="resumenDeAreas" title="Resumen áreas">
+						<p:panel id="distribucionDeAreasConstruidasPanel" header="Distribución de áreas construidas" style="margin-bottom:10px">
+							<p:dataTable id="resumenAreasConstruidas" var="area" value="#{informeComercialUrbanoBean.areasInmueble}" style="margin-bottom:20px">
+								<p:column headerText="Nombre">
+									<h:outputText value="#{area.nombre}" />
+								</p:column>
+								<p:column headerText="Descripción">
+									<h:outputText value="#{area.descripcion}" />
+								</p:column>
+								<p:column headerText="Unidad de medida">
+									<h:outputText value="#{area.unidadDeMedida}" />
+								</p:column>
+								<p:column headerText="Area">
+									<h:outputText value="#{area.area}" />
+								</p:column>
+							</p:dataTable>
+						</p:panel>
+					</p:tab>
+					<p:tab id="hipotesisCondicionesRestrictivas" title="Hipótesis y condiciones restrictivas">
+						<p:panel id="problemasDeEstabilidadDeSuelosPanel" header="Problemas de estabilidad de suelos" style="margin-bottom:10px">
+							<p:inputTextarea rows="5" cols="30" id="problemasDeEstabilidadDeSuelos" value="#{informeComercialUrbanoBean.avaluoComercialDTO.problemasDeEstabilidadDeSuelos}" label="Problemas de estabilidad de suelos" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="impactoAmbientalYCondicionesDeSalubridadPanel" header="Impacto ambiental y condiciones de salubridad" style="margin-bottom:10px">
+							<p:inputTextarea rows="5" cols="30" id="impactoAmbientalYCondicionesDeSalubridad" value="#{informeComercialUrbanoBean.avaluoComercialDTO.impactoAmbientalYCondicionesDeSalubridad}" label="Impacto ambiental y condiciones de salubridad" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="servidumbresCesionesYAfectacionesVialesPanel" header="Servidumbres, cesiones y afectaciones viales" style="margin-bottom:10px">
+							<p:inputTextarea rows="5" cols="30" id="servidumbresCesionesYAfectacionesViales" value="#{informeComercialUrbanoBean.avaluoComercialDTO.servidumbresCesionesYAfectacionesViales}" label="Servidumbres, cesiones y afectaciones viales" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="seguridadPanel" header="Seguridad" style="margin-bottom:10px">
+							<p:inputTextarea rows="5" cols="30" id="seguridad" value="#{informeComercialUrbanoBean.avaluoComercialDTO.seguridad}" label="Seguridad" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+						<p:panel id="problematicasSocioEconomicasPanel" header="Problematicas socio - económicas" style="margin-bottom:10px">
+							<p:inputTextarea rows="5" cols="30" id="problematicasSocioEconomicas" value="#{informeComercialUrbanoBean.avaluoComercialDTO.problematicasSocioEconomicas}" label="Problematicas socio - económicas" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+					</p:tab>
+					<p:tab id="hipotesisEspecialesInsuales" title="Hipótesis especiales, inusuales o extraordinarias">
+						<p:panel id="casosEspecialesDeAfectacionPanel" header="Casos especiales de afectación" style="margin-bottom:10px">
+							<p:inputTextarea rows="5" cols="30" id="descripcionDeLasHipotesisEspecialesInusualesOExtraordinarias" value="#{informeComercialUrbanoBean.avaluoComercialDTO.descripcionDeLasHipotesisEspecialesInusualesOExtraordinarias}" label="Descripción de las hipótesis especiales, inusuales o extraordinarias" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+						</p:panel>
+					</p:tab>
+					<p:tab id="metodoDeValuacion" title="Método de valuación">
+						<p:outputPanel id="metodosDeValuacion">
+							<p:dataTable var="metodoDeValuacion" value="#{informeComercialUrbanoBean.avaluoComercialDTO.metodosValuacion}" editable="true" style="margin-bottom:20px">
+								<f:facet name="header">
+								</f:facet>
+								<p:ajax event="rowEdit" listener="#{informeComercialUrbanoBean.editarMetodoDeValuacion}" />
+								<p:ajax event="rowEditCancel" listener="#{informeComercialUrbanoBean.cancelarMetodoDeValuacion}" />
+								<p:column headerText="Método">
+									<p:cellEditor>
+										<f:facet name="output"><h:outputText value="#{metodoDeValuacion.metodoUsado}" /></f:facet>
+										<f:facet name="input"><h:selectOneMenu value="#{metodoDeValuacion.metodoUsado}" style="width:100%" >
+											<f:selectItem itemLabel="Comparación de  Mercado" itemValue="21" />
+											<f:selectItem itemLabel="Capitalización de ingresos" itemValue="22" />
+											<f:selectItem itemLabel="Método Reposición" itemValue="23" />
+											<f:selectItem itemLabel="Metodo Residual" itemValue="24" />
+											<f:selectItem itemLabel="Comparación - Capitalización" itemValue="25" />
+											<f:selectItem itemLabel="Comparación  - Reposición" itemValue="26" />
+											<f:selectItem itemLabel="Comparación - Residual" itemValue="41" />
+											<f:selectItem itemLabel="Capitalización - Reposición" itemValue="42" />
+											<f:selectItem itemLabel="Capitalización - Residual" itemValue="43" />
+											<f:selectItem itemLabel="Reposición - Residual" itemValue="44" />
+											<f:selectItem itemLabel="Comp.-Capit-Repos" itemValue="45" />
+											<f:selectItem itemLabel="Comp.-Repos.-Residual" itemValue="61" />
+											<f:selectItem itemLabel="Comp.-Capit. - Residual" itemValue="62" />
+											<f:selectItem itemLabel="Comp.-Capit.-Repos.-Resid.l" itemValue="63" />
+										</h:selectOneMenu></f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Concepto">
+									<p:cellEditor>
+										<f:facet name="output"><h:outputText value="#{metodoDeValuacion.conceptoDelMetodo}" /></f:facet>
+										<f:facet name="input"><p:inputText value="#{metodoDeValuacion.conceptoDelMetodo}" style="width:100%"/></f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column style="width:32px">
+									<p:rowEditor />
+								</p:column>
+								<p:column headerText="Borrar">
+									<p:commandButton icon="ui-icon-trash" title="Borrar Método de valuación" actionListener="#{informeComercialUrbanoBean.borrarMetodoValuacion(metodoDeValuacion)}" update=":informeComercialUrbano:tabHost:metodosDeValuacion"/>
+								</p:column>
+							</p:dataTable>
+							<p:panelGrid style="width: 99%" rendered="#{informeComercialUrbanoBean.nuevoMetodoValuacion}">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="metodoUsadoNuevo" value="Método usado" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="metodoUsadoNuevo" value="#{informeComercialUrbanoBean.metodoValuacion.metodoUsado}" style="width:100%" >
+											<f:selectItem itemLabel="Comparación de  Mercado" itemValue="21" />
+											<f:selectItem itemLabel="Capitalización de ingresos" itemValue="22" />
+											<f:selectItem itemLabel="Método Reposición" itemValue="23" />
+											<f:selectItem itemLabel="Metodo Residual" itemValue="24" />
+											<f:selectItem itemLabel="Comparación - Capitalización" itemValue="25" />
+											<f:selectItem itemLabel="Comparación  - Reposición" itemValue="26" />
+											<f:selectItem itemLabel="Comparación - Residual" itemValue="41" />
+											<f:selectItem itemLabel="Capitalización - Reposición" itemValue="42" />
+											<f:selectItem itemLabel="Capitalización - Residual" itemValue="43" />
+											<f:selectItem itemLabel="Reposición - Residual" itemValue="44" />
+											<f:selectItem itemLabel="Comp.-Capit-Repos" itemValue="45" />
+											<f:selectItem itemLabel="Comp.-Repos.-Residual" itemValue="61" />
+											<f:selectItem itemLabel="Comp.-Capit. - Residual" itemValue="62" />
+											<f:selectItem itemLabel="Comp.-Capit.-Repos.-Resid.l" itemValue="63" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="conceptoDelMetodoNuevo" value="Concepto del método" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea rows="2" cols="30" id="conceptoDelMetodoNuevo" value="#{informeComercialUrbanoBean.metodoValuacion.conceptoDelMetodo}" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:commandButton icon="ui-icon-disk" actionListener="#{informeComercialUrbanoBean.agregarMetodoValuacion}" update=":informeComercialUrbano:tabHost:metodosDeValuacion" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+							<p:commandButton icon="ui-icon-plusthick" value="Agregar nuevo método de valuación" actionListener="#{informeComercialUrbanoBean.agregarMetodoValuacion}" rendered="#{not informeComercialUrbanoBean.nuevoMetodoValuacion}" update="metodosDeValuacion" />
+						</p:outputPanel>
+					</p:tab>
+					<p:tab id="conceptoGarantia" title="Concepto de la garantía">
+						<p:panel id="conceptoDeGarantia" header="Concepto de garantía" style="margin-bottom:10px">
+							<p:panelGrid style="width: 99%">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="observacionesConceptoGarantia" value="Observaciones del concepto de garantía" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu value="#{informeComercialUrbanoBean.avaluoComercialDTO.conceptoDeGarantia}" required="#{not empty param[enviar.clientId]}" style="width: 99%" >
+											<f:selectItem itemLabel="Seleccione ..." itemValue="" noSelectionOption="true"/>
+											<f:selectItem itemLabel="Favorable" itemValue="1" />
+											<f:selectItem itemLabel="Desfavorble" itemValue="2" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputTextarea rows="5" cols="30" id="observacionesConceptoGarantia" value="#{informeComercialUrbanoBean.avaluoComercialDTO.observacionesConceptoGarantia}" label="Observaciones del concepto de garantía" required="#{not empty param[enviar.clientId]}" style="width:99%"/>
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:panel>
+						<p:remoteCommand name="actualizarValoresRazonable" update=":informeComercialUrbano:tabHost:valorRazonableInmueble, :informeComercialUrbano:tabHost:areasValorProporcional, :informeComercialUrbano:tabHost:areasValorProporcionalConstruccion, :informeComercialUrbano:tabHost:costoReposicion, :informeComercialUrbano:tabHost:valorResidual"/>
+						<p:panel id="valorRazonableInmueble" header="Valor comercial del inmueble" style="margin-bottom:10px">
+							<p:dataTable id="areasValorRazonableDelInmueble" var="area" value="#{informeComercialUrbanoBean.areasValorComercial}" style="margin-bottom:20px" editable="true" editMode="cell" sortBy="#{area.tipoArea}" sortFunction="#{informeComercialUrbanoBean.ordenarTablaValorComercial}">
+								<p:ajax event="cellEdit" listener="#{informeComercialUrbanoBean.editarAreaRazonable}" oncomplete="actualizarValoresRazonable();" />
+								<p:column headerText="Nombre">
+									<h:outputText value="#{area.nombre}" />
+								</p:column>
+								<p:column headerText="Descripción">
+									<h:outputText value="#{area.descripcion}" />
+								</p:column>
+								<p:column headerText="Unidad de medida">
+									<h:outputText value="#{area.unidadDeMedida}" />
+								</p:column>
+								<p:column headerText="Area">
+									<h:outputText value="#{area.area}" />
+								</p:column>
+								<p:column headerText="Valor unitario">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{area.valorUnitario}" style="width:100%;text-align:right;" >
+												<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+											</h:outputText>
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{area.valorUnitario}" style="width:100%">
+											</p:inputText>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Valor total">
+									<h:outputText value="#{area.valorTotal}" style="width:100%;text-align:right;" >
+										<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Porcentaje">
+									<h:outputText value="#{area.porcentaje}" >
+										<f:convertNumber type="percent" locale="en_US" />
+									</h:outputText>
+								</p:column>
+								<p:summaryRow listener="#{informeComercialUrbanoBean.calcularSubtotales}">
+									<p:column colspan="5" style="text-align:right">
+										<h:outputText value="Subtotal:" />
+									</p:column>
+									<p:column>
+										<h:outputText value="#{informeComercialUrbanoBean.subtotalArea}" style="text-align:right">
+											<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+										</h:outputText>
+									</p:column>
+									<p:column>
+										<h:outputText value="#{informeComercialUrbanoBean.subtotalPorcentajeArea}" style="text-align:right">
+											<f:convertNumber type="percent" locale="en_US" />
+										</h:outputText>
+									</p:column>
+								</p:summaryRow>
+								<f:facet name="footer">
+									<p:panelGrid>
+										<p:row>
+											<p:column colspan="5">
+												<h:outputText value="Valor comercial del inmueble" style="width:100%;text-align:right" />
+											</p:column>
+											<p:column>
+												<h:outputText id="valorComercialDelInmueble" value="#{informeComercialUrbanoBean.avaluoComercialDTO.valorComercialDelInmueble}" style="float:right;" >
+													<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+												</h:outputText>
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="5">
+												<h:outputText value="Valor integral sobre el terreno" style="width:100%;text-align:right" />
+											</p:column>
+											<p:column>
+												<h:outputText value="#{informeComercialUrbanoBean.avaluoComercialDTO.valorIntegralSobreElTerreno}" style="float:right;" >
+													<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+												</h:outputText>
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="5">
+												<h:outputText value="Valor integral sobre la construcción" style="width:100%;text-align:right" />
+											</p:column>
+											<p:column>
+												<h:outputText value="#{informeComercialUrbanoBean.avaluoComercialDTO.valorIntegralSobreElConstruccion}" style="float:right;" >
+													<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+												</h:outputText>
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</f:facet>
+							</p:dataTable>
+						</p:panel>
+						<p:panel id="valorProporcional" header="Valor proporcional" style="margin-bottom:10px">
+							<p:dataTable id="areasValorProporcional" var="area" value="#{informeComercialUrbanoBean.areasValorProporcionalTerreno}" style="margin-bottom:20px" >
+								<p:column headerText="Descripción">
+									<h:outputText value="#{area.descripcion}" />
+								</p:column>
+								<p:column headerText="Valor proporcional">
+									<h:outputText value="#{area.valorTotal}" >
+										<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Porcentaje">
+									<h:outputText value="#{area.porcentajeValorProporcionalTerreno}" >
+										<f:convertNumber type="percent" locale="en_US" />
+									</h:outputText>
+								</p:column>
+							</p:dataTable>
+							<p:dataTable id="areasValorProporcionalConstruccion" var="area" value="#{informeComercialUrbanoBean.areasHabitacionales}" style="margin-bottom:20px" >
+								<p:column headerText="Descripción">
+									<h:outputText value="#{area.descripcion}" />
+								</p:column>
+								<p:column headerText="Valor proporcional de la construcción">
+									<h:outputText value="#{area.valorTotal}" >
+										<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Porcentaje">
+									<h:outputText value="#{area.porcentajeValorProporcionalConstruccion}" >
+										<f:convertNumber type="percent" locale="en_US" />
+									</h:outputText>
+								</p:column>
+							</p:dataTable>
+						</p:panel>
+						<p:panel id="costoReposicion" header="Costo de reposición" style="margin-bottom:10px">
+							<p:dataTable id="areascostoReposicion" var="area" value="#{informeComercialUrbanoBean.areasHabitacionales}" style="margin-bottom:20px" editable="true" editMode="cell">
+								<p:ajax event="cellEdit" listener="#{informeComercialUrbanoBean.editarAreaReposicion}" update=":informeComercialUrbano:growl" oncomplete="actualizarValoresRazonable();" />
+								<p:column headerText="Descripción">
+									<h:outputText value="#{area.descripcion}" />
+								</p:column>
+								<p:column headerText="Area">
+									<h:outputText value="#{area.area}" />
+								</p:column>
+								<p:column headerText="Valor reposición">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{area.valorReposicion}" >
+												<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+											</h:outputText>
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{area.valorReposicion}" style="width:100%"/>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Costo total de reposición">
+									<h:outputText value="#{area.costoTotalReposicion}" >
+										<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+									</h:outputText>
+								</p:column>
+							</p:dataTable>
+						</p:panel>
+						<p:panel style="margin-left: 5%" >
+							<h:outputLabel for="porcentajeFinal" value="Porcentaje final" />
+							<p:inputText id="porcentajeFinal" value="#{informeComercialUrbanoBean.porcentajeFinal}" label="Porcentaje final" >
+								<p:ajax event="change" listener="#{informeComercialUrbanoBean.calcularValoresResiduales}" update=":informeComercialUrbano:tabHost:valorResidual" />
+							</p:inputText>
+							<h:outputLabel value="%" />
+						</p:panel>
+						<p:panel id="valorResidual" header="Valor residual" style="margin-bottom:10px">
+							<p:dataTable id="areasValorResidual" var="area" value="#{informeComercialUrbanoBean.areasHabitacionales}" style="margin-bottom:20px" >
+								<p:column headerText="Descripción">
+									<h:outputText value="#{area.descripcion}" />
+								</p:column>
+								<p:column headerText="Area">
+									<h:outputText value="#{area.area}" />
+								</p:column>
+								<p:column headerText="Valor comercial">
+									<h:outputText value="#{area.valorTotal}" >
+										<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Valor residual de la construcción">
+									<h:outputText value="#{area.valorResidualConstruccion}" >
+										<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+									</h:outputText>
+								</p:column>
+								<p:summaryRow>
+									<p:column colspan="3" style="text-align:right">
+										<h:outputText value="Valor residual para la construcción:" />
+									</p:column>
+									<p:column>
+										<h:outputText value="#{informeComercialUrbanoBean.valorResidualParaLaConstruccion}" style="text-align:right">
+											<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+										</h:outputText>
+									</p:column>
+								</p:summaryRow>
+							</p:dataTable>
+						</p:panel>
+					</p:tab>
+				</p:accordionPanel>
+
+				<p:commandButton style="margin-left: 5%" value="Solicitar corrección" rendered="#{informeComercialUrbanoBean.avaluoEnRevision}" icon="ui-icon-arrowreturnthick-1-e" oncomplete="PF('correcionesDialog').show()" />
+				<p:spacer width="30px" rendered="#{informeComercialUrbanoBean.avaluoEnRevision}" />
+				<p:commandButton value="Liquidar avaluo" rendered="#{informeComercialUrbanoBean.avaluoEnRevision}" icon="ui-icon-circle-check" action="#{informeComercialUrbanoBean.liquidarAvaluo}" />
+				<p:commandButton style="margin-left: 5%" value="Mostrar correcciones" rendered="#{informeComercialUrbanoBean.avaluoEnCorrecion}" icon="ui-icon-arrowreturnthick-1-e" oncomplete="PF('correcionesDialog').show()" />
+				<p:spacer width="30px" rendered="#{informeComercialUrbanoBean.avaluoEnCorrecion}"></p:spacer>
+				<p:commandButton style="margin-left: 5%" value="Enviar" binding="#{enviar}" rendered="#{not informeComercialUrbanoBean.avaluoEnRevision}" icon="ui-icon-disk" action="#{informeComercialUrbanoBean.enviarAvaluo}"/>
+				<p:spacer width="30px"></p:spacer>
+				<p:commandButton value="Guardar" rendered="#{not informeComercialUrbanoBean.avaluoEnRevision}" icon="ui-icon-disk" action="#{informeComercialUrbanoBean.guardarSinEnviar}"/>
+				<input type="hidden"
+					name="${_csrf.parameterName}"
+					value="${_csrf.token}"/>
+			</h:form>
+			<p:dialog widgetVar="correcionesDialog" header="Corrreciones" minHeight="370" minWidth="185" width="400px" height="600px" minimizable="true" >
+				<h:form style="width:100%;height:99%">
+					<p:inputTextarea value="#{informeComercialUrbanoBean.avaluoComercialDTO.correciones}" id="correciones"
+					label="Correciones" required="true" style="display: block;width:95%;height:86%" maxlength="2000" readonly="#{informeComercialUrbanoBean.avaluoEnCorrecion}" />
+					<br/>
+					<p:commandButton value="Enviar correciones" action="#{informeComercialUrbanoBean.solcitarCorreciones}" rendered="#{not informeComercialUrbanoBean.avaluoEnCorrecion}"/>
+					<input type="hidden"
+					name="${_csrf.parameterName}"
+					value="${_csrf.token}"/>
+				</h:form>
+			</p:dialog>
+			<p:dialog widgetVar="ayudaDireccion" modal="true" closeOnEscape="true" resizable="false">
+				<p:panelGrid>
+					<p:row>
+				 		<p:column styleClass="ui-widget-header">
+				 			<h:outputLabel value="Convenciones de la dirección" />
+				 		</p:column>
+					</p:row>
+					<p:row>
+						<p:column styleClass="ui-widget-header">
+							<p:graphicImage  name="images/direccion.png" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:dialog>
+		</ui:define>
+
+	</ui:composition>
+</body> 
+</html>

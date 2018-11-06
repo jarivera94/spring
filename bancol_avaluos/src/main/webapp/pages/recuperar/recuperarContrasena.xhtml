@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+		<ui:define name="content">
+			<h:form id="form" style="width: 98%; margin: 20px auto;">
+                <p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+                <p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+				    <p:graphicImage  name="images/ajax-loader.gif" />
+			    </p:dialog>
+
+				<p:panel id="panelRecup" style="width:70%;margin:0px auto;">
+					<f:facet name="header">
+						<center>
+							<h2>Reestablecer Contaseña</h2>
+						</center>
+					</f:facet>
+					<p:messages id="msgs" showDetail="true" autoUpdate="true" closable="true" />
+					<center>
+						<p:panelGrid id="grid" columns="2">
+							<p:outputLabel value="Anterior Contraseña:" />
+							<p:password value="#{recuperarContrasenaBean.contrasenaAnterior}" required="true" requiredMessage="Se requiere la contraseña actual" />
+							<p:outputLabel value="Nueva Contraseña:" />
+							<p:password value="#{recuperarContrasenaBean.contrasenaNueva}" feedback="true" promptLabel="Nivel de Seguridad" weakLabel="Debil" goodLabel="Bueno" strongLabel="Fuerte" required="true" requiredMessage="Se requiere la nueva contraseña"/>
+							<p:outputLabel value="Repetir Nueva Contraseña:" />
+							<p:password value="#{recuperarContrasenaBean.contrasenaNueva2}" feedback="true" promptLabel="Nivel de Seguridad" weakLabel="Debil" goodLabel="Bueno" strongLabel="Fuerte" required="true" requiredMessage="Se requiere la confirmación de la contraseña"/>
+						</p:panelGrid>
+						<br />
+						<h:panelGrid columns="2">
+							<p:commandButton value="Reestablecer" action="#{recuperarContrasenaBean.reestablecer}" icon="ui-icon-disk" update="grid"
+								styleClass="button_green" />
+							<p:commandButton value="Cancelar" icon="ui-icon-closethick"
+								action="#{recuperarContrasenaBean.cerrar}" ajax="false" immediate="true"
+								styleClass="button_red" />
+						</h:panelGrid>
+					</center>
+				</p:panel>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

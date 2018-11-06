@@ -1,0 +1,312 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"	
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<!-- este actualiza el panel despues de editar un valor en alguna fila.-->
+	<p:remoteCommand name="actualizarComparacionMercado"
+	 update=":informeHipotecario:accordionPanel:comparacion-mercado-panel :informeHipotecario:accordionPanel:comparacionmercado-resultado :informeHipotecario:accordionPanel:botontes-comparacion-mercado" />
+						
+	<p:panel id="comparacion-mercado-panel" style="margin-bottom:10px; text-align:center;" >
+		<p:row rendered="#{comparacionMercadoBean.metodoValuacion.ofertas.size() gt 0}"  style="margin-bottom:120px" >
+			<p:column colspan="1" style="text-align: center; margin-bottom:30px;"> <h3>Comparación de mercado</h3></p:column>
+		</p:row>
+		<p:panelGrid id="comparacion-mercado-grid" 
+			styleClass="panelGridCenter"
+			style="margin-bottom:15px;text-align:center;  margin: 0 auto;"
+			rendered="#{comparacionMercadoBean.metodoValuacion.ofertas.size() gt 0}">
+			<!-- For sobre los metodos de valuacion --> 
+			
+				<ui:repeat value="#{comparacionMercadoBean.metodoValuacion.ofertas}" 
+					var="oferta" varStatus="loop">
+
+						<p:column headerText="oferta - #{loop.index+1}"  style=" text-align: center;">
+						<p:panelGrid columns="1">
+							<p:separator style="margin-bottom:20px;"> 
+								<p:commandButton icon="ui-icon-trash"
+													title="Borrar oferta"
+													styleClass="button_red"
+													actionListener="#{comparacionMercadoBean.borrarOferta(loop.index)}"
+													update=":informeHipotecario:accordionPanel:comparacion-mercado-panel"/>
+							
+							Oferta - #{loop.index+1} 
+							</p:separator>
+							
+							<label for="ciudad"  style="margin-top: 5px;">Ciudad </label>
+							<p:inputText 
+								id="ciudad"
+								value="#{oferta.ciudad}"
+								maxlength="255"
+								styleClass="nofireenter"
+								style="margin-bottom:5px; width:100%;" />
+								
+								
+							<label for="barrio" style="margin-top: 5px;">Barrio </label>
+							<p:inputText 
+								id="barrio"
+								value="#{oferta.barrio}"
+								maxlength="255"
+								styleClass="nofireenter"
+								style="margin-bottom:5px; width:100%;" />
+
+							<label for="conjunto" >Conjunto </label>
+							<p:inputText 
+								id="conjunto"
+								value="#{oferta.conjunto}"
+								maxlength="255"
+								styleClass="nofireenter"
+								style="margin-bottom:5px; width:100%;" />
+
+							<label for="telefono">Nombre  y (Cod. Area)+Teléfono </label>
+							<p:inputText 
+								id="telefono"
+								value="#{oferta.telefono}"
+								maxlength="255"
+								styleClass="nofireenter"
+								style="margin-bottom:5px;width:100%;" />
+
+							<label for="celular"> Celular </label>
+							<p:inputMask 
+								id="celular" 
+								value="#{oferta.celular}"
+								styleClass="nofireenter"
+								mask="999-999-9999" 
+								maxlength="255"
+								style="margin-bottom:5px;width:100%;"
+								validatorMessage="Celular debe tener 10 digitos">
+									<f:validateRegex pattern="\d{3}[\-]\d{3}[\-]\d{4}" />
+									<p:ajax update="msgCelular" event="blur" global="false" />
+							</p:inputMask>
+							<p:message id="msgCelular" for="celular" />
+							
+							<label for="valorOferta">Valor de oferta </label>
+							<p:inputNumber
+								id="valorOferta"
+								styleClass="nofireenter"
+								value="#{oferta.valorOferta}"
+								symbol="$"
+								decimalSeparator=","
+								thousandSeparator="."
+								decimalPlaces="2"
+								symbolPosition="p"
+								style="margin-bottom:5px;width:100%;">
+								<p:ajax
+									process=":informeHipotecario:accordionPanel:comparacion-mercado-panel"
+									update=":informeHipotecario:accordionPanel:comparacion-mercado-panel"
+									listener="#{comparacionMercadoBean.calcularValorDepurado(loop.index)}"
+									global="false"/>
+							</p:inputNumber>
+							
+							<label for="porcentajeDeupracion" >Porcentaje de depuración </label>
+							<p:inputNumber 
+								id="porcentajeDepuracion"
+								value="#{oferta.porcentajeDepurado}"
+								symbol="%"
+								decimalSeparator=","
+								thousandSeparator="."
+								decimalPlaces="2"
+								symbolPosition="s"
+								styleClass="nofireenter"
+								style="margin-bottom:5px;width:100%;">
+								<p:ajax
+									update=":informeHipotecario:accordionPanel:comparacion-mercado-panel"
+									listener="#{comparacionMercadoBean.calcularValorDepurado(loop.index)}"
+									global="false"/>
+							</p:inputNumber>
+
+							<label for="valorDepurado"> Valor Depurado </label>
+							<h:inputText 
+								id="valorDepurado" 
+								value="#{oferta.valorDepurado}"
+								style="margin-bottom:5px;width:100%;" 
+								disabled="true" >
+								<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+							</h:inputText>
+
+							<p:separator> Construccion </p:separator>
+
+							<label for="garajesDepositos"> Garajes y depositos </label>
+							<p:inputNumber 
+								id="garajesDepositos"
+								value="#{oferta.garajesDepositos}"
+								symbol="$"
+								decimalSeparator=","
+								thousandSeparator="."
+								decimalPlaces="2"
+								symbolPosition="p"
+								styleClass="nofireenter"
+								style="margin-bottom:5px;width:100%;" >
+								<p:ajax update=":informeHipotecario:accordionPanel:comparacion-mercado-panel"
+									 listener="#{comparacionMercadoBean.calcularConstruccion(loop.index)}"
+									 global="false"/>
+							</p:inputNumber>
+							
+							<label for="areaConstruida"> Area Construida m<sup>2</sup> </label>
+							<p:inputMask 
+								id="areaConstruida"
+								value="#{oferta.areaConstruida}"
+								mask="9?99999999"
+								styleClass="nofireenter"
+								style="margin-bottom:5px;width:100%;" >
+								<p:ajax update=":informeHipotecario:accordionPanel:comparacion-mercado-panel"
+									 listener="#{comparacionMercadoBean.calcularConstruccion(loop.index)}"
+									 global="false"/>
+							</p:inputMask>
+
+							<label for="valorM2Construccion"> Valor m<sup>2</sup> construcción </label>
+							<h:inputText 
+								id="valorM2Construccion"
+								value="#{oferta.valorM2Construccion}"
+								style="margin-bottom:5px;width:100%;" disabled="true" >
+								<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+							</h:inputText>
+
+
+							<label for="construccion"> Construcción </label>
+							<h:inputText  
+								id="construccion"
+								value="#{oferta.construccion}"
+								style="margin-bottom:2px;width:100%;" disabled="true" >
+								<f:convertNumber type="currency" currencySymbol="$" locale="en_US" />
+							</h:inputText>
+
+							<label for="observaciones"> Observaciones </label>
+							<p:inputTextarea 
+								id="observaciones"
+								value="#{oferta.observaciones}"
+								style="width:100%;" maxlength="255" >
+							</p:inputTextarea>
+						</p:panelGrid>
+						</p:column>
+				</ui:repeat>
+			
+
+		</p:panelGrid>
+		<!-- comparación-mercado-grid  -->
+		
+		
+
+	</p:panel>
+	
+	
+	<p:panel id="botontes-comparacion-mercado">
+		<p:panelGrid style="width:99%" rendered="#{comparacionMercadoBean.mostrar}">
+			<p:commandButton value="Agregar oferta"
+				actionListener="#{comparacionMercadoBean.agregarOferta()}"
+				rendered="#{(comparacionMercadoBean.metodoValuacion.ofertas.size() lt 7 ) and comparacionMercadoBean.mostrar}"
+				update=":informeHipotecario:accordionPanel:comparacion-mercado-panel :informeHipotecario:accordionPanel:botontes-comparacion-mercado :informeHipotecario:accordionPanel:comparacionmercado-resultado "></p:commandButton>
+		
+			<p:commandButton value="Calcular estudio de mercado"
+				actionListener="#{comparacionMercadoBean.calcularEstudio()}"
+				rendered="#{comparacionMercadoBean.mostrar}"
+				update=":informeHipotecario:accordionPanel:comparacionmercado-resultado :informeHipotecario:growl"
+				styleClass="button_green"></p:commandButton>
+		
+		</p:panelGrid>
+	</p:panel>
+
+
+	<!-- PANEL EN LE QUE SE MUESTRA EL RESULTADO DEL CALCULO DE COMPARACION DE MERCADO -->
+	<p:panel id="comparacionmercado-resultado" style="width:90%; margin-top: 20px !important;">
+		<p:panelGrid style="width:60%; text-align:center; margin: 0px auto !important;border: 2px solid #f2f2f2 !important;"
+			rendered="#{comparacionMercadoBean.mostrarResultado}">
+			<f:facet name="header">
+				<p:row>
+						<p:column style="text-align:center;">
+							<p:outputLabel>Resultado de Comparación</p:outputLabel>
+						</p:column>
+				</p:row>
+				<p:row>
+					<p:column > <b>Valores</b></p:column>
+					<p:column > <b>Construccion </b></p:column>
+				</p:row>
+
+			</f:facet>
+			<p:row>
+				<p:column style="text-align:center;"> 
+					<p:outputLabel>Promedio m<sup>2</sup></p:outputLabel>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{comparacionMercadoBean.resultado.promedioM2}" >
+						<f:convertNumber type="currency" currencySymbol="$" locale="en_US"  />
+					</h:outputText>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<p:outputLabel>Desviacion</p:outputLabel>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{comparacionMercadoBean.resultado.desviacion}" >
+						<f:convertNumber  maxFractionDigits="2" locale="en_US" />
+					</h:outputText>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<p:outputLabel> Coeficiente de Variacion </p:outputLabel>
+				</p:column>
+				<p:column>
+					<h:outputText
+						value="#{comparacionMercadoBean.resultado.coeficienteVariacion}" >
+						<f:convertNumber  type="percent" locale="en_US"/>
+						</h:outputText>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<p:outputLabel>Numero de datos</p:outputLabel>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{comparacionMercadoBean.resultado.numeroDatos}" >
+						<f:convertNumber maxFractionDigits="3" locale="en_US" />
+					</h:outputText>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<p:outputLabel>Raiz</p:outputLabel>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{comparacionMercadoBean.resultado.raiz}" >
+						<f:convertNumber  maxFractionDigits="3" locale="en_US" />
+					</h:outputText>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<p:outputLabel> T(N)</p:outputLabel>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{comparacionMercadoBean.resultado.tstudent}" >
+						<f:convertNumber  maxFractionDigits="3" locale="en_US"/>
+					</h:outputText>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<p:outputLabel> Limite Superior</p:outputLabel>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{comparacionMercadoBean.resultado.limiteSuperior}" >
+						<f:convertNumber type="currency" currencySymbol="$" locale="en_US" maxFractionDigits="3"/>
+					</h:outputText>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<p:outputLabel>Limite inferior</p:outputLabel>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{comparacionMercadoBean.resultado.limiteInferior}" >
+						<f:convertNumber   type="currency" currencySymbol="$" locale="en_US" maxFractionDigits="3"/>
+					</h:outputText>
+					
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+	</p:panel>
+</ui:composition>

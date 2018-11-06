@@ -1,0 +1,190 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<h:form id="form" style="padding: 0px !important;">
+		<p:growl id="growl" showDetail="true" sticky="true" life="10000" />
+		<p:remoteCommand name="cargarAvaluoTabla"
+			update="avaluoTablaContenedor " autoRun="true">
+			<f:setPropertyActionListener
+				target="#{listadoAvaluosBean.renderizar}" value="#{true}" />
+		</p:remoteCommand>
+		<h:panelGroup id="avaluoTablaContenedor">
+			<p:panel rendered="#{not listadoAvaluosBean.renderizar}">
+				<center>
+					<p:graphicImage name="images/ajax-loader2.gif" />
+				</center>
+			</p:panel>
+			<p:panel id="fab" rendered="#{listadoAvaluosBean.renderizar}"
+				style="width:100%;">
+				<p:poll interval="120" listener="#{listadoAvaluosBean.refresh}"
+					update=":form:avaluoTabla" />
+				<p:commandButton id="seleccion"
+					rendered="#{not empty listadoAvaluosBean.avaluo}"
+					actionListener="#{listadoAvaluosBean.cargarResumen()}"
+					update=":avaluoSeleccionado, :formTipoAvaluo"
+					oncomplete="PF('avaluoDialog').show()" icon="ui-icon-clipboard"
+					style="width: 50px;" title="Resumen de selección" />
+				<p:commandButton id="actualizar" icon="ui-icon-arrowrefresh-1-e"
+					action="#{listadoAvaluosBean.refresh}" styleClass="button_green"
+					style="width: 50px;" update=":form:avaluoTabla :formBtnAccion"
+					title="Actualizar tabla" />
+				<p:commandButton id="nSolicitud" icon="ui-icon-circle-plus"
+					action="#{listadoAvaluosBean.nuevaSolicitud()}"
+					rendered="#{listadoAvaluosBean.crearSolicitudes}"
+					widgetVar="btnNSolicitud" onclick="PF('btnNSolicitud').disable()"
+					oncomplete="PF('btnNSolicitud').enable()"
+					style="float: right; width: 50px;" styleClass="button_green"
+					title="Nueva Solicitud" />
+			</p:panel>
+			<p:panel id="avaluoTabla" rendered="#{listadoAvaluosBean.renderizar}"
+				style="width: 100%;background: transparent;padding: 0px !important;">
+
+				<div id="idTablaAvaluos"
+					style="position: relative; width: 100%; margin: 0px auto !important;">
+
+					<p:dataTable id="tabla_Avaluos" widgetVar="tablaAvaluos"
+						var="avaluo" value="#{listadoAvaluosBean.avaluosLazyModel}"
+						rowKey="#{avaluo.id}" selectionMode="single"
+						selection="#{listadoAvaluosBean.avaluo}"
+						sortBy="#{avaluo.fechaEstado}" sortOrder="descending"
+						resizableColumns="true" paginator="true" rows="15"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="10,15,20" lazy="true"
+						emptyMessage="No tienes solicitudes"
+						rowStyleClass="#{avaluo.semaforo.estadoSemaforo}"
+						styleClass="tablaAvaluos" disabledTextSelection="false"
+						filteredValue="#{listadoAvaluosBean.filteredData}"
+						filterEvent="change" skipChildren="true"
+						style="clear: right; font-size: 11px !important; 
+							margin-top: 5px; border-left: 2px solid #E4E2E2; border-bottom: 2px solid #E4E2E2;">
+
+						<p:ajax event="rowSelect"
+							update=":formBtnAccion, :avaluoSeleccionado :form:fab" />
+						<p:ajax event="filter" listener="#{listadoAvaluosBean.filtrar()}" />
+						<p:column headerText="Estado"
+							sortBy="#{avaluo.estado.estado.value()}"
+							filterBy="#{avaluo.estado.estado.value()}"
+							filterMatchMode="contains"
+							filterValue="#{listadoAvaluosBean.filtros['estado.estado.value()']}"
+							filterStyle="background: white !important;width: 70px">
+							<h:outputText value="#{avaluo.estado.estado.value()}" />
+						</p:column>
+						<p:column headerText="ID Sisgen" sortBy="#{avaluo.avaluoSisgenId}"
+							filterBy="#{avaluo.avaluoSisgenId}" filterMatchMode="contains"
+							filterValue="#{listadoAvaluosBean.filtros['avaluoSisgenId']}"
+							style="table-layout: fixed; width: 60px !important;"
+							filterStyle="background: white !important;width: 50px">
+							<h:outputText value="#{avaluo.avaluoSisgenId}" />
+						</p:column>
+						<p:column headerText="Código externo"
+							sortBy="#{avaluo.codigoExterno}"
+							filterBy="#{avaluo.codigoExterno}" filterMatchMode="contains"
+							filterValue="#{listadoAvaluosBean.filtros['codigoExterno']}"
+							style="table-layout: fixed; width: 60px !important;"
+							filterStyle="background: white !important;width: 50px">
+							<h:outputText value="#{avaluo.codigoExterno}" />
+						</p:column>
+
+						<p:column headerText="Cliente"
+							filterValue="#{listadoAvaluosBean.filtros['numeroDocumento']}"
+							filterBy="#{avaluo.cliente.numeroDocumento}"
+							filterStyle="background: white !important;width: 60px"
+							style="table-layout: fixed; width: 70px !important;"
+							sortBy="#{avaluo.cliente.numeroDocumento}" filterMaxLength="18">
+							<h:outputText value="#{avaluo.cliente.numeroDocumento}" />
+						</p:column>
+
+						<p:column headerText="Fecha de estado"
+							sortBy="#{avaluo.fechaEstado}" filterBy="#{avaluo.fechaEstado}"
+							filterMatchMode="contains"
+							filterValue="#{listadoAvaluosBean.filtros['fechaEstado']}"
+							filterStyle="background: white !important;width: 70px">
+							<h:outputText value="#{avaluo.fechaEstado}">
+								<f:convertDateTime type="date" pattern="yyyy-MM-dd HH:mm:ss"
+									locale="es_CO" timeZone="America/Bogota" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Tipo Avalúo"
+							sortBy="#{avaluo.tipoAvaluo.nombre}"
+							filterBy="#{avaluo.tipoAvaluo.nombre}" filterMatchMode="contains"
+							filterValue="#{listadoAvaluosBean.filtros['tipoAvaluo.nombre']}"
+							filterStyle="background: white !important;width: 70px">
+							<h:outputText id="tipoAvaluo" value="#{avaluo.tipoAvaluo.nombre}" />
+						</p:column>
+
+						<p:column headerText="Entidad" sortBy="#{avaluo.entidad.nombre}"
+							filterBy="#{avaluo.entidad.nombre}" filterMatchMode="contains"
+							filterValue="#{listadoAvaluosBean.filtros['entidad.nombre']}"
+							filterStyle="background: white !important;width: 70px">
+							<h:outputText value="#{avaluo.entidad.nombre}" />
+						</p:column>
+
+						<p:column headerText="Motivo"
+						sortBy="#{avaluo.motivoAux.nombre}"
+							filterBy="#{avaluo.motivoAux.nombre}" filterMatchMode="contains"
+							filterValue="#{listadoAvaluosBean.filtros['motivo']}"
+							style="table-layout: fixed; width: 60px !important;"
+							filterStyle="background: white !important;width: 50px">
+							<h:outputText value="#{avaluo.motivoAux.nombre}" />
+						</p:column>
+
+						<p:column headerText="Asignado" sortBy="#{avaluo.perito.nombres}"
+							filterBy="#{avaluo.perito.nombres}" filterMatchMode="contains"
+							filterValue="#{listadoAvaluosBean.filtros['perito.nombres']}"
+							filterStyle="background: white !important;width: 70px">
+							<h:outputText
+								value="#{avaluo.perito.nombres} #{avaluo.perito.apellidos}" />
+						</p:column>
+						<p:column headerText="Dirección"
+							sortBy="#{avaluo.direccionInmueble}"
+							filterBy="#{avaluo.direccionInmueble}" filterMatchMode="contains"
+							filterValue="#{listadoAvaluosBean.filtros['direccionInmueble']}"
+							filterStyle="background: white !important;width: 70px">
+							<h:outputText
+								value="#{avaluo.direccionInmueble}  #{avaluo.adicionalDireccion}" />
+						</p:column>
+
+
+						<p:column headerText="Ciudad" sortBy="#{avaluo.divipola}"
+							filterBy="#{avaluo.divipola}" filterMatchMode="contains"
+							filterValue="#{listadoAvaluosBean.filtros['divipola']}"
+							filterStyle="background: white !important;width: 70px">
+							<h:outputText
+								value="#{not empty avaluo.divipolaInforme.centroPoblado ?  avaluo.divipolaInforme.centroPoblado : avaluo.divipola.centroPoblado}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<p:commandButton onstart="PF('tablaAvaluos').filter()"
+									icon="ui-icon-search" />
+								<p:commandButton styleClass="button_red"
+									onstart="PF('tablaAvaluos').clearFilters()"
+									icon="ui-icon-closethick" />
+							</f:facet>
+							<p:commandLink
+								actionListener="#{listadoAvaluosBean.actualizarModeloMapa(avaluo)}"
+								process="@this" update=":mapa" value="Mapa"
+								oncomplete="PF('mapaDialog').show()"
+								style="font-weight: bold;color: #14587B; font-size: 14px !important;" />
+						</p:column>
+						<f:facet name="footer">
+
+						</f:facet>
+					</p:dataTable>
+				</div>
+			</p:panel>
+		</h:panelGroup>
+		<input type="hidden" name="${_csrf.parameterName}"
+			value="${_csrf.token}" />
+	</h:form>
+
+
+
+
+</ui:composition>
+

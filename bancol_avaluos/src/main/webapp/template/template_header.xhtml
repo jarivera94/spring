@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<head>
+</head>
+<body>
+	<ui:composition>
+		<h:form id="logout"
+			onsubmit="document.getElementById('logout').action='#{request.contextPath}/logout.do';"
+			style="height:75%;">
+			<p:menu id="menuLateral" model="#{menuBean.model}">
+			</p:menu>
+			<p:commandButton id="repassButton" value="Cambiar Contraseña"
+				action="#{menuBean.cambiarContrasena()}" icon="ui-icon-key"
+				styleClass="btnCambiarPass" style="border-bottom: 1px solid #8b8689!important;top: 10px;box-shadow: 0px -3px 5px #000000 !important;" />
+				
+			<p:commandButton id="logoutButton" value="Cerrar sesión"
+				type="submit" ajax="false" icon="ui-icon-extlink"
+				styleClass="btnCerrarSesion" style="top: 15px !important;left: 0px;width: 240px;height: 30px;border-bottom: 1px solid #8b8689!important;"/>
+
+			<input type="hidden" name="${_csrf.parameterName}"
+				value="${_csrf.token}" />
+
+		</h:form>
+	</ui:composition>
+</body>
+</html>

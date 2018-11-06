@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_base" pageWidth="572" pageHeight="752" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="3a366574-6e7f-4923-81ec-34a45caca2d6">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IDAVALUO" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[SELECT a.avaluo_id
+
+  FROM avaluos.avaluo a, avaluos.divipola d
+WHERE avaluo_id = $P{IDAVALUO}
+AND a.divipola = d.divipola_id]]>
+	</queryString>
+	<field name="avaluo_id" class="java.lang.Integer"/>
+	<background>
+		<band height="78">
+			<elementGroup>
+				<image>
+					<reportElement x="14" y="9" width="183" height="40" uuid="5d84a9fe-04e9-4795-9087-a4bf8b19cbee"/>
+					<imageExpression><![CDATA[$P{SUBREPORT_DIR}+"logo.png"]]></imageExpression>
+				</image>
+			</elementGroup>
+		</band>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<summary>
+		<band height="49">
+			<subreport isUsingCache="false">
+				<reportElement x="0" y="19" width="14" height="11" uuid="92cbef43-9dec-43fc-9e47-04aaa6b851d6"/>
+				<subreportParameter name="IDAVALUO">
+					<subreportParameterExpression><![CDATA[$P{IDAVALUO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "informacion_inmueble.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement mode="Opaque" x="0" y="0" width="14" height="18" uuid="3e702c93-8369-4a6e-b85a-fd5902bfc7c0"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="IDAVALUO">
+					<subreportParameterExpression><![CDATA[$P{IDAVALUO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"reporte_1.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="18" width="100" height="1" uuid="5c1175c5-dafd-4d89-8c59-ccaaf73dcd11"/>
+			</break>
+			<subreport>
+				<reportElement mode="Opaque" x="0" y="31" width="14" height="18" uuid="bb58b99c-024f-4e5a-a7ae-d74c3d8de50e"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="IDAVALUO">
+					<subreportParameterExpression><![CDATA[$P{IDAVALUO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"reporte_2.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="30" width="100" height="1" uuid="977f58e1-19bf-4ab1-8c9a-d656668b5ef6"/>
+			</break>
+		</band>
+	</summary>
+</jasperReport>

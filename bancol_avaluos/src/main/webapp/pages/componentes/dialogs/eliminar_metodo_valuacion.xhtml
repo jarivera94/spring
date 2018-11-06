@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:o="http://omnifaces.org/ui">
+
+	<p:dialog showHeader="false" widgetVar="eliminarMetodoValuacionDialog"
+		modal="true" closeOnEscape="true" width="600">
+		<p:panel id="eliminarMetodoValuacionPanel" header="Advertencia"
+			style="font-size: 15px;">
+			<p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10"
+				layout="grid" styleClass="ui-panelgrid-blank"
+				style=" width:100%; text-align: justify;">
+				<p:graphicImage name="images/warning-icon.png" height="60px" />
+				<h:outputText style="font-size: 16px;"
+					value="Recuerde que si borra este método de valuación, borrará toda la información de las ofertas que haya ingresado previamente en esta metodología. ¿Esta seguro que desea borrarla?" />
+			</p:panelGrid>
+			<p:commandButton value="Si, borrar"
+				title="Confirmar Borrar Método de valuación"
+				actionListener="#{informeHipotecarioBean.borrarMetodoValuacion()}"
+				update=":informeHipotecario:accordionPanel:metodosDeValuacion :informeHipotecario:accordionPanel:fitoCorvini-panel
+					:informeHipotecario:accordionPanel:comparacion-mercado-panel :informeHipotecario:accordionPanel:accordionPanelMetodologias"
+				oncomplete="actualizarComparacionMercado(); actualizarFitoCorvini(); PF('eliminarMetodoValuacionDialog').hide(); " />
+			<p:commandButton value="Cancelar"
+				title="Cancelar Borrar Método de valuación"
+				actionListener="#{informeHipotecarioBean.cancelarMensajeBorrarMetodo()}"
+				update=":informeHipotecario:accordionPanel:metodosDeValuacion :informeHipotecario:accordionPanel:fitoCorvini-panel
+					:informeHipotecario:accordionPanel:comparacion-mercado-panel :informeHipotecario:accordionPanel:accordionPanelMetodologias"
+				oncomplete="actualizarComparacionMercado(); actualizarFitoCorvini(); PF('eliminarMetodoValuacionDialog').hide(); " />
+		</p:panel>
+	</p:dialog>
+
+</ui:composition>

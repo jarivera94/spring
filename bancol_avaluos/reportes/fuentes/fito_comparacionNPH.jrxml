@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fito_comparacionNPH" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="64cc9d6a-3c4c-453d-8673-2b1b570e2481">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="IDAVALUO" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{SUBREPORT_DIR}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT e.prefijo, a.codigo_externo, tmv.justificacion, fih.justificacion_de_metodologia, o.ciudad, o.barrio, o.conjunto, o.telefono, o.celular,
+o.valor_oferta, o.porcentaje_depurado, o.valor_depurado, o.area_construida, o.vida_util, o.edad_inmueble, o.estado_conservacion, o.valor_reposicion,
+o.valor_mc_construccion, o.construccion, o.total_terreno, o.valor_mc_terreno, o.garajes_depositos, cm.promedio_mc_terreno, cm.desviacion_terreno, cm.coeficiente_variacion_terreno,
+cm.limite_superior_terreno, cm.limite_inferior_terreno, cm.promedio_mc_integral, cm.desviacion_integral, cm.coeficiente_variacion_integral,
+cm.limite_superior_integral, cm.limite_inferior_integral, cmp.promedio_mc, cmp.desviacion, cmp.coeficiente_variacion, cmp.limite_superior, cmp.limite_inferior,
+cmp.numero_datos, cmp.raiz, cmp.tstudent
+FROM avaluos.formato_informe_hipotecario fih
+INNER JOIN avaluos.formato_informe fi ON (fih.formato_informe_id = fi.formato_informe_id)
+INNER JOIN avaluos.avaluo a ON (fi.avaluo_id = a.avaluo_id)
+INNER JOIN avaluos.entidad e ON (a.entidad_id = e.entidad_id)
+INNER JOIN avaluos.metodo_valuacion mv ON (a.avaluo_id = mv.avaluo_id)
+INNER JOIN avaluos.tipo_metodo_valuacion tmv ON (mv.metodo_usado = tmv.id)
+LEFT JOIN avaluos.comparacion_mercado_no_ph cm ON (mv.metodo_valuacion_id = cm.metodo_valuacion_id)
+LEFT JOIN avaluos.comparacion_mercado_ph cmp ON (mv.metodo_valuacion_id = cmp.metodo_valuacion_id)
+INNER JOIN avaluos.oferta o ON (mv.metodo_valuacion_id = o.metodo_valuacion_id)
+WHERE a.avaluo_id = $P{IDAVALUO}]]>
+	</queryString>
+	<field name="prefijo" class="java.lang.String"/>
+	<field name="codigo_externo" class="java.lang.String"/>
+	<field name="justificacion" class="java.lang.String"/>
+	<field name="justificacion_de_metodologia" class="java.lang.String"/>
+	<field name="ciudad" class="java.lang.String"/>
+	<field name="barrio" class="java.lang.String"/>
+	<field name="conjunto" class="java.lang.String"/>
+	<field name="telefono" class="java.lang.String"/>
+	<field name="celular" class="java.lang.String"/>
+	<field name="valor_oferta" class="java.math.BigDecimal"/>
+	<field name="porcentaje_depurado" class="java.math.BigDecimal"/>
+	<field name="valor_depurado" class="java.math.BigDecimal"/>
+	<field name="area_construida" class="java.lang.Integer"/>
+	<field name="vida_util" class="java.math.BigDecimal"/>
+	<field name="edad_inmueble" class="java.lang.Integer"/>
+	<field name="estado_conservacion" class="java.math.BigDecimal"/>
+	<field name="valor_reposicion" class="java.math.BigDecimal"/>
+	<field name="valor_mc_construccion" class="java.math.BigDecimal"/>
+	<field name="construccion" class="java.math.BigDecimal"/>
+	<field name="total_terreno" class="java.math.BigDecimal"/>
+	<field name="valor_mc_terreno" class="java.math.BigDecimal"/>
+	<field name="garajes_depositos" class="java.math.BigDecimal"/>
+	<field name="promedio_mc_terreno" class="java.math.BigDecimal"/>
+	<field name="desviacion_terreno" class="java.math.BigDecimal"/>
+	<field name="coeficiente_variacion_terreno" class="java.math.BigDecimal"/>
+	<field name="limite_superior_terreno" class="java.math.BigDecimal"/>
+	<field name="limite_inferior_terreno" class="java.math.BigDecimal"/>
+	<field name="promedio_mc_integral" class="java.math.BigDecimal"/>
+	<field name="desviacion_integral" class="java.math.BigDecimal"/>
+	<field name="coeficiente_variacion_integral" class="java.math.BigDecimal"/>
+	<field name="limite_superior_integral" class="java.math.BigDecimal"/>
+	<field name="limite_inferior_integral" class="java.math.BigDecimal"/>
+	<field name="promedio_mc" class="java.math.BigDecimal"/>
+	<field name="desviacion" class="java.math.BigDecimal"/>
+	<field name="coeficiente_variacion" class="java.math.BigDecimal"/>
+	<field name="limite_superior" class="java.math.BigDecimal"/>
+	<field name="limite_inferior" class="java.math.BigDecimal"/>
+	<field name="numero_datos" class="java.lang.Integer"/>
+	<field name="raiz" class="java.math.BigDecimal"/>
+	<field name="tstudent" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<summary>
+		<band height="145">
+			<subreport>
+				<reportElement x="0" y="68" width="200" height="47" uuid="5861b1b5-ae57-4cd3-a402-137fc13bd055"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="IDAVALUO">
+					<subreportParameterExpression><![CDATA[$P{IDAVALUO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "comparacionNPH.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="0" y="0" width="200" height="41" uuid="3b7c1da5-32a5-45e7-86c9-01a7e68062b0"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="IDAVALUO">
+					<subreportParameterExpression><![CDATA[$P{IDAVALUO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "fito.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="54" width="100" height="1" uuid="0f29de1b-4405-4d4e-b0c6-934596940a4f"/>
+			</break>
+		</band>
+	</summary>
+</jasperReport>

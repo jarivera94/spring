@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+		<ui:define name="metadata">
+			<f:metadata>
+				<f:event listener="#{listadoRolesBean.actualizarListado}"
+					type="preRenderView"></f:event>
+			</f:metadata>
+		</ui:define>
+		<ui:define name="content">
+<!-- 			<h1>Roles</h1> -->
+			<h:form id="formDataRoles">
+				<p:growl id="msgs" showDetail="true" />
+				<p:panel id="rolTabla" header="Roles" style="margin-bottom:10px">
+					<p:dataTable var="rol" value="#{listadoRolesBean.roles}"
+						style="margin-bottom:40px;text-align: center !important;" sortMode="multiple" 
+						rows="10" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="top" 
+						reflow="true" rowExpandMode="true" resizableColumns="true" selection="true">
+						<p:ajax event="rowToggle" listener="#{listadoRolesBean.onRowToggle}" update="tablaPermisos" />
+						<f:facet name="header">Expande la fila para ver los permisos</f:facet>
+
+						<p:column style="width:40px;">
+							<p:rowToggler/>
+						</p:column>
+
+						<p:column headerText="Nombre" sortBy="#{rol.nombre}">
+							<h:outputText value="#{rol.nombre}" />
+						</p:column>
+
+						<p:column headerText="Pagina Inicio (Nombre)"
+							sortBy="#{rol.paginaInicio.nombre}">
+							<h:outputText value="#{rol.paginaInicio.nombre}" />
+						</p:column>
+
+						<p:column headerText="Pagina Inicio (Url)">
+							<h:outputText value="#{rol.paginaInicio.url}" />
+						</p:column>
+						
+						<p:column headerText="Editar">
+							<p:commandButton action="#{listadoRolesBean.modificarRol}" icon="ui-icon-pencil">
+								<f:setPropertyActionListener target="#{listadoRolesBean.selectedRol}" value="#{rol}" />
+							</p:commandButton>
+						</p:column>
+						
+						<p:column headerText="Borrar">
+							<p:commandButton icon="ui-icon-trash" onclick="PF('dlgEliminarRol').show();">
+								<f:setPropertyActionListener target="#{listadoRolesBean.selectedRol}" value="#{rol}" />
+							</p:commandButton>
+						</p:column>
+						
+						<p:rowExpansion>
+							<p:dataTable id="tablaPermisos" value="#{listadoRolesBean.rolPermisos}" var="permiso" 
+								rows="10" paginator="true" paginatorAlwaysVisible="false" paginatorPosition="top" 
+								style="margin-bottom: 20px; box-shadow: 0px 5px 12px #D1D4D8;">
+								<f:facet name="header">Permisos para este Rol</f:facet>
+								<p:column headerText="Nombre">
+									<h:outputText value="#{permiso.nombre}" />
+								</p:column>
+							</p:dataTable>
+						</p:rowExpansion>
+						
+					</p:dataTable>
+					<center>
+						<p:panelGrid>
+							<p:commandButton value="Crear Rol"
+								action="#{listadoRolesBean.nuevoRol()}"
+								icon="ui-icon-circle-plus" styleClass="button_green"
+								rendered="#{listadoRolesBean.tienePermisoCrearRol(listadoRolesBean.usuarioActivo)}" />
+						</p:panelGrid>
+					</center>
+				</p:panel>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			
+				<p:dialog header="Eliminar Rol" widgetVar="dlgEliminarRol" modal="true" closable="true" resizable="false" draggable="false">
+						<p:outputLabel value="¿Estas seguro?" />
+						<p:panelGrid columns="2">
+							<p:commandButton value="Si" update="msgs :formDataRoles"
+								oncomplete="PF('dlgEliminarRol').hide();"
+								actionListener="#{listadoRolesBean.eliminarRol()}"
+								icon="ui-icon-check" styleClass="button_red" />
+							<p:commandButton value="No" type="button"
+								icon="ui-icon-cancel" onclick="PF('dlgEliminarRol').hide();" />
+						</p:panelGrid>
+						<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+				</p:dialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

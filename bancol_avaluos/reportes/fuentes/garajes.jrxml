@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="garajes" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="4eedc8b4-2a58-4288-af40-63fb5ce40b8a">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IDAVALUO" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[$P{IDAVALUO}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT g.id, CASE WHEN g.tipo = 1 THEN 'Privado' WHEN g.tipo = 2 THEN 'Exclusivo' WHEN g.tipo = 3 THEN 'Bahía comunal' END Tipo,
+g.numero_garaje, g.matricula_inmobiliaria, g.doble,
+g.cubierto, g.paralelo, g.servidumbre
+FROM avaluos.garaje g, avaluos.avaluo a
+WHERE g.avaluo_id = a.avaluo_id
+AND a.avaluo_id = $P{IDAVALUO}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="numero_garaje" class="java.lang.String"/>
+	<field name="matricula_inmobiliaria" class="java.lang.String"/>
+	<field name="doble" class="java.lang.Boolean"/>
+	<field name="cubierto" class="java.lang.Boolean"/>
+	<field name="paralelo" class="java.lang.Boolean"/>
+	<field name="servidumbre" class="java.lang.Boolean"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="13" width="93" height="13" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#0DB3C8" uuid="cdf8c993-e023-47ff-ade8-e6ff171ebab9"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo de Garaje]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="94" y="13" width="90" height="13" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#0DB3C8" uuid="921d2a00-cc9c-4073-b933-90b715fb0861"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Número de Garaje]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="184" y="13" width="270" height="13" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#0DB3C8" uuid="5441b279-bb1c-43fc-b56e-4ed1cf766171"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Características]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="454" y="13" width="89" height="13" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#0DB3C8" uuid="5f872c45-8991-4590-ad0d-79c7d5980d8f"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Servidumbre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="0" width="542" height="13" isRemoveLineWhenBlank="true" forecolor="#FFFFFF" backcolor="#0DB3C8" uuid="23cb9fe4-50a8-4be5-a8a4-c7ee85ed55a1"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<leftPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<bottomPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<rightPen lineWidth="0.25" lineColor="#0DB3C8"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Parqueaderos]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="1" y="0" width="93" height="13" isRemoveLineWhenBlank="true" forecolor="#666666" uuid="540f9aac-f6d9-4eb6-b5ff-09453ba12a4f"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement>
+					<font fontName="Calibri" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="184" y="0" width="90" height="13" isRemoveLineWhenBlank="true" forecolor="#666666" uuid="0f07dfe6-1bc7-4979-b199-573ccf2eaba7"/>
+				<box leftPadding="2">
+					<pen lineWidth="0.5"/>
+					<topPen lineWidth="0.5" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.5" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.5" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.5" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{doble} ? "Doble" : "Sencillo")]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="274" y="0" width="90" height="13" isRemoveLineWhenBlank="true" forecolor="#666666" uuid="e9284514-040b-4242-ba60-a578be17792f"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{cubierto} ? "Cubierto" : "Descubierto" )]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="364" y="0" width="90" height="13" isRemoveLineWhenBlank="true" forecolor="#666666" uuid="6d595f80-5831-4283-8522-325e7d31f017"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{paralelo} ? "Paralelo" : "Lineal" )]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="454" y="0" width="89" height="13" isRemoveLineWhenBlank="true" forecolor="#666666" uuid="e1adbd26-54b6-47ae-a4df-66a62eba9c8b"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{servidumbre} ? "Si" : "No" )]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="94" y="0" width="90" height="13" forecolor="#666666" uuid="157a31ef-97a1-4af8-a566-cb8ab382ce87"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement>
+					<font fontName="Calibri" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero_garaje}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

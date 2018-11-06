@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:o="http://omnifaces.org/ui"
+    xmlns:of="http://omnifaces.org/functions"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet name="grid/grid.css" library="primefaces" />
+</h:head>
+<body>
+
+    <ui:composition template="/template/bancol_avaluos_template.xhtml">
+		<ui:define name="content">
+		<div style="width: 94%;margin: 0px auto;">
+			<h1>Cambiar Código Externo</h1>
+        </div>
+			<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+				<p:graphicImage  name="images/ajax-loader.gif" />
+			</p:dialog>
+			
+			<h:form id="solicitud" onkeypress="if (event.keyCode == 13) {return false; }">
+				<!-- <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> -->
+				<p:growl id="growl" showDetail="true" sticky="true" autoUpdate="false" />
+
+				<p:panelGrid style="width: 99%">
+					<p:row>
+						<p:column styleClass="ui-widget-header">
+							<h:outputLabel for="entidad" value="Entidad: " />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							
+							<h:selectOneMenu id="entidad"
+								value="#{modificarCodigoExternoBean.entidadSeleccionada}"
+								required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]}"
+								requiredMessage="Entidad es requerida"
+								converter="omnifaces.SelectItemsConverter"
+								label="Entidad">
+
+								<f:selectItem itemLabel="Seleccione ..."
+									noSelectionOption="true" />
+								<f:selectItems value="#{modificarCodigoExternoBean.entidades}" var="entidad"
+									itemLabel="#{entidad.nombre}" itemValue="#{entidad}" />
+							</h:selectOneMenu>
+
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<h:outputLabel for="codigoExterno" value="Código Externo" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputMask mask="9?999999999999" id="codigoExterno"
+								value="#{modificarCodigoExternoBean.codigoExternoSeleccionado}"
+								required="#{not empty param[guardar.clientId] or not empty param[asignarperito.clientId]}"
+								requiredMessage="Codigo externo es requerido"
+								label="Codigo Externo" style="width: 99%">
+								<f:validateLength minimum="3" maximum="13" />
+							</p:inputMask>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+						<p:commandButton value="Consultar" icon="ui-icon-disk"
+	                    styleClass="button_green"
+	                    action="#{modificarCodigoExternoBean.consultarSolicitud()}"
+	                    update=":solicitud:resultadosPanel :solicitud:growl" />
+						</p:column>
+					</p:row>
+					<p:row>
+					
+					</p:row>
+				</p:panelGrid>
+				
+				<input type="hidden"
+					name="${_csrf.parameterName}"
+					value="${_csrf.token}"/>
+			</h:form>
+			
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

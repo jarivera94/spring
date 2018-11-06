@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet name="grid/grid.css" library="primefaces" />
+</h:head> 
+<body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+
+		<ui:define name="content">
+			<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+				<p:graphicImage  name="images/ajax-loader.gif" />
+			</p:dialog>
+			<h:form id="parentForm">
+				<p:growl id="growl" showDetail="true" sticky="true" escape="true" autoUpdate="true" />
+				<p:panel id="exportarBua" header="Exportar Archivo BUA" style="margin-bottom:10px">
+				
+					<p:panelGrid columns="2" style="margin: 10px auto;">
+						<h:outputLabel value="Entidad: " />
+						<h:selectOneMenu
+                            id="selectEntidad"
+                            value="#{exportarArchivoBUABean.entidadSeleccionada}"
+                            converter="omnifaces.SelectItemsConverter"
+                            required="true"
+                            requiredMessage="Debes seleccionar la entidad">
+							<f:selectItem itemLabel="Selecciona..." itemValue="null" noSelectionOption="true"/>
+							<f:selectItems value="#{exportarArchivoBUABean.entidades}" var="entidad" itemLabel="#{entidad.nombre}" itemValue="#{entidad}"/>
+						</h:selectOneMenu>
+					</p:panelGrid>
+				
+					<p:fieldset id="exportarArchivoBua" legend="Elija las fechas de los avalúos" style="margin-bottom:10px">
+						<p:panelGrid columns="5" style="width: 90%; margin: 0px auto !important;" layout="grid">
+							<p:outputLabel for="fechaInicio" value="Fecha inicio: " style="font-size: 14px !important;font-weight: bold;"/>
+							<p:calendar id="fechaInicio" timeZone="GMT-5" mode="inline" value="#{exportarArchivoBUABean.fechaInicio}" />
+							<p:separator />
+							<p:outputLabel for="fechaFinal" value="Fecha final: " style="font-size: 14px !important;font-weight: bold;"/>
+							<p:calendar id="fechaFinal" timeZone="GMT-5" mode="inline" value="#{exportarArchivoBUABean.fechaFinal}" />
+						</p:panelGrid>
+					</p:fieldset>
+					<center style="margin-top: 20px;"> 
+						<p:commandButton value="Exportar" action="#{exportarArchivoBUABean.exportarArchivoBUA()}" icon="ui-icon-check" styleClass="button_green" update=":parentForm:exportarBua" />
+						<p:commandButton value="Guardar" icon="ui-icon-circle-arrow-s" rendered="#{not empty exportarArchivoBUABean.archivoBua}" action="#{exportarArchivoBUABean.descargarArchivo}" ajax="false"/>
+					</center>
+				</p:panel>
+				<input type="hidden"
+					name="${_csrf.parameterName}"
+					value="${_csrf.token}"/>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</body> 
+</html>

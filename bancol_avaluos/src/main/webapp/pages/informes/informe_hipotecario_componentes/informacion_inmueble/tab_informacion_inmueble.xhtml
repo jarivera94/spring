@@ -1,0 +1,1587 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:o="http://omnifaces.org/ui">
+
+	<p:tab id="informacionInmueble" title="Información del inmueble">
+		<p:panel id="informacionInmueblePanel"
+			header="Información del inmueble" style="margin-bottom:10px">
+			<div class="ui-grid ui-grid-responsive">
+				<div class="ui-grid-row">
+					<div class="ui-grid-col-3">
+						<p:panelGrid style="width:99%">
+							<p:row>
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="tipoInmueble" value="Tipo del inmueble: " />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<h:selectOneMenu id="tipoInmueble"
+										value="#{informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble}"
+										required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+										converter="omnifaces.SelectItemsConverter"
+										label="Tipo de Inmueble" style="width: 130px !important;">
+										<f:selectItem itemValue="null" itemLabel="Seleccione ..."
+											noSelectionOption="true" />
+										<f:selectItems value="#{informeHipotecarioBean.tiposInmueble}"
+											var="tipoInmueble" itemValue="#{tipoInmueble}"
+											itemLabel="#{tipoInmueble.nombre}" />
+										<o:validator validatorId="listaDesplegableValidator"
+											disabled="#{empty param[enviarHonorarios.clientId] ? true : (empty param[enviar.clientId]  ? true: (empty param[enviarCorrecciones.clientId] ? true: (empty param[aprobar.clientId] ? true : (empty param[correciones.clientId] ? true : (empty param[enviarComite.clientId] ? true: false)))))}" />
+
+										<p:ajax
+											process="@this,:informeHipotecario:accordionPanel:cocina"
+											event="change"
+											listener="#{informeHipotecarioBean.cambioTipoInmueble}"
+											update=":informeHipotecario:accordionPanel:tipoCredito, tiempoEsperadoDeComercializacion"
+											global="false"
+											onstart="$( '#informeHipotecario\\:accordionPanel\\:tipoInmueble' ).addClass('loadinggif');"
+											oncomplete="$( '#informeHipotecario\\:accordionPanel\\:tipoInmueble' ).removeClass('loadinggif');" />
+									</h:selectOneMenu>
+								</p:column>
+							</p:row>
+							<p:row
+								rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:tipoInmueble')}">
+								<p:column styleClass="ui-widget-header" colspan="2">
+									<p:message for="tipoInmueble" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="2" styleClass="ui-widget-header">
+									<h:outputLabel for="descripcionOtrosTipoInmueble"
+										value="Descripción: " />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="2" styleClass="ui-widget-header">
+									<p:inputTextarea rows="3" cols="27"
+										id="descripcionOtrosTipoInmueble"
+										value="#{informeHipotecarioBean.informeHipotecarioDTO.descripcionOtrosTipoInmueble}"
+										style="width: 100%;" label="Descripción Otros Tipo Inmueble"
+										maxlength="30" counter="tipoInmuebleCaracteresFaltantes"
+										counterTemplate="{0} caracteres faltantes" />
+									<h:outputText id="tipoInmuebleCaracteresFaltantes" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</div>
+					<div class="ui-grid-col-3">
+						<p:panelGrid style="width:99%">
+							<p:row>
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="usoInmueble" value="Uso del inmueble: " />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<h:selectOneMenu id="usoInmueble"
+										value="#{informeHipotecarioBean.informeHipotecarioDTO.usoActual}"
+										required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+										label="Uso del inmueble" style="width: 130px !important;">
+										<f:selectItems value="#{informeHipotecarioBean.usoActual}"
+											var="uso" itemValue="#{uso}" itemLabel="#{uso.value}"
+											itemDisabled="#{uso.disabled}" />
+										<o:validator validatorId="listaDesplegableValidator"
+											disabled="#{empty param[enviarHonorarios.clientId] ? true : (empty param[enviar.clientId]  ? true: (empty param[enviarCorrecciones.clientId] ? true: (empty param[aprobar.clientId] ? true : (empty param[correciones.clientId] ? true : (empty param[enviarComite.clientId] ? true: false)))))}" />
+									</h:selectOneMenu>
+								</p:column>
+							</p:row>
+							<p:row
+								rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:usoInmueble')}">
+								<p:column styleClass="ui-widget-header" colspan="2">
+									<p:message for="usoInmueble" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="2" styleClass="ui-widget-header">
+									<h:outputLabel for="descripcionOtrosUsoInmueble"
+										value="Descripción: " />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="2" styleClass="ui-widget-header">
+									<p:inputTextarea rows="3" cols="27"
+										id="descripcionOtrosUsoInmueble"
+										value="#{informeHipotecarioBean.informeHipotecarioDTO.descripcionOtrosUsoInmueble}"
+										style="width: 100%;" label="Descripción otros usos inmueble"
+										maxlength="30" counter="usoInmuebleCaracteresFaltantes"
+										counterTemplate="{0} caracteres faltantes" />
+									<h:outputText id="usoInmuebleCaracteresFaltantes" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</div>
+					<div class="ui-grid-col-3">
+						<p:panelGrid style="width:99%">
+							<p:row>
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="claseInmueble" value="Clase de inmueble: " />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<h:selectOneMenu id="claseInmueble"
+										value="#{informeHipotecarioBean.informeHipotecarioDTO.claseInmueble}"
+										required="#{(informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote' and informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote Urbano') and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}"
+										label="Clase Inmueble" style="width: 130px !important;">
+										<f:selectItems
+											value="#{informeHipotecarioBean.clasesInmuebles}" var="clase"
+											itemValue="#{clase}" itemLabel="#{clase.value}" />
+										<o:validator validatorId="listaDesplegableValidator"
+											disabled="#{empty param[enviarHonorarios.clientId] ? true : (empty param[enviar.clientId]  ? true: (empty param[enviarCorrecciones.clientId] ? true: (empty param[aprobar.clientId] ? true : (empty param[correciones.clientId] ? true : (empty param[enviarComite.clientId] ? true: false)))))}" />
+
+									</h:selectOneMenu>
+								</p:column>
+							</p:row>
+							<p:row
+								rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:claseInmueble')}">
+								<p:column styleClass="ui-widget-header" colspan="2">
+									<p:message for="claseInmueble" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="2" styleClass="ui-widget-header">
+									<h:outputLabel for="descripcionOtrosClaseInmueble"
+										value="Descripción: " />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column colspan="2" styleClass="ui-widget-header">
+									<p:inputTextarea rows="3" cols="27"
+										id="descripcionOtrosClaseInmueble"
+										value="#{informeHipotecarioBean.informeHipotecarioDTO.descripcionOtrosTipoInmueble}"
+										style="width: 100%;" label="Descripción otros clase inmueble"
+										maxlength="30" counter="claseInmuebleCaracteresFaltantes"
+										counterTemplate="{0} caracteres faltantes" />
+									<h:outputText id="claseInmuebleCaracteresFaltantes" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</div>
+					<div class="ui-grid-col-3">
+						<p:panelGrid style="width:99%">
+						</p:panelGrid>
+					</div>
+				</div>
+				<div class="ui-grid-row">
+					<div class="ui-grid-col-3">
+						<p:panelGrid style="width:99%">
+							<p:row>
+								<p:column styleClass="ui-widget-header">
+									<p:outputLabel value="Ocupante:" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<h:selectOneMenu id="ocupante"
+										value="#{informeHipotecarioBean.informeHipotecarioDTO.ocupante}"
+										required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+										converter="omnifaces.SelectItemsConverter" label="Ocupante"
+										style="width: 130px !important;">
+										<f:selectItem itemValue="null" itemLabel="Seleccione ..."
+											noSelectionOption="true" />
+										<f:selectItem itemValue="Arrendatario"
+											itemLabel="Arrendatario" />
+										<f:selectItem itemValue="Propietario" itemLabel="Propietario" />
+										<f:selectItem itemValue="Otro" itemLabel="Otro" />
+										<f:selectItem itemValue="SinOcupante" itemLabel="Sin ocupante" />
+										<f:selectItem itemValue="SinInformacion"
+											itemLabel="Sin información" />
+									</h:selectOneMenu>
+								</p:column>
+							</p:row>
+							<p:row
+								rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:ocupante')}">
+								<p:column styleClass="ui-widget-header" colspan="2">
+									<p:message for="ocupante" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</div>
+				</div>
+			</div>
+			<p:spacer width="100" height="20" />
+			<p:panel id="propiedadHorizontalPanel" header="Propiedad horizontal"
+				style="width:99%">
+				<p:panelGrid id="propiedadHorizontal" style="width: 99%">
+					<p:row>
+						<p:column styleClass="ui-widget-header">
+							<h:outputLabel for="sometidoAPropiedadHorizontal"
+								value="Sometido a propiedad horizontal" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:selectBooleanButton id="sometidoAPropiedadHorizontal"
+								value="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}"
+								onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+								offIcon="ui-icon-close"
+								required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+								style="width:100px" converter="javax.faces.Boolean">
+								<p:ajax event="change"
+									update="propiedadHorizontalPanel, :informeHipotecario:accordionPanel:valorComercial, :informeHipotecario:accordionPanel:metodosDeValuacion, :informeHipotecario:accordionPanel:accordionPanelMetodologias"
+									listener="#{informeHipotecarioBean.cambiarTipoConstruccion}"
+									oncomplete="actualizarFitoCorvini(); actualizarComparacionMercado();" />
+
+							</p:selectBooleanButton>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<h:outputLabel for="condicionPh" value="Condición de PH" />
+						</p:column>
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<h:selectOneMenu id="condicionPh"
+								value="#{informeHipotecarioBean.informeHipotecarioDTO.condicionPh}"
+								required="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal  and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}"
+								converter="omnifaces.SelectItemsConverter" label="Condicion PH"
+								style="width: 130px !important;">
+								<f:selectItem itemValue="null" itemLabel="Seleccione ..."
+									noSelectionOption="true" />
+								<f:selectItem itemValue="Construccion"
+									itemLabel="Solo construcción" />
+								<f:selectItem itemValue="Terreno"
+									itemLabel="Terreno / Terreno y Construcción" />
+								<p:ajax event="change"
+									update="propiedadHorizontalPanel, :informeHipotecario:accordionPanel:valorComercial, :informeHipotecario:accordionPanel:metodosDeValuacion, :informeHipotecario:accordionPanel:accordionPanelMetodologias"
+									listener="#{informeHipotecarioBean.cargarMetodologiasSugeridas}"
+									oncomplete="actualizarFitoCorvini(); actualizarComparacionMercado();" />
+							</h:selectOneMenu>
+						</p:column>
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<h:outputLabel for="numeroPiso" value="Piso Inmueble" />
+						</p:column>
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<p:inputMask id="numeroPiso" mask="9?9"
+								value="#{informeHipotecarioBean.informeHipotecarioDTO.numeroPiso}"
+								label="Piso Inmueble"
+								required="#{(informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote' and informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote Urbano') and (informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}">
+								<p:ajax event="change"
+									listener="#{informeHipotecarioBean.actualizarMetodologiasCamposSujeto}"
+									oncomplete="actualizarFitoCorvini();"
+									update="informeHipotecario:accordionPanel:accordionPanelMetodologias" />
+
+							</p:inputMask>
+
+						</p:column>
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<h:outputLabel for="conjuntoCerrado"
+								value="Conjunto o agrupación" />
+						</p:column>
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<p:selectBooleanButton id="conjuntoCerrado"
+								value="#{informeHipotecarioBean.informeHipotecarioDTO.conjuntoCerrado}"
+								onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+								offIcon="ui-icon-close"
+								required="#{(informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}"
+								style="width:100px" converter="javax.faces.Boolean" />
+						</p:column>
+
+					</p:row>
+					<p:row
+						rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:sometidoAPropiedadHorizontal') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:condicionPh') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:numeroPiso') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:conjuntoCerrado'))}">
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="sometidoAPropiedadHorizontal" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="condicionPh" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="numeroPiso" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="conjuntoCerrado" />
+						</p:column>
+					</p:row>
+					<p:row>
+
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<h:outputLabel for="numeroDeEdificios" value="No. Edificios" />
+						</p:column>
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<p:inputMask id="numeroDeEdificios" mask="9?9"
+								value="#{informeHipotecarioBean.informeHipotecarioDTO.numeroDeEdificios}"
+								label="No. Edificios"
+								required="#{(informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote' and informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote Urbano') and (informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<h:outputLabel for="unidadesPorPiso" value="Unidades por piso" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<p:inputMask id="unidadesPorPiso" mask="9?9"
+								value="#{informeHipotecarioBean.informeHipotecarioDTO.unidadesPorPiso}"
+								label="Unidades por piso"
+								required="#{(informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote' and informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote Urbano') and (informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}" />
+						</p:column>
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<h:outputLabel for="ubicacionDelInmueble" value="Ubicación" />
+						</p:column>
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<h:selectOneMenu id="ubicacionDelInmueble"
+								value="#{informeHipotecarioBean.informeHipotecarioDTO.ubicacionDelInmueble}"
+								required="#{(informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}"
+								label="Ubicación">
+								<f:selectItems
+									value="#{informeHipotecarioBean.ubicacionesInmueble}"
+									var="ubicacion" itemValue="#{ubicacion}"
+									itemLabel="#{ubicacion.value}" />
+							</h:selectOneMenu>
+						</p:column>
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<h:outputLabel for="totalUnidades" value="Total unidades" />
+						</p:column>
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<p:inputMask id="totalUnidades" mask="9?99"
+								value="#{informeHipotecarioBean.informeHipotecarioDTO.totalUnidades}"
+								label="Total unidades"
+								required="#{(informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote' and informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote Urbano') and (informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}" />
+						</p:column>
+					</p:row>
+					<p:row
+						rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:numeroDeEdificios') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:unidadesPorPiso') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:ubicacionDelInmueble') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:totalUnidades'))}">
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="numeroDeEdificios" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="unidadesPorPiso" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="ubicacionDelInmueble" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="totalUnidades" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<h:outputLabel for="coeficiente" value="Coeficiente % " />
+						</p:column>
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<p:inputNumber id="coeficiente"
+								value="#{informeHipotecarioBean.informeHipotecarioDTO.coeficiente}"
+								decimalSeparator="," thousandSeparator="." decimalPlaces="3"
+								symbol="%" symbolPosition="s" maxValue="100" label="Coeficiente"
+								required="#{(informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote' and informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote Urbano') and (informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}"
+								style="width: 99%">
+							</p:inputNumber>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<h:outputLabel for="areaActividadTxt" value="Área de actividad" />
+						</p:column>
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<p:inputText id="areaActividadTxt"
+								value="#{informeHipotecarioBean.informeHipotecarioDTO.areaActividad}"
+								label="Area de actividad" maxlength="25"
+								required="#{(informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote' and informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote Urbano') and (informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId])}"
+								style="width: 99%">
+
+							</p:inputText>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<h:outputLabel for="usoPrincipalTxt" value="Uso Principal " />
+						</p:column>
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<p:inputText id="usoPrincipalTxt"
+								value="#{informeHipotecarioBean.informeHipotecarioDTO.usoPrincipalPh}"
+								label="Uso principal" maxlength="25"
+								required="#{(informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote' and informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote Urbano') and (informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId])}"
+								style="width: 99%">
+							</p:inputText>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<h:outputLabel for="rphBooleanButton" value="RPH:" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header"
+							rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+							<p:selectBooleanButton id="rphBooleanButton"
+								value="#{informeHipotecarioBean.informeHipotecarioDTO.rph}"
+								onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+								offIcon="ui-icon-close" style="width:100px"
+								converter="javax.faces.Boolean" />
+						</p:column>
+
+					</p:row>
+					<p:row
+						rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:coeficiente') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:areaActividadTxt') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:usoPrincipalTxt'))}">
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="coeficiente" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="areaActividadTxt" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="usoPrincipalTxt" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<br />
+				<br />
+				<p:panelGrid id="dotacionComunal" style="width: 99%"
+					rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+					<h2>Dotación Comunal</h2>
+					<p:row>
+						<p:column styleClass="ui-widget-header">
+							<p:panelGrid id="dotaccionComunalA">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="porteria" value="Portería" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="porteria"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.porteria}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="citofono" value="Citófono" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="citofono"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.citofono}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="bicicletero" value="Bicicletero" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="bicicletero"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.bicicletero}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="piscina" value="Piscina" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="piscina"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.piscina}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="tanqueDeAgua" value="Tanque de agua" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="tanqueDeAgua"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.tanqueDeAgua}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="clubHouse" value="Club House" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="clubHouse"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.clubHouse}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="garajeVisitantes"
+											value="Garaje Visitantes" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="garajeVisitantes"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.garajeVisitantes}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="teatrino" value="Teatrino" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="teatrino"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.teatrino}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="sauna" value="Sauna" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="sauna"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.sauna}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="estadoVigilancia"
+											value="Vigilancia Privada" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="estadoVigilancia"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.estadoVigilancia}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean">
+											<p:ajax update="dotaccionComunalA"
+												process="dotaccionComunalA" global="false"
+												onstart="$( '#informeHipotecario\\:accordionPanel\\:estadoVigilancia' ).addClass('loadinggif');"
+												oncomplete="$( '#informeHipotecario\\:accordionPanel\\:estadoVigilancia' ).removeClass('loadinggif');" />
+										</p:selectBooleanButton>
+									</p:column>
+								</p:row>
+								<p:row
+									rendered="#{informeHipotecarioBean.informeHipotecarioDTO.estadoVigilancia}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="vigilanciaPrivada"
+											value="Tipo de vigilancia" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="vigilanciaPrivada"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.vigilanciaPrivada}"
+											required="#{(informeHipotecarioBean.informeHipotecarioDTO.vigilanciaPrivada) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}"
+											converter="omnifaces.SelectItemsConverter"
+											label="Tipo de vigilancia" style="width: 130px !important;">
+											<f:selectItem itemValue="null" itemLabel="Seleccione ..."
+												noSelectionOption="true" />
+											<f:selectItem itemValue="DOCE_HORAS" itemLabel="12 Horas" />
+											<f:selectItem itemValue="VEINTICUATRO_HORAS"
+												itemLabel="24 Horas" />
+										</h:selectOneMenu>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="administracion" value="Administración" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="administracion"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.administracion}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean">
+											<p:ajax update="dotaccionComunalA"
+												process="dotaccionComunalA" global="false"
+												onstart="$( '#informeHipotecario\\:accordionPanel\\:administracion' ).addClass('loadinggif');"
+												oncomplete="$( '#informeHipotecario\\:accordionPanel\\:administracion' ).removeClass('loadinggif');" />
+										</p:selectBooleanButton>
+									</p:column>
+								</p:row>
+								<p:row
+									rendered="#{informeHipotecarioBean.informeHipotecarioDTO.administracion}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="valorAdministracion" value="Mensualidad" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputNumber id="valorAdministracion"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.valorAdministracion}"
+											label="Valor Administración" symbol="$" decimalSeparator=","
+											thousandSeparator="." symbolPosition="p" decimalPlaces="2"
+											maxValue="999999999"
+											required="#{(informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}">
+
+											<p:ajax event="change"
+												listener="#{informeHipotecarioBean.actualizarMetodologiasCamposSujeto}"
+												oncomplete="actualizarFitoCorvini();"
+												update="informeHipotecario:accordionPanel:accordionPanelMetodologias" />
+										</p:inputNumber>
+									</p:column>
+								</p:row>
+
+							</p:panelGrid>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:panelGrid>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="juegosNinos" value="Juegos Niños" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="juegosNinos"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.juegosNinos}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="canchaMultiple" value="Cancha Múltiple" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="canchaMultiple"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.canchaMultiple}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="bombaEyectora" value="Bomba Eyectora" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="bombaEyectora"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.bombaEyectora}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="aireAcondicionadoCentral"
+											value="Aire Acondicionado Central" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="aireAcondicionadoCentral"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.aireAcondicionadoCentral}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="canchaSquash" value="Cancha Squash" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="canchaSquash"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.canchaSquash}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="zonasVerdesComunales"
+											value="Zonas Verdes Comunales" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="zonasVerdesComunales"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.zonasVerdesComunales}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="gimnasio" value="Gimnasio" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="gimnasio"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.gimnasio}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="calefaccion" value="Calefacción" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="calefaccion"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.calefaccion}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="terrazaComunal" value="Terraza Comunal" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="terrazaComunal"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.terrazaComunal}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:panelGrid id="pagina3DotCom">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="golfito" value="Golfito" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="golfito"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.golfito}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="salonComunal" value="Salón Comunal" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="salonComunal"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.salonComunal}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="shutBasuras" value="Shut Basuras" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="shutBasuras"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.shutBasuras}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="equipoDePresionConstante"
+											value="Equipo De Presión Constante" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="equipoDePresionConstante"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.equipoDePresionConstante}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="plantaElectrica" value="Planta Eléctrica" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="plantaElectrica"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.plantaElectrica}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="ascensor" value="Ascensor" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="ascensor"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.ascensor}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean">
+											<p:ajax update="pagina3DotCom" process="pagina3DotCom"
+												global="false"
+												onstart="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).addClass('loadinggif');"
+												oncomplete="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).removeClass('loadinggif');" />
+										</p:selectBooleanButton>
+									</p:column>
+								</p:row>
+								<p:row
+									rendered="#{informeHipotecarioBean.informeHipotecarioDTO.ascensor}">
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="numeroDeAscensores"
+											value="Número de ascensores" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:inputMask id="numeroDeAscensores" mask="9?99"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.numeroDeAscensores}"
+											required="#{(informeHipotecarioBean.informeHipotecarioDTO.ascensor) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}"
+											requiredMessage="Numero de Ascensores es obligatorio"
+											style="width:100px" />
+									</p:column>
+								</p:row>
+								<p:row
+									rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:numeroDeAscensores')}">
+									<p:column styleClass="ui-widget-header" colspan="2">
+										<p:message for="numeroDeAscensores" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="turco" value="Turco" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="turco"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.turco}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="bbq" value="BBQ" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="bbq"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.bbq}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+
+
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<h:outputLabel for="jardinInfantil" value="Jardín Infantil" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<p:selectBooleanButton id="jardinInfantil"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.jardinInfantil}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:panelGrid columns="2">
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="otros" value="Otros: " />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<p:inputTextarea rows="3" cols="30" id="otros"
+										value="#{informeHipotecarioBean.informeHipotecarioDTO.otros}"
+										label="Otros" style="width:150px" maxlength="200"
+										counter="otrosCaracteresFaltantes"
+										counterTemplate="{0} caracteres faltantes" />
+									<h:outputText id="otrosCaracteresFaltantes" />
+								</p:column>
+							</p:panelGrid>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<br />
+				<br />
+				<p:panelGrid id="normasUsodelSuelo" style="width: 99%"
+					rendered="#{!informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+					<h2>Norma de Uso del Suelo</h2>
+					<p:row>
+						<p:column styleClass="ui-widget-header">
+							<p:panelGrid id="normasUsodelSueloCampos">
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel value="Decreto o acuerdo:" />
+									</p:column>
+									<p:column colspan="2">
+										<p:inputText id="observacionDecretoAcuerdo"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.observacionDecretoAcuerdo}"
+											style="width: 99%" maxlength="99" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="alturaPermitida" value="Altura permitida:" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="alturaPermitida"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.alturaPermitida}"
+											converter="omnifaces.SelectItemsConverter"
+											label="Altura permitida" style="width: 130px !important;"
+											required="#{(!informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId])}">
+											<p:ajax event="change" update="normasUsodelSueloCampos"
+												process="normasUsodelSueloCampos" global="false"
+												onstart="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).addClass('loadinggif');"
+												oncomplete="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).removeClass('loadinggif');"
+												listener="#{informeHipotecarioBean.validarCampoAlturaPermitida(true)}" />
+											<f:selectItem itemValue="Aplica" itemLabel="Aplica" />
+											<f:selectItem itemValue="No Aplica" itemLabel="No Aplica" />
+											<f:selectItem itemValue="Resultante" itemLabel="Resultante" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column>
+										<p:inputNumber decimalPlaces="0"
+											id="observacionAlturaPermitida" maxValue="50" minValue="0"
+											symbol=" Pisos" symbolPosition="s"
+											rendered="#{informeHipotecarioBean.mostrarObservacionAlturaPermitida}"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.observacionAlturaPermitida}"
+											style="width: 99%" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel value="Uso principal:" />
+									</p:column>
+									<p:column colspan="2">
+										<p:inputText id="observacionUsoPrincipal"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.observacionUsoPrincipal}"
+											style="width: 99%" maxlength="50" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="aislamientoPosterior"
+											value="Aislamiento Posterior:" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="aislamientoPosterior"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.aislamientoPosterior}"
+											converter="omnifaces.SelectItemsConverter"
+											label="Aislamiento Posterior"
+											style="width: 130px !important;"
+											required="#{(!informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId])}">
+											<p:ajax event="change" update="normasUsodelSueloCampos"
+												process="normasUsodelSueloCampos" global="false"
+												onstart="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).addClass('loadinggif');"
+												oncomplete="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).removeClass('loadinggif');"
+												listener="#{informeHipotecarioBean.validarAislamientoPosterior(true)}" />
+											<f:selectItem itemValue="Aplica" itemLabel="Aplica" />
+											<f:selectItem itemValue="No Aplica" itemLabel="No Aplica" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column>
+										<p:inputNumber symbol="M " symbolPosition="s"
+											decimalPlaces="2" decimalSeparator="," thousandSeparator="."
+											id="observacionAislamientoPosterior"
+											rendered="#{informeHipotecarioBean.mostrarObservacionAislamientoPosterior}"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.observacionAislamientoPosterior}"
+											style="width: 99%" minValue="0" maxValue="99.99" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="aislamientoLateral"
+											value="Aislamiento Lateral:" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="aislamientoLateral"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.aislamientoLateral}"
+											converter="omnifaces.SelectItemsConverter"
+											label="Aislamiento Lateral" style="width: 130px !important;"
+											required="#{(!informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId])}">
+											<p:ajax event="change" update="normasUsodelSueloCampos"
+												process="normasUsodelSueloCampos" global="false"
+												onstart="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).addClass('loadinggif');"
+												oncomplete="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).removeClass('loadinggif');"
+												listener="#{informeHipotecarioBean.validarAislamientoLateral(true)}" />
+											<f:selectItem itemValue="Aplica" itemLabel="Aplica" />
+											<f:selectItem itemValue="No Aplica" itemLabel="No Aplica" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column>
+										<p:inputNumber symbol="M " symbolPosition="s"
+											decimalPlaces="2" decimalSeparator="," thousandSeparator="."
+											id="observacionAislamientoLateral"
+											rendered="#{informeHipotecarioBean.mostrarObservacionAislamientoLateral}"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.observacionAislamientoLateral}"
+											style="width: 99%" minValue="0" maxValue="99.99" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="anteJardin" value="Ante jardín:" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="anteJardin"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.anteJardin}"
+											converter="omnifaces.SelectItemsConverter"
+											label="Ante jardín" style="width: 130px !important;">
+											<p:ajax event="change" update="normasUsodelSueloCampos"
+												process="normasUsodelSueloCampos" global="false"
+												onstart="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).addClass('loadinggif');"
+												oncomplete="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).removeClass('loadinggif');"
+												listener="#{informeHipotecarioBean.validarAnteJardin(true)}" />
+											<f:selectItem itemValue="Aplica" itemLabel="Aplica" />
+											<f:selectItem itemValue="No Aplica" itemLabel="No Aplica" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column>
+										<p:inputNumber symbol="M " symbolPosition="s"
+											decimalPlaces="2"
+											rendered="#{informeHipotecarioBean.mostrarObservacionAnteJardin}"
+											decimalSeparator="," thousandSeparator="."
+											id="observacionAnteJardin"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.observacionAnteJardin}"
+											style="width: 99%" maxlength="25" minValue="0"
+											maxValue="99.99" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="indiceOcupacion"
+											value="Indice de ocupación:" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="indiceOcupacion"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.indiceOcupacion}"
+											converter="omnifaces.SelectItemsConverter"
+											label="Indice de ocupación" style="width: 130px !important;"
+											required="#{(!informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId])}">
+											<p:ajax event="change" update="normasUsodelSueloCampos"
+												process="normasUsodelSueloCampos" global="false"
+												onstart="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).addClass('loadinggif');"
+												oncomplete="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).removeClass('loadinggif');"
+												listener="#{informeHipotecarioBean.validarIndiceOcupacion(true)}" />
+											<f:selectItem itemValue="Aplica" itemLabel="Aplica" />
+											<f:selectItem itemValue="No Aplica" itemLabel="No Aplica" />
+											<f:selectItem itemValue="Resultante" itemLabel="Resultante" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column>
+										<p:inputNumber decimalPlaces="3"
+											rendered="#{informeHipotecarioBean.mostrarObservacionIndiceOcupacion}"
+											decimalSeparator="," thousandSeparator="."
+											id="observacionIndiceOcupacion"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.observacionIndiceOcupacion}"
+											style="width: 99%" minValue="0.000" maxValue="9.999" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel for="indiceConstruccion"
+											value="Indice de Construcción:" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+										<h:selectOneMenu id="indiceConstruccion"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.indiceConstruccion}"
+											converter="omnifaces.SelectItemsConverter"
+											label="Indice de Construcción"
+											style="width: 130px !important;"
+											required="#{(!informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId])}">
+											<p:ajax event="change" update="normasUsodelSueloCampos"
+												process="normasUsodelSueloCampos" global="false"
+												onstart="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).addClass('loadinggif');"
+												oncomplete="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).removeClass('loadinggif');"
+												listener="#{informeHipotecarioBean.validarIndiceConstruccion(true)}" />
+											<f:selectItem itemValue="Aplica" itemLabel="Aplica" />
+											<f:selectItem itemValue="No Aplica" itemLabel="No Aplica" />
+											<f:selectItem itemValue="Resultante" itemLabel="Resultante" />
+										</h:selectOneMenu>
+									</p:column>
+									<p:column>
+										<p:inputNumber decimalPlaces="3"
+											rendered="#{informeHipotecarioBean.mostrarObservacionIndiceConstruccion}"
+											decimalSeparator="," thousandSeparator="."
+											id="observacionIndiceConstruccion"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.observacionIndiceConstruccion}"
+											style="width: 99%" minValue="0.000" maxValue="9.999" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column styleClass="ui-widget-header">
+										<p:outputLabel value="Predio subdivido fisicamente:" />
+									</p:column>
+									<p:column styleClass="ui-widget-header">
+
+										<p:selectBooleanButton id="predioSubdivididoBoolean"
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.mostrarPredioSubdivididoFisicamente}"
+											onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+											offIcon="ui-icon-close" style="width:100px"
+											converter="javax.faces.Boolean">
+											<p:ajax update="normasUsodelSueloCampos"
+												process="normasUsodelSueloCampos" global="false"
+												onstart="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).addClass('loadinggif');"
+												oncomplete="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).removeClass('loadinggif');" />
+										</p:selectBooleanButton>
+									</p:column>
+
+
+									<p:column
+										rendered="#{informeHipotecarioBean.informeHipotecarioDTO.mostrarPredioSubdivididoFisicamente}">
+										<p:outputLabel value="No de unidades:" />
+									</p:column>
+
+									<p:column
+										rendered="#{informeHipotecarioBean.informeHipotecarioDTO.mostrarPredioSubdivididoFisicamente}">
+										<p:inputNumber decimalPlaces="0" decimalSeparator=","
+											thousandSeparator="."
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.unidades}"
+											style="width: 99%" minValue="0" maxValue="99" />
+									</p:column>
+
+									<p:column
+										rendered="#{informeHipotecarioBean.informeHipotecarioDTO.mostrarPredioSubdivididoFisicamente}">
+										<p:outputLabel value="No. de  contadores de agua:" />
+									</p:column>
+
+									<p:column
+										rendered="#{informeHipotecarioBean.informeHipotecarioDTO.mostrarPredioSubdivididoFisicamente}">
+										<p:inputNumber decimalPlaces="0" decimalSeparator=","
+											thousandSeparator="."
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.contadoresAgua}"
+											style="width: 99%" minValue="0" maxValue="99" />
+									</p:column>
+
+									<p:column
+										rendered="#{informeHipotecarioBean.informeHipotecarioDTO.mostrarPredioSubdivididoFisicamente}">
+										<p:outputLabel value="No. de  contadores de luz:" />
+									</p:column>
+
+									<p:column
+										rendered="#{informeHipotecarioBean.informeHipotecarioDTO.mostrarPredioSubdivididoFisicamente}">
+										<p:inputNumber decimalPlaces="0" decimalSeparator=","
+											thousandSeparator="."
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.contadoresLuz}"
+											style="width: 99%" minValue="0" maxValue="99" />
+									</p:column>
+
+									<p:column
+										rendered="#{informeHipotecarioBean.informeHipotecarioDTO.mostrarPredioSubdivididoFisicamente}">
+										<p:outputLabel value="No. de Accesos:" />
+									</p:column>
+
+									<p:column
+										rendered="#{informeHipotecarioBean.informeHipotecarioDTO.mostrarPredioSubdivididoFisicamente}">
+										<p:inputNumber decimalPlaces="0" decimalSeparator=","
+											thousandSeparator="."
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.accesos}"
+											style="width: 99%" minValue="0" maxValue="99" />
+									</p:column>
+
+								</p:row>
+							</p:panelGrid>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<br />
+				<br />
+
+				<p:panelGrid id="areasLotePanelPH" style="width: 99%"
+					rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+
+					<p:row rendered="#{informeHipotecarioBean.mostrarAreasLotePH}">
+						<p:column styleClass="ui-widget-header" colspan="8">
+							<h2>Áreas Lote</h2>
+						</p:column>
+					</p:row>
+					<p:row rendered="#{informeHipotecarioBean.mostrarAreasLotePH}">
+
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Área Lote:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber id="txtAreaLotePH" symbol=" M2" symbolPosition="s"
+								decimalPlaces="3" minValue="0" maxValue="999999.999"
+								decimalSeparator="," thousandSeparator="."
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaLoteAvaluoDTO.area}"
+								style="width: 99%">
+								<p:ajax event="change"
+									listener="#{informeHipotecarioBean.actualizarMetodologiasCamposSujeto}"
+									oncomplete="actualizarFitoCorvini();"
+									update="informeHipotecario:accordionPanel:accordionPanelMetodologias" />
+							</p:inputNumber>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Frente:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber id="txtFrentePH" symbol=" M" symbolPosition="s"
+								decimalPlaces="3" minValue="0" maxValue="999999.999"
+								decimalSeparator="," thousandSeparator="."
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaLoteAvaluoDTO.frente}"
+								style="width: 99%">
+								<p:ajax update="areasLotePanelPH" process="areasLotePanelPH"
+									listener="#{informeHipotecarioBean.calcularRelacionFrenteFondo()}"
+									global="false" />
+							</p:inputNumber>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Fondo:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol=" M" symbolPosition="s" decimalPlaces="3"
+								minValue="0" maxValue="999999.999" decimalSeparator=","
+								thousandSeparator="."
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaLoteAvaluoDTO.fondo}"
+								style="width: 99%">
+								<p:ajax update="areasLotePanelPH" process="areasLotePanelPH"
+									listener="#{informeHipotecarioBean.calcularRelacionFrenteFondo()}"
+									global="false" />
+							</p:inputNumber>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Relación Frente/Fondo" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalPlaces="3" decimalSeparator=","
+								thousandSeparator="." id="txtRelacionFrenteFondoPH"
+								disabled="true"
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaLoteAvaluoDTO.relacion}"
+								style="width: 99%" />
+						</p:column>
+
+					</p:row>
+
+					<p:row>
+						<p:column styleClass="ui-widget-header" colspan="8">
+							<h2>Áreas Construcción</h2>
+						</p:column>
+					</p:row>
+					<p:row>
+
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Área Privada:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol=" M2" symbolPosition="s" decimalPlaces="3"
+								minValue="0" maxValue="999999.999" label="Área Privada"
+								decimalSeparator="," thousandSeparator="." id="txtAreaPrivadaPH"
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaConstruccionAvaluoDTO.areaPrivada}"
+								style="width: 99%"
+								required="#{(informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId])}" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Área Construida:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol=" M2" symbolPosition="s" decimalPlaces="3"
+								minValue="0" maxValue="999999.999" label="Área Construida"
+								decimalSeparator="," thousandSeparator="."
+								id="txtAreaConstruidaPH"
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaConstruccionAvaluoDTO.areaConstruida}"
+								style="width: 99%"
+								required="#{(informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId])}">
+								<p:ajax event="change"
+									listener="#{informeHipotecarioBean.actualizarMetodologiasCamposSujeto}"
+									oncomplete="actualizarFitoCorvini();"
+									update="informeHipotecario:accordionPanel:accordionPanelMetodologias" />
+							</p:inputNumber>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Área Libre:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:selectBooleanButton
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaConstruccionAvaluoDTO.areaLibre}"
+								onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+								offIcon="ui-icon-close" style="width:100px"
+								converter="javax.faces.Boolean">
+								<p:ajax update="areasLotePanelPH" process="areasLotePanelPH"
+									global="false"
+									onstart="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).addClass('loadinggif');"
+									oncomplete="$( '#informeHipotecario\\:accordionPanel\\:ascensor' ).removeClass('loadinggif');" />
+							</p:selectBooleanButton>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Uso:"
+								rendered="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaConstruccionAvaluoDTO.areaLibre}" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+
+							<h:selectOneMenu
+								rendered="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaConstruccionAvaluoDTO.areaLibre}"
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaConstruccionAvaluoDTO.usoAreaLibre}"
+								style="width: 130px !important;">
+								<f:selectItem itemValue="null" itemLabel="Seleccione ..."
+									noSelectionOption="true" />
+								<f:selectItem itemValue="Privado" itemLabel="Privado" />
+								<f:selectItem itemValue="Exclusivo" itemLabel="Exclusivo" />
+							</h:selectOneMenu>
+
+
+						</p:column>
+					</p:row>
+					<p:row
+						rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:txtAreaPrivadaPH') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:txtAreaConstruidaPH'))}">
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="txtAreaPrivadaPH" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="txtAreaConstruidaPH" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Área Catastral:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber id="txtAreaCatastral" symbol=" M2"
+								symbolPosition="s" decimalPlaces="3" minValue="0"
+								maxValue="999999.999" decimalSeparator="," thousandSeparator="."
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaConstruccionAvaluoDTO.areaCatastral}"
+								style="width: 99%" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Área medida en la inspección:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber id="txtAreaMedidaInspeccion" symbol=" M2"
+								symbolPosition="s" decimalPlaces="3" minValue="0"
+								maxValue="999999.999" label="Área medida en la inspección"
+								decimalSeparator="," thousandSeparator="."
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaConstruccionAvaluoDTO.areaMedidaInspeccion}"
+								style="width: 99%"
+								required="#{(informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId])}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Área valorada:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber id="txtAreaValorada" symbol=" M2"
+								symbolPosition="s" decimalPlaces="3" minValue="0"
+								maxValue="999999.999" label="Área valorada" decimalSeparator=","
+								thousandSeparator="."
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaConstruccionAvaluoDTO.areaValorada}"
+								style="width: 99%"
+								required="#{(informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId])}" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+						</p:column>
+
+					</p:row>
+					<p:row
+						rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:txtAreaCatastral') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:txtAreaMedidaInspeccion') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:txtAreaValorada'))}">
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="txtAreaCatastral" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="txtAreaMedidaInspeccion" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="txtAreaValorada" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+
+				<p:panelGrid id="areasLotePanelNPH" style="width: 99%"
+					rendered="#{!informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+
+					<p:row>
+						<p:column styleClass="ui-widget-header" colspan="8">
+							<h2>Áreas Lote</h2>
+						</p:column>
+					</p:row>
+					<p:row>
+
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Área Lote:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol=" M2" symbolPosition="s" decimalPlaces="3"
+								minValue="0" maxValue="999999.999" decimalSeparator=","
+								thousandSeparator="." id="txtAreaLoteNPH"
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaLoteAvaluoDTO.area}"
+								style="width: 99%">
+								<p:ajax event="change"
+									listener="#{informeHipotecarioBean.actualizarMetodologiasCamposSujeto}"
+									oncomplete="actualizarFitoCorvini();"
+									update="informeHipotecario:accordionPanel:accordionPanelMetodologias" />
+							</p:inputNumber>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Frente:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol=" M" symbolPosition="s" decimalPlaces="3"
+								minValue="0" maxValue="999999.999" decimalSeparator=","
+								thousandSeparator="." id="txtFrenteNPH"
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaLoteAvaluoDTO.frente}"
+								style="width: 99%">
+								<p:ajax update="areasLotePanelNPH" process="areasLotePanelNPH"
+									listener="#{informeHipotecarioBean.calcularRelacionFrenteFondo()}"
+									global="false" />
+							</p:inputNumber>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Fondo:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol=" M" symbolPosition="s" decimalPlaces="3"
+								minValue="0" maxValue="999999.999" decimalSeparator=","
+								thousandSeparator="." id="txtFondoNPH"
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaLoteAvaluoDTO.fondo}"
+								style="width: 99%">
+								<p:ajax update="areasLotePanelNPH" process="areasLotePanelNPH"
+									listener="#{informeHipotecarioBean.calcularRelacionFrenteFondo()}"
+									global="false" />
+							</p:inputNumber>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Relación Frente/Fondo" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalPlaces="3" decimalSeparator=","
+								thousandSeparator="." id="txtRelacionFrenteFondoNPH"
+								disabled="true"
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaLoteAvaluoDTO.relacion}"
+								style="width: 99%" />
+						</p:column>
+
+					</p:row>
+
+					<p:row>
+						<p:column styleClass="ui-widget-header" colspan="8">
+							<h2>Áreas Construcción</h2>
+						</p:column>
+					</p:row>
+					<p:row>
+
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Área medida en la inspección:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol=" M2" symbolPosition="s" decimalPlaces="3"
+								minValue="0" maxValue="999999.999"
+								label="Área medida en la inspeccion" decimalSeparator=","
+								thousandSeparator="." id="txtAreaMedidaInspeccionNPH"
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaConstruccionAvaluoDTO.areaMedidaInspeccion}"
+								style="width: 99%"
+								required="#{(!informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId])}" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Área suceptible a legalización:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol=" M2" symbolPosition="s" decimalPlaces="3"
+								minValue="0" maxValue="999999.999"
+								label="Área suceptible a legalización" decimalSeparator=","
+								thousandSeparator="." id="txtAreaSuceptibleLegalizacionNPH"
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaConstruccionAvaluoDTO.areaSuseptibleLegalizacion}"
+								style="width: 99%"
+								required="#{(!informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId])}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Área Catastral:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol=" M2" symbolPosition="s" decimalPlaces="3"
+								minValue="0" maxValue="999999.999" decimalSeparator=","
+								thousandSeparator="." id="txtAreaCatastralNPH"
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaConstruccionAvaluoDTO.areaCatastral}"
+								style="width: 99%" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Área Licencia Construcción:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol=" M2" symbolPosition="s" decimalPlaces="3"
+								minValue="0" maxValue="999999.999"
+								label="Área Licencia Construcción" decimalSeparator=","
+								thousandSeparator="." id="txtAreaLicenciaConstruccion"
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaConstruccionAvaluoDTO.arealicenciaConstruccion}"
+								style="width: 99%" />
+						</p:column>
+					</p:row>
+					<p:row
+						rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:txtAreaMedidaInspeccionNPH') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:txtAreaSuceptibleLegalizacionNPH') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:txtAreaCatastralNPH') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:txtAreaLicenciaConstruccion')}">
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="txtAreaMedidaInspeccionNPH" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="txtAreaSuceptibleLegalizacionNPH" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="txtAreaCatastralNPH" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="txtAreaLicenciaConstruccion" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column styleClass="ui-widget-header">
+							<p:outputLabel value="Área Valorada:" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol=" M2" symbolPosition="s" decimalPlaces="3"
+								minValue="0" maxValue="999999.999" label="Área Valorada"
+								decimalSeparator="," thousandSeparator="."
+								id="txtAreaValoradaNPH"
+								value="#{informeHipotecarioBean.avaluoHipotecarioDTO.areaConstruccionAvaluoDTO.areaValorada}"
+								style="width: 99%"
+								required="#{(!informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId])}" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" colspan="6">
+						</p:column>
+
+					</p:row>
+					<p:row
+						rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:txtAreaValoradaNPH')}">
+						<p:column styleClass="ui-widget-header" colspan="2">
+							<p:message for="txtAreaValoradaNPH" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+
+			</p:panel>
+		</p:panel>
+		<p:panel id="panelObservacionesGeneralesInmueble"
+			header="Observaciones generales del inmueble:"
+			style="margin-bottom:10px">
+			<p:panelGrid style="width: 99%">
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<p:inputTextarea id="observacionesGeneralesInmueble"
+							label="Observaciones generales del inmueble"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.observacionesGeneralesInmueble}"
+							style="width:100%; margin-top:10px;" rows="3" maxlength="500"
+							counter="observacionesGeneralesInmuebleCaracteresFaltantes"
+							counterTemplate="{0} caracteres faltantes"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<h:outputText
+							id="observacionesGeneralesInmuebleCaracteresFaltantes" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:observacionesGeneralesInmueble'))}">
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="observacionesGeneralesInmueble" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+	</p:tab>
+
+
+</ui:composition>

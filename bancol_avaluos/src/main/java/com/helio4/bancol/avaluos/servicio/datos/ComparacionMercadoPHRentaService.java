@@ -1,0 +1,14 @@
+package com.helio4.bancol.avaluos.servicio.datos;
+
+import com.helio4.bancol.avaluos.dto.ComparacionMercadoPHRentaDTO;
+import com.helio4.bancol.avaluos.exception.ComparacionMercadoPHRentaNotFoundException;
+
+public interface ComparacionMercadoPHRentaService {
+
+	ComparacionMercadoPHRentaDTO crear(ComparacionMercadoPHRentaDTO comparacionMercadoPHRentaDTO);
+
+	ComparacionMercadoPHRentaDTO actualizar(ComparacionMercadoPHRentaDTO comparacionActualizada) throws ComparacionMercadoPHRentaNotFoundException;
+
+	ComparacionMercadoPHRentaDTO eliminar(Long compracionMercadoPhId) throws ComparacionMercadoPHRentaNotFoundException;
+
+}

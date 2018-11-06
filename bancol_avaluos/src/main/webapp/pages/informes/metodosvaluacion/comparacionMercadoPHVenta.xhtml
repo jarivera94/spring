@@ -1,0 +1,762 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:tab id="tabPHVenta" title="Comparación de mercado PH en Venta"
+		rendered="#{informeHipotecarioBean.mostrarMetodoComparacionMercadoPHVenta}">
+
+		<p:commandButton icon="ui-icon-plusthick" value="Nueva Oferta"
+			update="ofertasPHV"
+			actionListener="#{comparacionMercadoPHVentaBean.adicionarOferta}"
+			global="true">
+		</p:commandButton>
+
+		<p:commandButton value="Calcular Metodologia"
+			actionListener="#{comparacionMercadoPHVentaBean.calcular}"
+			icon="ui-icon-gear" styleClass="button_green" global="true">
+		</p:commandButton>
+
+
+		<h:panelGroup id="ofertasPHV">
+			<p:panelGrid styleClass="ui-panelgrid-methodology"
+				style="width:80% ;">
+
+				<p:row
+					style="border-bottom: 1px solid #00aad8 !important; background-color:#F2F5FA !important;">
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Localización" />
+					</p:column>
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Fuente" />
+					</p:column>
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Piso" />
+					</p:column>
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Área" />
+					</p:column>
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Tipo Área" />
+					</p:column>
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="No. garajes" />
+					</p:column>
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Edad (años)" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Ubi" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Acab" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Edif" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Neg" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Precio unitario garaje" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Valor Comercial" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Valor Administración" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Área libre" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Edad" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Ubi/pi" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Sup" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="F.H" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Valor m2 homogenizado sin garaje" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Precio unitario administración m2" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="valor m2 sin garaje no homogenizado" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText
+							value="Valor m2 homogenizado sin Garaje y aire libre" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="" />
+					</p:column>
+
+				</p:row>
+
+				<ui:repeat
+					value="#{comparacionMercadoPHVentaBean.metodoValuacion.ofertasPH}"
+					var="oferta">
+
+					<p:row style="border-bottom: 1px solid #00aad8 !important;">
+						<p:column styleClass="ui-widget-header">
+							<p:inputText value="#{oferta.localizacion}"
+								styleClass="ui-inputfield-methodology-editable"
+								style="width:100px;" immediate="true">
+							</p:inputText>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header" width="">
+							<p:inputText id="txtFuenteMetodologiaPHV" maxlength="1000"
+								value="#{oferta.fuente}"
+								styleClass="ui-inputfield-methodology-editable"
+								style="width:100px;" immediate="true">
+							</p:inputText>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalPlaces="0"
+								styleClass="ui-inputfield-methodology-editable-short"
+								id="txtPisoMetodologiaPHV" maxlength="20" value="#{oferta.piso}"
+								immediate="true">
+							</p:inputNumber>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtAreaMetodologiaPHV" maxlength="20"
+								value="#{oferta.area}"
+								styleClass="ui-inputfield-methodology-editable-short"
+								immediate="true">
+							</p:inputNumber>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<h:selectOneMenu id="txtTipoAreaMetodologiaPHV"
+								value="#{oferta.tipoArea}"
+								styleClass="ui-select-item-methodology-editable"
+								style="width:100px" immediate="true">
+								<f:selectItems
+									value="#{comparacionMercadoPHVentaBean.metodoValuacion.tiposArea}"
+									var="tipoArea" itemValue="#{tipoArea}"
+									itemLabel="#{tipoArea.value}" />
+							</h:selectOneMenu>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalPlaces="0" id="txtGarajesMetodologiaPHV"
+								maxlength="20" value="#{oferta.garajes}"
+								styleClass="ui-inputfield-methodology-editable-short"
+								immediate="true">
+							</p:inputNumber>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+
+							<p:inputNumber decimalPlaces="0" id="txtEdadMetodologiaPHV"
+								maxlength="20" value="#{oferta.edad}"
+								styleClass="ui-inputfield-methodology-editable-short"
+								immediate="true">
+							</p:inputNumber>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+
+							<h:selectOneMenu id="cmbUbicacionMetodologiaPHV"
+								style="width:50px" value="#{oferta.ubicacion}"
+								styleClass="ui-select-item-methodology-editable"
+								immediate="true">
+								<f:selectItems
+									value="#{comparacionMercadoPHVentaBean.metodoValuacion.factoresHomologacion}"
+									var="ubicacion" itemValue="#{ubicacion}"
+									itemLabel="#{ubicacion.value}" />
+							</h:selectOneMenu>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+
+							<h:selectOneMenu id="cmbAcabadosMetodologiaPHV"
+								style="width:50px"
+								styleClass="ui-select-item-methodology-editable"
+								value="#{oferta.acabados}" immediate="true">
+								<f:selectItems
+									value="#{comparacionMercadoPHVentaBean.metodoValuacion.factoresHomologacion}"
+									var="ubicacion" itemValue="#{ubicacion}"
+									itemLabel="#{ubicacion.value}" />
+							</h:selectOneMenu>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+
+							<h:selectOneMenu id="cmbEdificioConjuntoMetodologiaPHV"
+								style="width:50px"
+								styleClass="ui-select-item-methodology-editable"
+								value="#{oferta.edificioConjunto}" immediate="true">
+								<f:selectItems
+									value="#{comparacionMercadoPHVentaBean.metodoValuacion.factoresHomologacion}"
+									var="ubicacion" itemValue="#{ubicacion}"
+									itemLabel="#{ubicacion.value}" />
+							</h:selectOneMenu>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+
+							<h:selectOneMenu id="cmbNegociacionMetodologiaPHV"
+								style="width:50px"
+								styleClass="ui-select-item-methodology-editable"
+								value="#{oferta.negociacion}" immediate="true">
+								<f:selectItems
+									value="#{comparacionMercadoPHVentaBean.factoresNegociacion}"
+									var="var" itemValue="#{var}" itemLabel="#{var}" />
+							</h:selectOneMenu>
+
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtPrecioUnitarioGarajeMetodologiaPHV"
+								styleClass="ui-inputfield-methodology-editable-large"
+								maxlength="20" value="#{oferta.precioUnitarioGaraje}"
+								immediate="true">
+							</p:inputNumber>
+
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtrentaMensualMetodologiaPHV" maxlength="20"
+								styleClass="ui-inputfield-methodology-editable-large"
+								immediate="true" value="#{oferta.valorOferta}">
+							</p:inputNumber>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtValorAdministracionMetodologiaPHV" maxlength="20"
+								styleClass="ui-inputfield-methodology-editable-large"
+								immediate="true" value="#{oferta.valorAdministracion}">
+							</p:inputNumber>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtAreaLibreMetodologiaPHV" maxlength="20"
+								styleClass="ui-inputfield-methodology-editable-short"
+								immediate="true" value="#{oferta.areaLibre}">
+							</p:inputNumber>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtEdadPropiedadMetodologiaPHV"
+								maxlength="20" value="#{oferta.edadHomogenizada}"
+								disabled="true"
+								styleClass="ui-inputfield-methodology-disabled-short" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtUbicacionPisoMetodologiaPHV"
+								maxlength="20" value="#{oferta.ubicacionPiso}" disabled="true"
+								styleClass="ui-inputfield-methodology-disabled-short" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtSuperficieMetodologiaPHV"
+								maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-short"
+								value="#{oferta.superficie}" disabled="true" style="width:50px;" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtFactorHomogenizacionMetodologiaPHV"
+								disabled="true" maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-short"
+								value="#{oferta.factorHomogenizacion}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="." decimalPlaces="0"
+								id="txtValorM2HomogenizadoSinGarajeMetodologiaPHV"
+								disabled="true" maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-large"
+								value="#{oferta.valorMetroHomogenizadoSinGaraje}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtPrecioUnitarioAdministracionMetodologiaPHV"
+								disabled="true" maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-large"
+								value="#{oferta.precioUnitarioAdministracionM2}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtValorM2SinGarajeNoHomogenizadoMetodologiaPHV"
+								disabled="true" maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-large"
+								value="#{oferta.valorM2SinGarajeNoHomogenizado}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtValorM2HomogenizadoSinGSMetodologiaPHV" disabled="true"
+								maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-large"
+								value="#{oferta.valorM2HomogenizadoSinGarajeYAreaLibre}" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:commandButton icon="ui-icon-trash" title="Borrar Oferta"
+								actionListener="#{comparacionMercadoPHVentaBean.borrarOferta(oferta)}" />
+						</p:column>
+
+					</p:row>
+
+				</ui:repeat>
+
+				<p:row style=" background-color: #f0f1f2 !important;">
+					<p:column styleClass="ui-widget-header" colspan="11"
+						style="text-align: left; background-color: #f0f1f2 !important;">
+						<h:outputText value="Promedio:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="." id="txtPromedioPrecioUnitarioGarajePHV"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true"
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.promedioValorUnitarioGaraje}" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="." id="txtPromedioValorComercialPHV"
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.promedioValorComercial}"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="6"
+						style="text-align: left;">
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							id="txtPromedioValorM2HomogenizadoSinGarajePHV"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true"
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.promedioValorM2HomogenizadoSinGaraje}" />
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							id="txtPromedioValorm2SinGarajeNoHomogenizadoPHV"
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.promedioValorM2SinGarajeNoHomogenizado}"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							id="txtPromedioValorm2HomogenizadoSinGarajeAreaLibre"
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.promedioValorM2HomogenizadoSinGarajeAreaLibre}"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true" />
+					</p:column>
+					<p:column />
+				</p:row>
+
+				<p:row style="background-color:lightblue" id="panelSujetoPHV">
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="text-align: left;">
+						<h:outputText value="Sujeto:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber decimalSeparator="," thousandSeparator="."
+							immediate="true " decimalPlaces="0" id="txtSujetoPisoPHV"
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.piso}"
+							styleClass="ui-inputfield-methodology-editable-short">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoPHVentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber decimalSeparator="," thousandSeparator="."
+							decimalPlaces="2" id="txtSujetoAreaPHV"
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.area}"
+							styleClass="ui-inputfield-methodology-editable-short">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoPHVentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber decimalSeparator="," thousandSeparator="."
+							decimalPlaces="0" id="txtSujetoNoGarajesPHV"
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.garajes}"
+							styleClass="ui-inputfield-methodology-editable-short">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoPHVentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber decimalSeparator="," thousandSeparator="."
+							decimalPlaces="0" id="txtSujetoEdadPHV"
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.edad}"
+							styleClass="ui-inputfield-methodology-editable-short">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoPHVentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="6">
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="." id="txtSujetoValorAdministracionPHV"
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.valorAdministracion}"
+							styleClass="ui-inputfield-methodology-editable-large">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoPHVentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber decimalSeparator="," thousandSeparator="."
+							id="txtSujetoAreaLibrePHV"
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.areaLibre}"
+							styleClass="ui-inputfield-methodology-editable-short">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoPHVentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="5">
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							id="txtSujetoPrecioUnitarioAdministarcionm2PHV"
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.precioUnitarioAdministracionM2}"
+							styleClass="ui-inputfield-methodology-editable-large">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoPHVentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+					</p:column>
+					<p:column colspan="3" />
+				</p:row>
+
+				<p:row id="alertaPHV"
+					rendered="#{informeHipotecarioBean.mostrarMensajeValidacionSujetoPHVenta}">
+
+					<p:column colspan="23">
+						<p:panelGrid columns="2"
+							columnClasses="ui-grid-col-1,ui-grid-col-9" layout="grid"
+							styleClass="ui-panelgrid-blank"
+							style=" width:100%; text-align: center;  background-color: #fcf8e3; border: 2px solid #faebcc;">
+							<p:graphicImage name="images/warning-icon.png" height="70px" />
+							<h:outputText style="font-size: 20px;"
+								value="Tenga en cuenta que los valores del inmueble sujeto del avalúo son diferentes a los valores ingresados en el informe." />
+						</p:panelGrid>
+					</p:column>
+
+				</p:row>
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8"
+						style="background-color:#F2F5FA !important; text-align: center !important;">
+						<b>Convenciones</b>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Tipo proyecto:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h:selectOneMenu
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.tipoProyecto}"
+							style="width:170px"
+							styleClass="ui-select-item-methodology-editable">
+							<f:selectItems
+								value="#{comparacionMercadoPHVentaBean.metodoValuacion.tiposProyecto}"
+								var="var" itemValue="#{var}" itemLabel="#{var.value}" />
+						</h:selectOneMenu>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Promedio m2 Homogenizado:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.promedioM2Homogenizado}"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true" />
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="5">
+
+					</p:column>
+
+				</p:row>
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>P:</b> Peor
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="background-color:#F2F5FA !important;">
+						<b>S:</b> Similar
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="background-color:#F2F5FA !important;">
+						<b>M:</b> Mejor
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Factor de superficie:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h:selectOneMenu
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.factorSuperficie}"
+							style="width:170px"
+							styleClass="ui-select-item-methodology-editable">
+							<f:selectItems value="#{comparacionMercadoPHVentaBean.factores}"
+								var="factorSuperficie" itemValue="#{factorSuperficie}"
+								itemLabel="#{factorSuperficie}" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Promedio m2:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.promedioM2}"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true" />
+
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="5">
+
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>NP:</b> Notoriamente Peor
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="background-color:#F2F5FA !important;">
+						<b>SP:</b> Sensiblemente Peor 
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="background-color:#F2F5FA !important;">
+						<b>MM:</b> Mucho mejor
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Factor de Edad" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h:selectOneMenu
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.factorEdad}"
+							style="width:170px"
+							styleClass="ui-select-item-methodology-editable">
+							<f:selectItems
+								value="#{comparacionMercadoPHVentaBean.factoresEdad}"
+								var="factorEdad" itemValue="#{factorEdad}"
+								itemLabel="#{factorEdad}" />
+						</h:selectOneMenu>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Media aritmética:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.mediaAritmetica}"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true" />
+
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="5">
+
+					</p:column>
+
+				</p:row>
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>MP:</b> Mucho peor
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="background-color:#F2F5FA !important;">
+						<b>SM:</b> Sensiblemente mejor
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="background-color:#F2F5FA !important;">
+						<b>NM:</b> Notoriamente mejor
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Valor M2 área libre:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							styleClass="ui-inputfield-methodology-editable-large"
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.valorM2AreaLibre}"
+							style="text-align:right;">
+						</p:inputNumber>
+
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Desviación Estándar:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.desviacionEstandar}"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true" />
+
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="5">
+
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="13" />
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Coef. de Variación:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+
+						<p:inputNumber symbol="%" symbolPosition="s" decimalSeparator=","
+							thousandSeparator="."
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.coeficienteVariacion}"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true" />
+
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="5" />
+				</p:row>
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="13" />
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Valor m2 Hom. GJ Privado:"
+							rendered="#{comparacionMercadoPHVentaBean.mostrarValorHomogenizacionGarajePrivado}" />
+						<h:outputText value="Valor m2 Hom. GJ Uso exclusivo:"
+							rendered="#{comparacionMercadoPHVentaBean.mostrarValorHomogenizacionGarajeExclusivo}" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.valorm2homogenizadoGJ}"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true"
+							rendered="#{comparacionMercadoPHVentaBean.mostrarValorHomogenizacionGarajePrivado}" />
+
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							value="#{comparacionMercadoPHVentaBean.metodoValuacion.valorm2homogenizadoGJ}"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true"
+							rendered="#{comparacionMercadoPHVentaBean.mostrarValorHomogenizacionGarajeExclusivo}" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="5" />
+				</p:row>
+
+			</p:panelGrid>
+		</h:panelGroup>
+
+	</p:tab>
+
+</ui:composition>

@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog header="Tipo de avalúo" widgetVar="tipoAvaluoDialog"
+		modal="false" showEffect="fade" hideEffect="fade" resizable="false"
+		width="400">
+		<h:form id="formTipoAvaluo">
+			<h:panelGrid columns="1" style="width: 99%">
+				<p:row>
+					<p:column>
+						<h:outputLabel for="formatoAvaluo" value="Formato avalúo: " />
+					</p:column>
+					<p:column>
+						<h:selectOneMenu id="formatoAvaluo"
+							value="#{listadoAvaluosBean.formatoInforme}"
+							label="Formato avalúo" style="width: 200px" required="true">
+							<p:ajax process="formatoAvaluo" update=":formTipoAvaluo" />
+							<f:selectItems value="#{listadoAvaluosBean.formatosInforme}"
+								var="formatoInforme" itemValue="#{formatoInforme}"
+								itemLabel="#{formatoInforme.value()}" />
+						</h:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column
+						rendered="#{listadoAvaluosBean.avaluo.tipoAvaluo.nombre.contains('Comercial')}">
+						<h:outputLabel for="sector" value="Sector: " />
+					</p:column>
+					<p:column
+						rendered="#{listadoAvaluosBean.avaluo.tipoAvaluo.nombre.contains('Comercial')}">
+						<h:selectOneMenu id="sector"
+							value="#{listadoAvaluosBean.avaluo.sector}" style="width:100px"
+							required="#{listadoAvaluosBean.avaluo.tipoAvaluo eq 'Comercial'}">
+							<f:selectItem itemLabel="Seleccione ..." itemValue=""
+								noSelectionOption="true" />
+							<f:selectItem itemLabel="Urbano" itemValue="1" />
+							<f:selectItem itemLabel="Rural" itemValue="2" />
+						</h:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column>
+						<center>
+							<p:commandButton value="Continuar"
+								action="#{listadoAvaluosBean.confirmarTipoAvaluo()}"
+								icon="ui-icon-check" styleClass="button_green" />
+						</center>
+					</p:column>
+				</p:row>
+			</h:panelGrid>
+			<input type="hidden" name="${_csrf.parameterName}"
+				value="${_csrf.token}" />
+		</h:form>
+	</p:dialog>
+
+</ui:composition>

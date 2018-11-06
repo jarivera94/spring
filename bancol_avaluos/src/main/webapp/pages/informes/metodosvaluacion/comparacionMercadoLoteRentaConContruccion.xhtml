@@ -1,0 +1,609 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:tab id="tabLoteRentaConConstruccion"
+		title="Comparación de mercado Lote en renta con construcción"
+		rendered="#{informeHipotecarioBean.mostrarMetodoComparacionMercadoLoteRentaConContruccion}">
+
+		<p:commandButton icon="ui-icon-plusthick" value="Nueva Oferta"
+			update="ofertasLCR"
+			actionListener="#{comparacionMercadoLoteConstruccionRentaBean.adicionarOferta}"
+			global="true">
+		</p:commandButton>
+
+		<p:commandButton value="Calcular Metodologia"
+			actionListener="#{comparacionMercadoLoteConstruccionRentaBean.calcular}"
+			icon="ui-icon-gear" styleClass="button_green" global="true">
+		</p:commandButton>
+
+		<h:panelGroup id="ofertasLCR">
+			<p:panelGrid style="width:80%" styleClass="ui-panelgrid-methodology">
+
+				<p:row
+					style="border-bottom: 1px solid #00aad8 !important; background-color:#F2F5FA !important;">
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Localización" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Fuente" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Edad" />
+					</p:column>
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Comparación" />
+					</p:column>
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Precio Unitario m2/mes" />
+					</p:column>
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Área lote m2" />
+					</p:column>
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Área const. m2" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Ubi" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Cons" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Acab" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Neg" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Edad" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Const/Ter" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Lote" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="F. H." />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Valor Unitario resultante m2/mes" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Renta mensual" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Área construcción/ Área terreno" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="" />
+					</p:column>
+
+				</p:row>
+
+				<ui:repeat
+					value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.ofertasConstruccionRenta}"
+					var="oferta">
+
+					<p:row style="border-bottom: 1px solid #00aad8 !important;">
+						<p:column styleClass="ui-widget-header">
+							<p:inputText value="#{oferta.localizacion}"
+								styleClass="ui-inputfield-methodology-editable"
+								style="width:100px;" />
+						</p:column>
+						<p:column styleClass="ui-widget-header" width="">
+							<p:inputText id="txtFuenteMetodologiaLCR" maxlength="1000"
+								value="#{oferta.fuente}"
+								styleClass="ui-inputfield-methodology-editable"
+								style="width:100px;" />
+
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalPlaces="0"
+								styleClass="ui-inputfield-methodology-editable-short"
+								id="txtEdadMetodologiaLCR" maxlength="20" value="#{oferta.edad}"
+								style="width:20px;" />
+
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+
+							<h:selectOneMenu id="cmbComparacionMetodologiaLCR"
+								style="width:100px"
+								styleClass="ui-select-item-methodology-editable"
+								value="#{oferta.comparacion}">
+								<f:selectItems
+									value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.tiposComparacion}"
+									var="var" itemValue="#{var}" itemLabel="#{var.value}" />
+							</h:selectOneMenu>
+
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtPrecioUnitarioM2MesMetodologiaLCR" maxlength="20"
+								value="#{oferta.precioUnitarioM2}" disabled="true"
+								styleClass="ui-inputfield-methodology-disabled-large" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtAreaLoteM2MetodologiaLCR"
+								maxlength="20" value="#{oferta.areaLoteM2}"
+								styleClass="ui-inputfield-methodology-editable-short" />
+
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtAreaConstruidaMetodologiaLCR"
+								maxlength="20" value="#{oferta.areaConstruidaM2}"
+								styleClass="ui-inputfield-methodology-editable-short" />
+
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+
+							<h:selectOneMenu id="txtUbicacionMetodologiaLCR"
+								style="width:50px" value="#{oferta.ubicacion}"
+								styleClass="ui-select-item-methodology-editable">
+								<f:selectItems
+									value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.factoresHomologacion}"
+									var="ubicacion" itemValue="#{ubicacion}"
+									itemLabel="#{ubicacion.value}" />
+							</h:selectOneMenu>
+
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+
+							<h:selectOneMenu id="txtConservacionMetodologiaLCR"
+								style="width:50px"
+								value="#{oferta.factorHomologacionConservacion}"
+								styleClass="ui-select-item-methodology-editable">
+								<f:selectItems
+									value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.factoresHomologacion}"
+									var="ubicacion" itemValue="#{ubicacion}"
+									itemLabel="#{ubicacion.value}" />
+							</h:selectOneMenu>
+
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+
+							<h:selectOneMenu id="cmbAcabadosMetodologiaLCR"
+								style="width:50px"
+								styleClass="ui-select-item-methodology-editable"
+								value="#{oferta.acabados}">
+								<f:selectItems
+									value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.factoresHomologacion}"
+									var="ubicacion" itemValue="#{ubicacion}"
+									itemLabel="#{ubicacion.value}" />
+							</h:selectOneMenu>
+
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<h:selectOneMenu id="cmbNegociacionMetodologiaLCR"
+								style="width:50px"
+								styleClass="ui-select-item-methodology-editable"
+								value="#{oferta.negociacion}">
+								<f:selectItems
+									value="#{comparacionMercadoLoteConstruccionRentaBean.factoresNegociacion}"
+									var="var" itemValue="#{var}" itemLabel="#{var}" />
+							</h:selectOneMenu>
+
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtEdadPropiedadMetodologiaLCR"
+								maxlength="20" value="#{oferta.edadHomogenizada}"
+								disabled="true"
+								styleClass="ui-inputfield-methodology-disabled-short" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtConstruccionTerrenoMetodologiaLCR"
+								maxlength="20" value="#{oferta.factorHomologacionConstruccion}"
+								disabled="true"
+								styleClass="ui-inputfield-methodology-disabled-short" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtLoteMetodologiaLCR" maxlength="20"
+								value="#{oferta.factorHomologacionLote}" disabled="true"
+								styleClass="ui-inputfield-methodology-disabled-short" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtFactorHomogenizacionMetodologiaLCR"
+								disabled="true" maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-short"
+								value="#{oferta.factorHomogenizacion}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtValorUnitarioresultanteM2MesMetodologiaLCR"
+								disabled="true" maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-large"
+								value="#{oferta.valorUnitarioResultanteM2}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtRentaMensualMetodologiaLCR" maxlength="20"
+								styleClass="ui-inputfield-methodology-editable-large"
+								value="#{oferta.valorOferta}" />
+
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2"
+								id="txtAreaConstruccionAreaTerrenoMetodologiaLCR"
+								disabled="true" maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-large"
+								value="#{oferta.areaConstruccion}" />
+
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:commandButton icon="ui-icon-trash" title="Borrar Oferta"
+								actionListener="#{comparacionMercadoLoteConstruccionRentaBean.borrarOferta(oferta)}" />
+						</p:column>
+					</p:row>
+
+				</ui:repeat>
+
+				<p:row style="background-color:lightblue" id="panelSujetoLCR">
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="text-align: right;">
+						<h:outputText value="Sujeto:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber decimalSeparator="," thousandSeparator="."
+							decimalPlaces="0" id="txtEdadMetodologiaLoteContruccionRenta"
+							styleClass="ui-inputfield-methodology-editable-short"
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.edad}">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoLoteConstruccionRentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="text-align: left;">
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber decimalSeparator="," thousandSeparator="."
+							decimalPlaces="3" id="txtAreaLoteMetodologiaLoteContruccionRenta"
+							styleClass="ui-inputfield-methodology-editable-short"
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.areaLote}">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoLoteConstruccionRentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber decimalSeparator="," thousandSeparator="."
+							decimalPlaces="2"
+							id="txtAreaConstruidaMetodologiaLoteContruccionRenta"
+							styleClass="ui-inputfield-methodology-editable-short"
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.areaConsttruida}">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoLoteConstruccionRentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="8"
+						style="text-align: right;">
+						<h:outputText value="Promedio:" />
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							id="txtValorUnitarioResultandteMetodologiaLoteContruccionRenta"
+							disabled="true"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.promedioValorUnitarioResultanteM2Mes}" />
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							id="txtRentaMensualMetodologiaLoteContruccionRenta"
+							disabled="true"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.promedioRentaMensual}" />
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber decimalSeparator="," thousandSeparator="."
+							decimalPlaces="2"
+							id="txtAreaConstruccionAreaRentaMetodologiaLoteContruccionRenta"
+							disabled="true"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.promedioAreaConstruccionAreaTerreno}" />
+					</p:column>
+					<p:column />
+				</p:row>
+				<p:row id="alertaLCR"
+					rendered="#{informeHipotecarioBean.mostrarMensajeValidacionSujetoLoteconstruccionRenta}">
+
+					<p:column colspan="20">
+						<p:panelGrid columns="2"
+							columnClasses="ui-grid-col-1,ui-grid-col-9" layout="grid"
+							styleClass="ui-panelgrid-blank"
+							style=" width:100%; text-align: center;  background-color: #fcf8e3; border: 2px solid #faebcc;">
+							<p:graphicImage name="images/warning-icon.png" height="70px" />
+							<h:outputText style="font-size: 20px;"
+								value="Tenga en cuenta que los valores del inmueble sujeto del avalúo son diferentes a los valores ingresados en el informe." />
+						</p:panelGrid>
+					</p:column>
+
+				</p:row>
+
+				<p:row>
+
+					<p:column styleClass="ui-widget-header" colspan="6"
+						style="background-color:#F2F5FA !important; text-align: center !important;">
+						<b>Convenciones</b>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="4"
+						style="text-align: left;">
+						<h:outputText value="Factor de homogenización Lote:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h:selectOneMenu
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.factorHomogenizacionLote}"
+							style="width:100px"
+							styleClass="ui-select-item-methodology-editable">
+							<f:selectItem itemValue="1" itemLabel="1" />
+							<f:selectItems
+								value="#{comparacionMercadoLoteConstruccionRentaBean.factores}"
+								var="factorSuperficie" itemValue="#{factorSuperficie}"
+								itemLabel="#{factorSuperficie}" />
+						</h:selectOneMenu>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="4"
+						style="text-align: left;">
+						<h:outputText value="Deducciones:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							styleClass="ui-inputfield-methodology-editable-large"
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.deducciones}" />
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="2" />
+
+				</p:row>
+
+
+				<p:row>
+
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>P:</b> Peor
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>S:</b> Similar
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>M:</b> Mejor
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="4"
+						style="text-align: left;">
+						<h:outputText
+							value="Factor de homogenización Construcción / Terreno:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h:selectOneMenu
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.factorHomogenizacionConstruccionTerreno}"
+							style="width:100px"
+							styleClass="ui-select-item-methodology-editable">
+							<f:selectItems
+								value="#{comparacionMercadoLoteConstruccionRentaBean.factores}"
+								var="factorEdad" itemValue="#{factorEdad}"
+								itemLabel="#{factorEdad}" />
+						</h:selectOneMenu>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="4"
+						style="text-align: left;">
+						<h:outputText value="Renta Bruta MENSUAL (R.B.M.):" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="." disabled="true"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.rentaBrutaMensual}" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2" />
+				</p:row>
+
+				<p:row>
+
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>NP:</b> Notoriamente Peor
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>SP:</b> Sensiblemente Peor 
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>MM:</b> Mucho mejor
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="4"
+						style="text-align: left;">
+						<h:outputText value="Factor de homogenización Edad:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h:selectOneMenu
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.factorHomogenizacionEdad}"
+							style="width:100px"
+							styleClass="ui-select-item-methodology-editable">
+							<f:selectItems
+								value="#{comparacionMercadoLoteConstruccionRentaBean.factoresEdad}"
+								var="factorEdad" itemValue="#{factorEdad}"
+								itemLabel="#{factorEdad}" />
+						</h:selectOneMenu>
+
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="4"
+						style="text-align: left;">
+						<h:outputText value="Renta Neta MENSUAL (R.N.M.) [R.B.M.-D]:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="." disabled="true"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.rentaNetaMensual}" />
+
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2" />
+				</p:row>
+
+				<p:row>
+
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>MP:</b> Mucho peor
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>SM:</b> Sensiblemente mejor
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>NM:</b> Notoriamente mejor
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="4"
+						style="text-align: left;">
+						<h:outputText value="Tasa Aplicada:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+
+						<p:inputNumber symbol="% " symbolPosition="s" minValue="0.00"
+							maxValue="100.00" decimalSeparator="," thousandSeparator="."
+							styleClass="ui-inputfield-methodology-editable-large"
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.tasaAplicada}" />
+
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="4"
+						style="text-align: left;">
+						<h:outputText value="Renta Neta Anual (R.N.A.) [R.N.M. x 12]:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="." disabled="true"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.rentaNetaAnual}" />
+
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2" />
+				</p:row>
+
+				<p:row>
+
+
+					<p:column styleClass="ui-widget-header" colspan="12" />
+					<p:column styleClass="ui-widget-header" colspan="4"
+						style="text-align: left;">
+						<h:outputText value="Valor por CAPITALIZACIÓN:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="." disabled="true"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.valorCapitalizacion}" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2" />
+				</p:row>
+
+
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="12" />
+					<p:column styleClass="ui-widget-header" colspan="4"
+						style="text-align: left;">
+						<h:outputText value="Valor m2 Integral C/T Homogenizado:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="." disabled="true"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							value="#{comparacionMercadoLoteConstruccionRentaBean.metodoValuacion.valorM2HomogenizadoSinGaraje}" />
+
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2" />
+				</p:row>
+
+			</p:panelGrid>
+		</h:panelGroup>
+
+	</p:tab>
+
+</ui:composition>

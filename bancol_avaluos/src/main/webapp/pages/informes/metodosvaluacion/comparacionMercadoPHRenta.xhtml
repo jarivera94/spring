@@ -1,0 +1,820 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:tab id="tabPHRenta" title="Comparación de mercado PH en Renta "
+		rendered="#{informeHipotecarioBean.mostrarMetodoComparacionMercadoPHRenta}">
+
+		<p:commandButton icon="ui-icon-plusthick" value="Nueva Oferta"
+			update="ofertasPHR"
+			actionListener="#{comparacionMercadoPHRentaBean.adicionarOferta}"
+			global="true">
+		</p:commandButton>
+
+		<p:commandButton value="Calcular Metodologia"
+			actionListener="#{comparacionMercadoPHRentaBean.calcular}"
+			icon="ui-icon-gear" styleClass="button_green" global="true">
+		</p:commandButton>
+
+
+		<h:panelGroup id="ofertasPHR">
+			<p:panelGrid style="width:80%" styleClass="ui-panelgrid-methodology">
+
+				<p:row
+					style="border-bottom: 1px solid #00aad8 !important; background-color:#F2F5FA !important;">
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Localización" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Fuente" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Piso" />
+					</p:column>
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Área" />
+					</p:column>
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Tipo Área" />
+					</p:column>
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="No. garajes" />
+					</p:column>
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Edad (años)" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="ubi" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Acab" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Edif" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Neg" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Renta mensual" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Valor Administración" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Área libre" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Edad" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Ubi/Pi" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Sup" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="F.H." />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Precio unitario garaje" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Valor m2 homogenizado sin garaje" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="Precio unitario administración m2" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="valor m2 sin garaje no homogenizado" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText
+							value="Valor m2 homogenizado sin Garaje y aire libre" />
+					</p:column>
+
+					<p:column
+						styleClass="ui-widget-header ui-column-header-grid-methodology">
+						<h:outputText value="" />
+					</p:column>
+
+				</p:row>
+
+				<ui:repeat
+					value="#{comparacionMercadoPHRentaBean.metodoValuacion.ofertasPH}"
+					var="oferta">
+
+					<p:row style="border-bottom: 1px solid #00aad8 !important;">
+						<p:column styleClass="ui-widget-header">
+							<p:inputText value="#{oferta.localizacion}"
+								styleClass="ui-inputfield-methodology-editable"
+								style="width:100px;" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header" width="">
+							<p:inputText id="txtFuenteMetodologiaPHR" maxlength="1000"
+								value="#{oferta.fuente}"
+								styleClass="ui-inputfield-methodology-editable"
+								style="width:100px;" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalPlaces="0"
+								styleClass="ui-inputfield-methodology-editable-short"
+								id="txtPisoMetodologiaPHR" maxlength="20" value="#{oferta.piso}" />
+
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtAreaMetodologiaPHR" maxlength="20"
+								styleClass="ui-inputfield-methodology-editable-short"
+								value="#{oferta.area}" />
+
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<h:selectOneMenu id="txtTipoAreaMetodologiaPHR"
+								value="#{oferta.tipoArea}"
+								styleClass="ui-select-item-methodology-editable"
+								style="width:100px">
+								<f:selectItems
+									value="#{comparacionMercadoPHRentaBean.metodoValuacion.tiposArea}"
+									var="tipoArea" itemValue="#{tipoArea}"
+									itemLabel="#{tipoArea.value}" />
+
+							</h:selectOneMenu>
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalPlaces="0" id="txtGarajesMetodologiaPHR"
+								maxlength="20"
+								styleClass="ui-inputfield-methodology-editable-short"
+								value="#{oferta.garajes}" />
+
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+
+							<p:inputNumber decimalPlaces="0" id="txtEdadMetodologiaPHR"
+								maxlength="20" value="#{oferta.edad}"
+								styleClass="ui-inputfield-methodology-editable-short" />
+
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+
+							<h:selectOneMenu id="cmbUbicacionMetodologiaPHR"
+								style="width:50px" value="#{oferta.ubicacion}"
+								styleClass="ui-select-item-methodology-editable">
+								<f:selectItems
+									value="#{comparacionMercadoPHRentaBean.metodoValuacion.factoresHomologacion}"
+									var="ubicacion" itemValue="#{ubicacion}"
+									itemLabel="#{ubicacion.value}" />
+							</h:selectOneMenu>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+
+							<h:selectOneMenu id="cmbAcabadosMetodologiaPHR"
+								style="width:50px"
+								styleClass="ui-select-item-methodology-editable"
+								value="#{oferta.acabados}">
+								<f:selectItems
+									value="#{comparacionMercadoPHRentaBean.metodoValuacion.factoresHomologacion}"
+									var="ubicacion" itemValue="#{ubicacion}"
+									itemLabel="#{ubicacion.value}" />
+
+							</h:selectOneMenu>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+
+							<h:selectOneMenu id="cmbEdificioConjuntoMetodologiaPHR"
+								style="width:50px"
+								styleClass="ui-select-item-methodology-editable"
+								value="#{oferta.edificioConjunto}">
+								<f:selectItems
+									value="#{comparacionMercadoPHRentaBean.metodoValuacion.factoresHomologacion}"
+									var="ubicacion" itemValue="#{ubicacion}"
+									itemLabel="#{ubicacion.value}" />
+
+							</h:selectOneMenu>
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+
+							<h:selectOneMenu id="cmbNegociacionMetodologiaPHR"
+								style="width:50px"
+								styleClass="ui-select-item-methodology-editable"
+								value="#{oferta.negociacion}">
+								<f:selectItems
+									value="#{comparacionMercadoPHRentaBean.factoresNegociacion}"
+									var="var" itemValue="#{var}" itemLabel="#{var}" />
+							</h:selectOneMenu>
+
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtrentaMensualMetodologiaPHR" maxlength="20"
+								styleClass="ui-inputfield-methodology-editable-large"
+								value="#{oferta.valorOferta}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtValorAdministracionMetodologiaPHR" maxlength="20"
+								styleClass="ui-inputfield-methodology-editable-large"
+								value="#{oferta.valorAdministracion}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtAreaLibreMetodologiaPHR" maxlength="20"
+								styleClass="ui-inputfield-methodology-editable-short"
+								value="#{oferta.areaLibre}" />
+
+						</p:column>
+
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtEdadPropiedadMetodologiaPHR"
+								maxlength="20" value="#{oferta.edadHomogenizada}"
+								disabled="true"
+								styleClass="ui-inputfield-methodology-disabled-short" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtUbicacionPisoMetodologiaPHR"
+								maxlength="20" value="#{oferta.ubicacionPiso}" disabled="true"
+								styleClass="ui-inputfield-methodology-disabled-short" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtSuperficieMetodologiaPHR"
+								maxlength="20" value="#{oferta.superficie}" disabled="true"
+								styleClass="ui-inputfield-methodology-disabled-short" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber decimalSeparator="," thousandSeparator="."
+								decimalPlaces="2" id="txtFactorHomogenizacionMetodologiaPHR"
+								disabled="true" maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-large"
+								value="#{oferta.factorHomogenizacion}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtPrecioUnitarioGarajeMetodologiaPHR" disabled="true"
+								maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-large"
+								value="#{oferta.precioUnitarioGaraje}" />
+
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtValorM2HomogenizadoSinGarajeMetodologiaPHR"
+								disabled="true" maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-large"
+								value="#{oferta.valorMetroHomogenizadoSinGaraje}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtPrecioUnitarioAdministracionMetodologiaPHR"
+								disabled="true" maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-large"
+								value="#{oferta.precioUnitarioAdministracionM2}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtValorM2SinGarajeNoHomogenizadoMetodologiaPHR"
+								disabled="true" maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-large"
+								value="#{oferta.valorM2SinGarajeNoHomogenizado}" />
+						</p:column>
+
+						<p:column styleClass="ui-widget-header">
+							<p:inputNumber symbol="$ " symbolPosition="p"
+								decimalSeparator="," thousandSeparator="."
+								id="txtValorM2HomogenizadoSinGSMetodologiaPHR" disabled="true"
+								maxlength="20"
+								styleClass="ui-inputfield-methodology-disabled-large"
+								value="#{oferta.valorM2HomogenizadoSinGarajeYAreaLibre}" />
+						</p:column>
+						<p:column styleClass="ui-widget-header">
+							<p:commandButton icon="ui-icon-trash" title="Borrar Oferta"
+								actionListener="#{comparacionMercadoPHRentaBean.borrarOferta(oferta)}" />
+						</p:column>
+					</p:row>
+
+				</ui:repeat>
+
+				<p:row style=" background-color: #f0f1f2 !important;">
+					<p:column styleClass="ui-widget-header" colspan="11"
+						style="text-align: left;">
+						<h:outputText value="Promedio:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="." id="txtPromedioValorComercialPHR"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.promedioValorComercial}"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="6"
+						style="text-align: left;">
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="." id="txtPromedioPrecioUnitarioGarajePHR"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.promedioValorUnitarioGaraje}" />
+
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							id="txtPromedioValorM2HomogenizadoSinGarajePHR"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.promedioValorM2HomogenizadoSinGaraje}" />
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="1">
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							id="txtPromedioValorm2SinGarajeNoHomogenizadoPHR"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.promedioValorM2SinGarajeNoHomogenizado}"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							id="txtPromedioValorm2HomogenizadoSinGarajeAreaLibrePHR"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.promedioValorM2HomogenizadoSinGarajeAreaLibre}" />
+					</p:column>
+					<p:column />
+
+				</p:row>
+
+				<p:row style="background-color:lightblue" id="panelSujetoPHR">
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="text-align: left;">
+						<h:outputText value="Sujeto:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber decimalSeparator="," thousandSeparator="."
+							decimalPlaces="0" id="txtSujetoPisoPHR"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.piso}"
+							styleClass="ui-inputfield-methodology-editable-short">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoPHRentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber decimalSeparator="," thousandSeparator="."
+							decimalPlaces="2" id="txtSujetoAreaPHR"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.area}"
+							styleClass="ui-inputfield-methodology-editable-short">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoPHRentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber decimalSeparator="," thousandSeparator="."
+							decimalPlaces="0" id="txtSujetoNoGarajesPHR"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.garajes}"
+							styleClass="ui-inputfield-methodology-editable-short">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoPHRentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber decimalSeparator="," thousandSeparator="."
+							decimalPlaces="0" id="txtSujetoEdadPHR"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.edad}"
+							styleClass="ui-inputfield-methodology-editable-short">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoPHRentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="5">
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="." id="txtSujetoValorAdministracionPHR"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.valorAdministracion}"
+							styleClass="ui-inputfield-methodology-editable-large">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoPHRentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+
+					</p:column>
+
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber decimalSeparator="," thousandSeparator="."
+							id="txtSujetoAreaLibrePHR"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.areaLibre}"
+							styleClass="ui-inputfield-methodology-editable-short">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoPHRentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="6">
+					</p:column>
+
+
+					<p:column styleClass="ui-widget-header">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							id="txtSujetoPrecioUnitarioAdministarcionm2PHR"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.precioUnitarioAdministracionM2}"
+							styleClass="ui-inputfield-methodology-editable-large">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.validarCambiosCamposSujeto(comparacionMercadoPHRentaBean.metodoValuacion)}"
+								global="false" />
+						</p:inputNumber>
+
+					</p:column>
+
+					<p:column colspan="3" />
+				</p:row>
+
+				<p:row id="alertaPHR"
+					rendered="#{informeHipotecarioBean.mostrarMensajeValidacionSujetoPHRenta}">
+
+					<p:column colspan="23">
+						<p:panelGrid columns="2"
+							columnClasses="ui-grid-col-1,ui-grid-col-9" layout="grid"
+							styleClass="ui-panelgrid-blank"
+							style=" width:100%; text-align: center;  background-color: #fcf8e3; border: 2px solid #faebcc;">
+							<p:graphicImage name="images/warning-icon.png" height="70px" />
+							<h:outputText style="font-size: 20px;"
+								value="Tenga en cuenta que los valores del inmueble sujeto del avalúo son diferentes a los valores ingresados en el informe." />
+						</p:panelGrid>
+					</p:column>
+
+				</p:row>
+
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8"
+						style="background-color:#F2F5FA !important; text-align: center !important;">
+						<b>Convenciones</b>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Tipo proyecto:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h:selectOneMenu
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.tipoProyecto}"
+							style="width:170px"
+							styleClass="ui-select-item-methodology-editable">
+
+							<f:selectItems
+								value="#{comparacionMercadoPHRentaBean.metodoValuacion.tiposProyecto}"
+								var="var" itemValue="#{var}" itemLabel="#{var.value}" />
+
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="5"
+						style="text-align: left;">
+						<h:outputText value="Renta Bruta MENSUAL (R.B.M.):" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.rentaBrutaMensual}"
+							style="text-align:right;" />
+
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="3" />
+
+				</p:row>
+
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>P:</b> Peor
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="background-color:#F2F5FA !important;">
+						<b>S:</b> Similar
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="background-color:#F2F5FA !important;">
+						<b>M:</b> Mejor
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Factor de superficie:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h:selectOneMenu
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.factorSuperficie}"
+							style="width:100px"
+							styleClass="ui-select-item-methodology-editable">
+							<f:selectItems value="#{comparacionMercadoPHRentaBean.factores}"
+								var="factorSuperficie" itemValue="#{factorSuperficie}"
+								itemLabel="#{factorSuperficie}" />
+						</h:selectOneMenu>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="5"
+						style="text-align: left;">
+						<h:outputText value="Deducciones:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							styleClass="ui-inputfield-methodology-editable-large"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.deducciones}"
+							style="text-align:right;" />
+
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="3" />
+
+				</p:row>
+
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>NP:</b> Notoriamente Peor
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="background-color:#F2F5FA !important;">
+						<b>SP:</b> Sensiblemente Peor 
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="background-color:#F2F5FA !important;">
+						<b>MM:</b> Mucho mejor
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Factor de Edad" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h:selectOneMenu
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.factorEdad}"
+							style="width:170px"
+							styleClass="ui-select-item-methodology-editable">
+							<f:selectItems
+								value="#{comparacionMercadoPHRentaBean.factoresEdad}"
+								var="factorEdad" itemValue="#{factorEdad}"
+								itemLabel="#{factorEdad}" />
+						</h:selectOneMenu>
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="5"
+						style="text-align: left;">
+						<h:outputText value="Renta Neta MENSUAL (R.N.M.) [R.B.M.-D]:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.rentaNetaMensual}"
+							style="text-align:right;" />
+
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="3" />
+
+				</p:row>
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="2"
+						style="background-color:#F2F5FA !important;">
+						<b>MP:</b> Mucho peor
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="background-color:#F2F5FA !important;">
+						<b>SM:</b> Sensiblemente mejor
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="background-color:#F2F5FA !important;">
+						<b>NM:</b> Notoriamente mejor
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Valor M2 área libre:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							styleClass="ui-inputfield-methodology-editable-large"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.valorM2AreaLibre}"
+							style="text-align:right;" />
+
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="5"
+						style="text-align: left;">
+						<h:outputText value="Renta Neta Anual (R.N.A.) [R.N.M. x 12]:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.rentaNetaAnual}"
+							style="text-align:right;" />
+
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3" />
+				</p:row>
+
+				<p:row>
+
+					<p:column styleClass="ui-widget-header" colspan="8" />
+
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputLabel value="Valor Unitario garaje:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							styleClass="ui-inputfield-methodology-editable-large"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.valorUnitarioGaraje}"
+							style="text-align:right;" />
+
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="5"
+						style="text-align: left;">
+						<h:outputText value="Valor por CAPITALIZACIÓN:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.valorCapitalizacion}"
+							style="text-align:right;" />
+
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3" />
+				</p:row>
+
+				<p:row>
+
+					<p:column styleClass="ui-widget-header" colspan="8" />
+
+					<p:column styleClass="ui-widget-header" colspan="3"
+						style="text-align: left;">
+						<h:outputText value="Tasa Aplicada:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:inputNumber symbol="% " symbolPosition="s" minValue="0.00"
+							maxValue="100.00" decimalSeparator="," thousandSeparator="."
+							styleClass="ui-inputfield-methodology-editable-large"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.tasaAplicada}"
+							style="text-align:right;" />
+
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="5"
+						style="text-align: left;">
+						<h:outputText value="Valor m2 HOM. SIN Garaje:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true"
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.valorM2HomogenizadoSinGaraje}"
+							style="text-align:right;" />
+
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3" />
+				</p:row>
+
+				<p:row>
+
+					<p:column styleClass="ui-widget-header" colspan="13" />
+
+					<p:column styleClass="ui-widget-header" colspan="5"
+						style="text-align: left;">
+						<h:outputText value="Valor m2 Hom. GJ Privado:"
+							rendered="#{comparacionMercadoPHRentaBean.mostrarValorHomogenizacionGarajePrivado}" />
+						<h:outputText value="Valor m2 Hom. GJ Uso exclusivo:"
+							rendered="#{comparacionMercadoPHRentaBean.mostrarValorHomogenizacionGarajeExclusivo}" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.valorm2homogenizadoGJ}"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true"
+							rendered="#{comparacionMercadoPHRentaBean.mostrarValorHomogenizacionGarajePrivado}" />
+
+						<p:inputNumber symbol="$ " symbolPosition="p" decimalSeparator=","
+							thousandSeparator="."
+							value="#{comparacionMercadoPHRentaBean.metodoValuacion.valorm2homogenizadoGJ}"
+							styleClass="ui-inputfield-methodology-disabled-large"
+							disabled="true"
+							rendered="#{comparacionMercadoPHRentaBean.mostrarValorHomogenizacionGarajeExclusivo}" />
+					</p:column>
+
+					<p:column styleClass="ui-widget-header" colspan="3" />
+
+				</p:row>
+
+			</p:panelGrid>
+		</h:panelGroup>
+
+	</p:tab>
+
+</ui:composition>

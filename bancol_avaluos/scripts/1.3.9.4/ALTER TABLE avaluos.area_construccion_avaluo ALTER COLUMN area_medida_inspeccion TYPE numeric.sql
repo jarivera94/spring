@@ -1,0 +1,1 @@
+ALTER TABLE avaluos.area_construccion_avaluo ALTER COLUMN area_medida_inspeccion TYPE numeric

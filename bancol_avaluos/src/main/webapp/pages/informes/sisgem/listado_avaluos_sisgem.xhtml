@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:o="http://omnifaces.org/ui"
+    xmlns:of="http://omnifaces.org/functions"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+
+<h:body >
+
+	<ui:composition template="/template/bancol_avaluos_sisgem_template.xhtml">
+		 			<f:ajax event="load" listener="#{listadoAvaluosSisgemBean.onLoad}" />
+
+		<ui:define name="content">
+			<p:panelGrid columns="2" columnClasses="ui-grid-col-1,ui-grid-col-9"
+				layout="grid" styleClass="ui-panelgrid-blank"
+				style=" width:100%; text-align: center;  background-color: #fcf8e3; border: 2px solid #faebcc;">
+				<p:graphicImage name="images/warning-icon.png" height="70px" />
+				<h:outputText style="font-size: 20px;"
+					value="#{listadoAvaluosSisgemBean.mensajeValidacion}" />
+			</p:panelGrid>
+		</ui:define>
+
+		<f:metadata>
+			<f:viewAction action="#{listadoAvaluosSisgemBean.onLoad}" />
+		</f:metadata>
+
+	</ui:composition>
+</h:body>
+</html>

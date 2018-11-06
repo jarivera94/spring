@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:dialog header="Información de honorarios"
+		widgetVar="informacionHonorarios" modal="false" showEffect="fade"
+		hideEffect="fade" resizable="false">
+
+
+		<h:form id="informacion-honorarios">
+			<p:panelGrid style="width: 99%" columns="2">
+
+				<p:outputLabel value="N de cuenta" />
+				<h:outputText
+					value="#{listadoAvaluosBean.avaluo.perito.numeroCuentaBanco}" />
+
+				<p:outputLabel value="Tipo de cuenta" />
+				<h:outputText
+					value="#{listadoAvaluosBean.avaluo.perito.tipoCuentaBanco}" />
+
+				<p:outputLabel value="Nombre del titular" />
+				<h:outputText
+					value="#{listadoAvaluosBean.avaluo.perito.nombreTitular}" />
+
+				<p:outputLabel value="Tipo de identificación del Titular" />
+				<h:outputText
+					value="#{listadoAvaluosBean.avaluo.perito.tipoIdentificacionTitular eq 'cc' ? C.C 
+							: listadoAvaluosBean.avaluo.perito.tipoIdentificacionTitular eq 'ce' ? 'C.Ext.' 
+							: listadoAvaluosBean.avaluo.perito.tipoIdentificacionTitular eq 'nit' ? 'NIT': ''   }" />
+
+				<p:outputLabel value="No identificación del titular" />
+				<h:outputText
+					value="#{listadoAvaluosBean.avaluo.perito.numeroIdentificacionTitular}" />
+
+				<p:outputLabel value="Valor a pagar: " />
+				<h:outputText value="#{listadoAvaluosBean.valorHonorarios}" />
+
+
+				<p:commandButton value="Ok"
+					oncomplete="PF('informacionHonorarios').hide();"
+					styleClass="button_green" icon="ui-icon-check" />
+
+			</p:panelGrid>
+			<input type="hidden" name="${_csrf.parameterName}"
+				value="${_csrf.token}" />
+		</h:form>
+	</p:dialog>
+
+</ui:composition>

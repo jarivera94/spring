@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="croquis" pageWidth="571" pageHeight="792" columnWidth="571" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="20" uuid="bf640228-cf45-4682-aab8-c7288f5e6024">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="IDAVALUO" class="java.lang.Long"/>
+	<queryString>
+		<![CDATA[SELECT f.fotografia_id, f.ruta_ubicacion, f.descripcion, f.avaluo_id, f.orden, u.nombres, u.apellidos, u.registro
+  FROM avaluos.fotografia f, avaluos.avaluo a, avaluos.usuario u
+WHERE f.avaluo_id = a.avaluo_id
+AND u.tipo_documento_identificacion = a.perito_tipo_documento
+AND u.numero_documento = a.perito_numero_documento
+AND f.orden =1
+AND f.avaluo_id = $P{IDAVALUO}
+ORDER BY f.orden]]>
+	</queryString>
+	<field name="ruta_ubicacion" class="java.lang.String"/>
+	<detail>
+		<band height="330" splitType="Stretch">
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="13" y="20" width="531" height="310" uuid="dcc0a57a-d244-410d-a1b5-36ff2231573f"/>
+				<imageExpression><![CDATA[$F{ruta_ubicacion}]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+</jasperReport>

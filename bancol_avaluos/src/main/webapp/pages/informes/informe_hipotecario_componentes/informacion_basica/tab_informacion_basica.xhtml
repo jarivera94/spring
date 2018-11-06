@@ -1,0 +1,665 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:tab id="informacionBasica" title="Información básica">
+		<p:panel id="datosPersonales" header="Datos de cliente"
+			style="margin-bottom:10px">
+			<p:panelGrid style="width: 99%">
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="tipoDocumentoId"
+							value="Tipo de documento de identificación: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="tipoDocumentoId"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.tipoDocumentoIdentificacion}"
+							style="width: 99%"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							disabled="true">
+							<p:ajax update="datosPersonales" global="false"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:tipoDocumentoId' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:tipoDocumentoId' ).removeClass('loadinggif');" />
+							<f:selectItem itemLabel="Seleccione ..." itemValue=""
+								noSelectionOption="true" />
+							<f:selectItem itemLabel="C.C." itemValue="21" />
+							<f:selectItem itemLabel="C.Ext." itemValue="22" />
+							<f:selectItem itemLabel="NIT." itemValue="23" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="numeroDocumento" value="Número de documento: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputText id="numeroDocumento"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.numeroDocumento}"
+							label="Número de documento"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							disabled="true"
+							style="width: 99%">
+							<p:ajax event="change"
+								listener="#{informeHipotecarioBean.onClienteSeleccionado}"
+								update="datosPersonales" global="false"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:numeroDocumento' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:numeroDocumento' ).removeClass('loadinggif');" />
+
+						</p:inputText>
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:tipoDocumentoId') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:numeroDocumento')}">
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="tipoDocumentoId" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="numeroDocumento" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{not empty informeHipotecarioBean.avaluosAnteriores}">
+					<p:column styleClass="ui-widget-header">
+						<p:spacer height="0" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<h:outputText value="Cliente presenta avaluos" />
+						<p:spacer height="0px" width="30px" />
+						<p:commandButton update=":avaluoTabla" icon="ui-icon-search"
+							oncomplete="PF('avaluosAnteriores').show()" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.tipoDocumentoIdentificacion eq '23'}">
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="razonSocial" value="Razón social: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputText id="razonSocial"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.razonSocial}"
+							required="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.tipoDocumentoIdentificacion eq '23' and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}"
+							label="Razón social"
+							disabled="true"
+							style="width:99%" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:razonSocial')}">
+					<p:column styleClass="ui-widget-header" colspan="4">
+						<p:message for="razonSocial" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.tipoDocumentoIdentificacion ne '23'}">
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="primerNombre" value="Primer nombre: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputText id="primerNombre"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.primerNombre}"
+							required="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.tipoDocumentoIdentificacion ne '23' and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}"
+							label="Primer nombre"
+							disabled="true"
+							style="width:99%" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:primerNombre')}">
+					<p:column styleClass="ui-widget-header" colspan="4">
+						<p:message for="primerNombre" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.tipoDocumentoIdentificacion ne '23'}">
+
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="segundoNombre" value="Segundo nombre: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputText id="segundoNombre"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.segundoNombre}"
+							label="Segundo nombre"
+							disabled="true"
+							style="width:99%" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.tipoDocumentoIdentificacion ne '23'}">
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="primerApellido" value="Primer apellido: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputText id="primerApellido"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.primerApellido}"
+							required="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.tipoDocumentoIdentificacion ne '23' and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}"
+							label="Primer apellido"
+							disabled="true"
+							style="width:99%" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:primerApellido')}">
+					<p:column styleClass="ui-widget-header" colspan="4">
+						<p:message for="primerApellido" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.tipoDocumentoIdentificacion ne '23'}">
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="segundoApellido" value="Segundo apellido: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputText id="segundoApellido"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.segundoApellido}"
+							label="Segundo apellido"
+							disabled="true"
+							style="width:99%" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.tipoDocumentoIdentificacion eq '23' and not informeHipotecarioBean.avaluoRemate}">
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="paisOrigen" value="País de origen: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="paisOrigen"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.paisOrigen}"
+							disabled="#{ listadoAvaluosBean.editarAvaluoDespuesDeAprobado eq false
+											and (informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 8 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 10 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 11 )}"
+							style="width:99%">
+							<f:selectItem itemLabel="Seleccione ..." itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems value="#{informeHipotecarioBean.paises}" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="clasificacionFiscal"
+							value="Clasificación fiscal: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="clasificacionFiscal"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.clasificacionFiscal}"
+							label="Clasificación fiscal"
+							required="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.tipoDocumentoIdentificacion eq '23' and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}"
+							disabled="#{ listadoAvaluosBean.editarAvaluoDespuesDeAprobado eq false
+											and (informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 8 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 10 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 11 )}"
+							style="width:99%">
+							<f:selectItem itemLabel="Seleccione ..." itemValue=""
+								noSelectionOption="true" />
+							<f:selectItem itemLabel="Persona natural"
+								itemValue="persona natural" />
+							<f:selectItem itemLabel="Persona juridica"
+								itemValue="persona juridica" />
+						</h:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:clasificacionFiscal')}">
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:spacer height="0" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="clasificacionFiscal" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.tipoDocumentoIdentificacion eq '23' and not informeHipotecarioBean.avaluoRemate}">
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="regimen" value="Régimen: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="regimen"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.regimen}"
+							required="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.tipoDocumentoIdentificacion eq '23' and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}"
+							disabled="#{ listadoAvaluosBean.editarAvaluoDespuesDeAprobado eq false
+											and (informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 8 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 10 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 11 )}"
+							style="width:99%">
+							<f:selectItem itemLabel="Común" itemValue="comun" />
+							<f:selectItem itemLabel="Simplificado" itemValue="simplificado" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="codigoCIIU" value="Código CIIU: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputText id="codigoCIIU"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.codigoCIIU}"
+							label="Código CIIU"
+							disabled="#{ listadoAvaluosBean.editarAvaluoDespuesDeAprobado eq false
+											and (informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 8 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 10 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 11 )}"
+							style="width:99%" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:regimen')}">
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="regimen" />
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not informeHipotecarioBean.avaluoRemate}">
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="celularSoli" value="Celular: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputMask id="celularSoli" mask="999-999-9999"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.celularSolicitante}"
+							label="Celular" style="width:99%"
+							validatorMessage="Celular debe tener 10 digitos"
+							disabled="#{ listadoAvaluosBean.editarAvaluoDespuesDeAprobado eq false
+											and (informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 8 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 10 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 11 )}">
+							<f:validateRegex pattern="\d{3}[\-]\d{3}[\-]\d{4}"></f:validateRegex>
+							<p:ajax update="msgCelular" event="blur" global="false"></p:ajax>
+						</p:inputMask>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="telefono" value="(Cod. Area)+Teléfono: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:inputText id="telefono"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.telefonoSolicitante}"
+							label="Teléfono"
+							disabled="#{ listadoAvaluosBean.editarAvaluoDespuesDeAprobado eq false
+											and (informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 8 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 10 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 11 )}"
+							style="width:99%" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:messages id="msgCelular" for="celularSoli" closable="true" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="telefono" />
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not informeHipotecarioBean.avaluoRemate}">
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="correoElectronico"
+							value="Correo Electrónico: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:inputText id="correoElectronico"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.correoElectronicoSolicitante}"
+							label="Correo Electrónico"
+							validatorMessage="Correo Electrónico del cliente inválido"
+							disabled="#{ listadoAvaluosBean.editarAvaluoDespuesDeAprobado eq false
+											and (informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 8 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 10 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 11 )}"
+							style="width:99%">
+							<p:ajax event="change" update="messageCorreoElectronico"
+								global="false"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:correoElectronico' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:correoElectronico' ).removeClass('loadinggif');"></p:ajax>
+							<f:validateRegex
+								pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+						</p:inputText>
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:correoElectronico')}">
+					<p:column styleClass="ui-widget-header" colspan="4">
+						<p:message id="messageCorreoElectronico" for="correoElectronico" />
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not informeHipotecarioBean.avaluoRemate}">
+					<p:column styleClass="ui-widget-header">
+						<p:outputLabel for="direccionSolicitante"
+							value="Dirección del solicitante: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<p:panelGrid id="direccionSolicitante" columns="9">
+							<p:outputLabel value="Tipo Via: " styleClass="subLabel" />
+							<p:outputLabel value="Via: " styleClass="subLabel" />
+							<p:outputLabel value="Complemento Via: " styleClass="subLabel" />
+							<p:outputLabel value="  " styleClass="subLabel" />
+							<p:outputLabel value="Número: " styleClass="subLabel" />
+							<p:outputLabel value="Complemento Numero: " styleClass="subLabel" />
+							<p:outputLabel value="  " styleClass="subLabel" />
+							<p:outputLabel value="Placa: " styleClass="subLabel" />
+							<p:outputLabel value="Adicional: " styleClass="subLabel" />
+
+							<h:selectOneMenu id="tipoViaSolicitante"
+								value="#{informeHipotecarioBean.tipoViaSolicitante}"
+								style="width:100px;">
+								<f:selectItem itemLabel="Seleccione ..."
+									noSelectionOption="true" />
+								<f:selectItem itemLabel="Calle" itemValue="CL" />
+								<f:selectItem itemLabel="Carrera" itemValue="KR" />
+								<f:selectItem itemLabel="Diagonal" itemValue="DG" />
+								<f:selectItem itemLabel="Transversal" itemValue="TV" />
+								<f:selectItem itemLabel="Avenida" itemValue="AV" />
+								<f:selectItem itemLabel="Avenida calle" itemValue="AC" />
+								<f:selectItem itemLabel="Avenida carrera" itemValue="AK" />
+								<f:selectItem itemLabel="Avenida autopista" itemValue="AU" />
+								<f:selectItem itemLabel="Carretera" itemValue="CT" />
+								<f:selectItem itemLabel="Circular" itemValue="CQ" />
+								<f:selectItem itemLabel="Camino" itemValue="CN" />
+							</h:selectOneMenu>
+							<p:inputMask id="numeroViaSolicitante" mask="9?99"
+								value="#{informeHipotecarioBean.numeroViaSolicitante}"
+								style="width:30px;" />
+							<p:autoComplete id="complementoViaSolicitante"
+								value="#{informeHipotecarioBean.complementoViaSolicitante}"
+								label="Complemento Via Solicitante" style="width:150px;"
+								multiple="true" forceSelection="true" maxlength="1"
+								completeMethod="#{informeHipotecarioBean.completarComplemento}" />
+							<p:outputLabel value=" # "
+								style="left: -8px;position: relative;font-size: 18px !important;" />
+							<p:inputMask id="numeroViaGeneradoraSolicitante" mask="9?99"
+								value="#{informeHipotecarioBean.numeroViaGeneradoraSolicitante}"
+								label="Número Via Generadora Solicitante" style="width:30px;" />
+							<p:autoComplete id="complementoViaGeneradoraSolicitante"
+								value="#{informeHipotecarioBean.complementoViaGeneradoraSolicitante}"
+								label="Complemento Via Generadora" style="width:150px;"
+								multiple="true" forceSelection="true" maxlength="1"
+								completeMethod="#{informeHipotecarioBean.completarComplemento}" />
+							<p:outputLabel value=" - " styleClass="subLabel"
+								style="left: -8px;position: relative;font-size: 18px !important;" />
+							<p:inputText id="placaSolicitante"
+								value="#{informeHipotecarioBean.placaSolicitante}"
+								label="Placa Solicitante" style="width:30px;" />
+							<p:inputText id="adicionalDireccionSolicitante" maxlength="255"
+								value="#{informeHipotecarioBean.adicionalDireccionSolicitante}"
+								label="Adicional Dirección Solicitante" style="width:150px;" />
+						</p:panelGrid>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not informeHipotecarioBean.avaluoRemate}">
+					<p:column styleClass="ui-widget-header">
+						<p:outputLabel for="departamentoSolicitante"
+							value="Departamento del solicitante: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="departamentoSolicitante"
+							value="#{informeHipotecarioBean.departamentoCliente}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							disabled="#{ listadoAvaluosBean.editarAvaluoDespuesDeAprobado eq false
+											and (informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 8 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 10 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 11 )}"
+							style="width:99%">
+							<p:ajax
+								listener="#{informeHipotecarioBean.onDepartamentoSolicitanteChanged}"
+								update="ciudadSolicitante" global="false"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:departamentoSolicitante' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:departamentoSolicitante' ).removeClass('loadinggif');" />
+							<f:selectItem itemLabel="Seleccione departamento" itemValue=""
+								noSelectionOption="true" />
+							<f:selectItems value="#{informeHipotecarioBean.departamentos}" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:outputLabel for="ciudadSolicitante"
+							value="Ciudad del solicitante: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="ciudadSolicitante"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.divipola}"
+							converter="omnifaces.SelectItemsConverter"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							disabled="#{ listadoAvaluosBean.editarAvaluoDespuesDeAprobado eq false
+											and (informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 8 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 10 
+											or informeHipotecarioBean.avaluoHipotecarioDTO.estado.estado.key() ne 11 )}"
+							style="width:99%">
+							<!-- 											<f:selectItem itemLabel="Seleccionar ciudad" itemValue="" noSelectionOption="true" /> -->
+							<f:selectItems
+								value="#{informeHipotecarioBean.ciudadesSolicitante}"
+								var="ciudad" itemLabel="#{ciudad.centroPoblado}"
+								itemValue="#{ciudad}" />
+						</h:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:departamentoSolicitante') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:ciudadSolicitante')}">
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="departamentoSolicitante" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="ciudadSolicitante" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+		<p:panel id="informacionEntidad" header="Información de la entidad"
+			style="margin-bottom:10px">
+			<p:panelGrid style="width: 99%">
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="entidad" value="Entidad: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="entidad"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.entidad}"
+							converter="omnifaces.SelectItemsConverter" disabled="true"
+							style="width: 99%">
+							<p:ajax update="datosPersonales" global="false"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:entidad' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:entidad' ).removeClass('loadinggif');" />
+							<f:selectItems value="#{informeHipotecarioBean.entidades}"
+								var="entidad" itemLabel="#{entidad.nombre}"
+								itemValue="#{entidad}" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header"
+						rendered="#{not informeHipotecarioBean.avaluoRemate}">
+						<h:outputLabel for="segmento" value="Segmento: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header"
+						rendered="#{not informeHipotecarioBean.avaluoRemate}">
+						<h:selectOneMenu id="segmento"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.segmento}"
+							label="Segmento" converter="omnifaces.SelectItemsConverter"
+							style="width:99%">
+							<f:selectItem itemLabel="Seleccione ..." itemValue="null"
+								noSelectionOption="true" />
+							<f:selectItems value="#{informeHipotecarioBean.segmentos}"
+								var="segmento" itemLabel="#{segmento.nombre}"
+								itemValue="#{segmento}" />
+						</h:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{informeHipotecarioBean.avaluoHipotecarioDTO.entidad eq 'Bancolombia' and not informeHipotecarioBean.avaluoRemate}">
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="empleadoEntidad" value="Empleado de Entidad: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="empleadoEntidad"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.empleadoEntidad}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="clienteExterior"
+							value="Cliente en el exterior: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<p:selectBooleanButton id="clienteExterior"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.cliente.clienteExterior}"
+							onLabel="Si" offLabel="No" onIcon="ui-icon-check"
+							offIcon="ui-icon-close" style="width:100px"
+							converter="javax.faces.Boolean">
+						</p:selectBooleanButton>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+		<p:panel id="datosAvaluo" header="Información del avaluo"
+			style="margin-bottom:10px">
+			<p:panelGrid style="width: 99%">
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="objetoDelAvaluo" value="Objeto del avalúo: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputText id="objetoDelAvaluo"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.objetoDelAvaluo.nombre}" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="motivo" value="Motivo del avalúo:" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputText id="motivo"
+							value="#{informeHipotecarioBean.motivo.nombre}"
+							style="width: 99%" />
+						<!-- 										<h:selectOneMenu id="motivo" value="#{informeHipotecarioBean.avaluoHipotecarioDTO.motivo}" required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}" label="Motivo del avalúo" style="width: 99%" > -->
+						<!-- 											<f:selectItem itemLabel="Garantía" itemValue=""/> -->
+						<!-- 											<f:selectItem itemLabel="Cambio de garantía" itemValue="3"/> -->
+						<!-- 											<f:selectItem itemLabel="Compra de cartera" itemValue="4"/> -->
+						<!-- 										</h:selectOneMenu> -->
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:objetoDelAvaluo') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:motivo'))}">
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="objetoDelAvaluo" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="motivo" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="propositoAvaluo"
+							value="Propósito del Avalúo: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="propositoAvaluo"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.proposito}"
+							label="Propósito del Avalúo" style="width: 100%"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}">
+							<f:selectItem itemLabel="Seleccione ..." itemValue=""
+								noSelectionOption="true" />
+							<f:selectItem itemLabel="Garantía Hipotecaria"
+								itemValue="Garantía Hipotecaria" />
+							<f:selectItem itemLabel="Transacción Comercial de Venta"
+								itemValue="Transacción Comercial de Venta" />
+							<f:selectItem itemLabel="Transacción Comercial de Renta"
+								itemValue="Transacción Comercial de Renta" />
+							<f:selectItem itemLabel="Valor Asegurable"
+								itemValue="Valor Asegurable" />
+						</h:selectOneMenu>
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="tipoAvaluo" value="Tipo de Avalúo: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="tipoAvaluo"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.tipo}"
+							label="Tipo de Avalúo" style="width: 100%"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}">
+							<f:selectItem itemLabel="Seleccione ..." itemValue=""
+								noSelectionOption="true" />
+							<f:selectItem itemLabel="Valor Comercial"
+								itemValue="Valor Comercial" />
+							<f:selectItem itemLabel="Valor Comercial de Renta"
+								itemValue="Valor Comercial de Renta" />
+							<f:selectItem itemLabel="Valor Fiscal" itemValue="Valor Fiscal" />
+							<f:selectItem itemLabel="Valor Asegurable"
+								itemValue="Valor Asegurable" />
+							<f:selectItem itemLabel="Valor Neto de reposición"
+								itemValue="Valor Neto de reposición" />
+							<f:selectItem itemLabel="Valor lucro Cesante"
+								itemValue="Valor lucro Cesante" />
+						</h:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:propositoAvaluo') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:tipoAvaluo'))}">
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="propositoAvaluo" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="tipoAvaluo" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="tipoCredito" value="Tipo Crédito: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="3">
+						<h:selectOneMenu id="tipoCredito"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.tipoCredito}"
+							label="Tipo Crédito" style="width: 100%"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}">
+							<f:selectItem itemLabel="Seleccione ..." itemValue=""
+								noSelectionOption="true" />
+							<f:selectItem itemLabel="Vivienda" itemValue="Vivienda" />
+							<f:selectItem itemLabel="Diferente de Vivienda"
+								itemValue="Diferente de Vivienda" />
+							<p:ajax process="@this,:informeHipotecario:accordionPanel:cocina"
+								event="change"
+								listener="#{informeHipotecarioBean.definirTipoCredito}"
+								update=":informeHipotecario:accordionPanel:tipoCredito :informeHipotecario:accordionPanel:valorHonorarios :informeHipotecario:accordionPanel:valorHonorarios :informeHipotecario:accordionPanel:subTotalHonorarios :informeHipotecario:accordionPanel:totalHonorarios"
+								global="false"
+								onstart="$( '#informeHipotecario\\:accordionPanel\\:tipoCredito' ).addClass('loadinggif');"
+								oncomplete="$( '#informeHipotecario\\:accordionPanel\\:tipoCredito' ).removeClass('loadinggif');" />
+						</h:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:tipoCredito'))}">
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="tipoCredito" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header">
+						<h:outputLabel for="tipoSubsidio"
+							value="Tipo de subisidio al que aplica" />
+					</p:column>
+					<p:column styleClass="ui-widget-header">
+						<h:selectOneMenu id="tipoSubsidio"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.tipoSubsidio}"
+							converter="omnifaces.SelectItemsConverter"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Tipo de subisdio" style="width: 99%">
+							<p:ajax event="change" update="@([id$=mensajeSubsidio])" />
+							<f:selectItems value="#{listasController.tiposSubsidio}"
+								var="subsidio" itemValue="#{subsidio}"
+								itemLabel="#{subsidio.nombre}" />
+						</h:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:tipoSubsidio'))}">
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="tipoSubsidio" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header"
+						rendered="#{informeHipotecarioBean.fechaElaboracionInforme ne null}">
+						<h:outputLabel for="fechaAvaluo" value="Fecha del informe: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header"
+						rendered="#{informeHipotecarioBean.fechaElaboracionInforme ne null}">
+						<p:outputLabel id="fechaAvaluo"
+							value="#{informeHipotecarioBean.fechaElaboracionInforme}" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2"
+						rendered="#{informeHipotecarioBean.fechaElaboracionInforme eq null}">
+						<p:spacer height="0px" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+	</p:tab>
+
+
+</ui:composition>

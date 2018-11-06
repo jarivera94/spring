@@ -1,0 +1,995 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="comparacionNPH" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1131d3ad-5e8c-4945-b1de-0c5a4c28ed29">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="language" value="Java"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="9472b255-7fea-4e26-98fa-ccd55f6ec358"/>
+	<parameter name="IDAVALUO" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[$P{SUBREPORT_DIR}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT e.prefijo, a.codigo_externo, tmv.justificacion, mv.concepto_del_metodo, o.ciudad, o.barrio, o.conjunto, o.telefono, o.celular,
+o.valor_oferta, o.porcentaje_depurado, o.valor_depurado, o.area_construida, o.vida_util, o.edad_inmueble, o.estado_conservacion, o.valor_reposicion,
+o.valor_mc_construccion, o.construccion, o.total_terreno, o.valor_mc_terreno, cm.promedio_mc_terreno, cm.desviacion_terreno, cm.coeficiente_variacion_terreno,
+cm.limite_superior_terreno, cm.limite_inferior_terreno, cm.promedio_mc_integral, cm.desviacion_integral, cm.coeficiente_variacion_integral,
+cm.limite_superior_integral, cm.limite_inferior_integral, cmp.promedio_mc, cmp.desviacion, cmp.coeficiente_variacion, cmp.limite_superior, cmp.limite_inferior,
+cmp.numero_datos, cmp.raiz, cmp.tstudent
+FROM avaluos.avaluo a
+INNER JOIN avaluos.entidad e ON (a.entidad_id = e.entidad_id)
+INNER JOIN avaluos.metodo_valuacion mv ON (a.avaluo_id = mv.avaluo_id)
+INNER JOIN avaluos.tipo_metodo_valuacion tmv ON (mv.metodo_usado = tmv.id)
+LEFT JOIN avaluos.comparacion_mercado_no_ph cm ON (mv.metodo_valuacion_id = cm.metodo_valuacion_id)
+LEFT JOIN avaluos.comparacion_mercado_ph cmp ON (mv.metodo_valuacion_id = cmp.metodo_valuacion_id)
+INNER JOIN avaluos.oferta o ON (mv.metodo_valuacion_id = o.metodo_valuacion_id)
+WHERE a.avaluo_id = $P{IDAVALUO};]]>
+	</queryString>
+	<field name="prefijo" class="java.lang.String"/>
+	<field name="codigo_externo" class="java.lang.String"/>
+	<field name="justificacion" class="java.lang.String"/>
+	<field name="concepto_del_metodo" class="java.lang.String"/>
+	<field name="ciudad" class="java.lang.String"/>
+	<field name="barrio" class="java.lang.String"/>
+	<field name="conjunto" class="java.lang.String"/>
+	<field name="telefono" class="java.lang.String"/>
+	<field name="celular" class="java.lang.String"/>
+	<field name="valor_oferta" class="java.math.BigDecimal"/>
+	<field name="porcentaje_depurado" class="java.math.BigDecimal"/>
+	<field name="valor_depurado" class="java.math.BigDecimal"/>
+	<field name="area_construida" class="java.lang.Integer"/>
+	<field name="vida_util" class="java.math.BigDecimal"/>
+	<field name="edad_inmueble" class="java.lang.Integer"/>
+	<field name="estado_conservacion" class="java.math.BigDecimal"/>
+	<field name="valor_reposicion" class="java.math.BigDecimal"/>
+	<field name="valor_mc_construccion" class="java.math.BigDecimal"/>
+	<field name="construccion" class="java.math.BigDecimal"/>
+	<field name="total_terreno" class="java.math.BigDecimal"/>
+	<field name="valor_mc_terreno" class="java.math.BigDecimal"/>
+	<field name="promedio_mc_terreno" class="java.math.BigDecimal"/>
+	<field name="desviacion_terreno" class="java.math.BigDecimal"/>
+	<field name="coeficiente_variacion_terreno" class="java.math.BigDecimal"/>
+	<field name="limite_superior_terreno" class="java.math.BigDecimal"/>
+	<field name="limite_inferior_terreno" class="java.math.BigDecimal"/>
+	<field name="promedio_mc_integral" class="java.math.BigDecimal"/>
+	<field name="desviacion_integral" class="java.math.BigDecimal"/>
+	<field name="coeficiente_variacion_integral" class="java.math.BigDecimal"/>
+	<field name="limite_superior_integral" class="java.math.BigDecimal"/>
+	<field name="limite_inferior_integral" class="java.math.BigDecimal"/>
+	<field name="promedio_mc" class="java.math.BigDecimal"/>
+	<field name="desviacion" class="java.math.BigDecimal"/>
+	<field name="coeficiente_variacion" class="java.math.BigDecimal"/>
+	<field name="limite_superior" class="java.math.BigDecimal"/>
+	<field name="limite_inferior" class="java.math.BigDecimal"/>
+	<field name="numero_datos" class="java.lang.Integer"/>
+	<field name="raiz" class="java.math.BigDecimal"/>
+	<field name="tstudent" class="java.math.BigDecimal"/>
+	<title>
+		<band height="258" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="802" height="30" forecolor="#FFFFFF" backcolor="#0099FF" uuid="83f2a747-bab9-44a8-b5fc-3d7923603e4a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Anexo Metodologías de Valuación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="69" width="802" height="37" forecolor="#0099FF" backcolor="#FFFFFF" uuid="ca25da9a-649d-4d3e-8758-afa35d4c285f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Comparación de Mercado NoPH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="237" y="45" width="190" height="20" uuid="dafebe1f-824a-41ba-b5f2-cc2cad874923"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Avalúo Hipotecario:   Cod]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="427" y="45" width="41" height="20" uuid="bf3b1046-4ab7-4122-9cdd-9fa1812d5131"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{prefijo} + "-"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="468" y="45" width="100" height="20" uuid="55c52f6d-7c19-4ef7-8043-3ebe08de3149"/>
+				<box leftPadding="2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Calibri" size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codigo_externo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="108" width="100" height="20" forecolor="#0099FF" uuid="5f6b1f3b-0cda-487b-8300-e66a69669fc4"/>
+				<textElement>
+					<font fontName="Calibri" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Justificación:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1" y="134" width="802" height="65" uuid="daec1f77-d83c-419f-8c1f-2f83f1dc5f08"/>
+				<textElement>
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{justificacion} == null) ? "No tiene justificación" : $F{justificacion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="199" width="100" height="20" forecolor="#0099FF" uuid="88f1638f-3ad6-44ee-886c-8f113e528ed9"/>
+				<textElement>
+					<font fontName="Calibri" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Concepto:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1" y="223" width="801" height="30" uuid="730e7335-eb67-4c78-83ea-876147104919"/>
+				<textElement>
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{concepto_del_metodo} == null) ? "No tiene concepto" : $F{concepto_del_metodo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="314" y="0" width="174" height="20" forecolor="#0099FF" uuid="4ee677a9-733e-4f43-8ab1-d737e31ee478"/>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ofertas]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="60" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="0" width="78" height="60" forecolor="#FFFFFF" backcolor="#0099FF" uuid="9a6010c3-f66b-4800-9eb5-f9c2a7600baa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Oferta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="80" y="0" width="76" height="60" forecolor="#FFFFFF" backcolor="#0099FF" uuid="656730a3-5118-4b36-a057-8d7cf4e55e22"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Oferta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="156" y="0" width="43" height="60" forecolor="#FFFFFF" backcolor="#0099FF" uuid="b6fd27b4-bb8b-44f6-ae68-1c1a85698f2a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[% Depurado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="199" y="0" width="74" height="60" forecolor="#FFFFFF" backcolor="#0099FF" uuid="0abd555f-7911-44ac-8460-873a5cd424dd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Depurado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="273" y="0" width="62" height="60" forecolor="#FFFFFF" backcolor="#0099FF" uuid="199a6563-c223-4921-9f57-59ce1c7f77b4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Area Construida m2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="335" y="0" width="27" height="60" forecolor="#FFFFFF" backcolor="#0099FF" uuid="0b9fbf64-8bac-4a69-9e4d-89ed81f3da8c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vida Útil]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="393" y="0" width="45" height="60" forecolor="#FFFFFF" backcolor="#0099FF" uuid="077742a4-2676-4bc2-98d5-39896c4d464e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado Conservación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="438" y="0" width="60" height="60" forecolor="#FFFFFF" backcolor="#0099FF" uuid="b73dd14c-74f6-4ff6-92b3-7e89a18e730a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Reposición]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="497" y="0" width="80" height="60" forecolor="#FFFFFF" backcolor="#0099FF" uuid="b4d0c3e6-38de-4a87-91cb-85a97fe5e987"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Construcción m2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="577" y="0" width="80" height="60" forecolor="#FFFFFF" backcolor="#0099FF" uuid="3d4e91a5-8765-4894-95d0-82a6a6927702"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Construcción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="657" y="0" width="80" height="60" forecolor="#FFFFFF" backcolor="#0099FF" uuid="77ba04eb-9735-4e06-b3dc-3ba8fe5bd7fc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Terreno]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="737" y="0" width="65" height="60" forecolor="#FFFFFF" backcolor="#0099FF" uuid="a7aa74ea-7498-4b2b-a2f0-3ac7c39d1096"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Terreno m2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="362" y="0" width="31" height="60" forecolor="#FFFFFF" backcolor="#0099FF" uuid="278b4c50-a1ba-498c-825d-d154f6735ecc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Edad de Inmueble]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="70">
+			<textField>
+				<reportElement mode="Opaque" x="1" y="0" width="78" height="14" uuid="ba0d83a7-d7e8-42e9-a6ef-9270b07e06d6"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ciudad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="1" y="14" width="78" height="14" uuid="ac6a0a3a-3e81-43b6-9b21-2095065b3acd"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{barrio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="1" y="28" width="78" height="14" uuid="00f27e32-6283-4644-9eeb-8a1af010c3df"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{conjunto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="1" y="42" width="78" height="14" uuid="e9e2fce1-429a-4c66-8c61-76b4a6f5f9b2"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{telefono}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="1" y="56" width="78" height="14" uuid="ad11ee5d-56c8-48e7-99b5-519a58c0dae6"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{celular}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="79" y="0" width="76" height="70" uuid="524a97cc-755d-4762-bd40-4d890c3561e8"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_oferta}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement mode="Opaque" x="155" y="0" width="43" height="70" uuid="5ce673b0-d448-4583-b5ed-b7a2423df90e"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{porcentaje_depurado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="198" y="0" width="75" height="70" uuid="7bfd0ec5-f49d-467b-a005-e5ed836f4fe8"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_depurado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="273" y="0" width="62" height="70" uuid="6a5c85b2-4bcb-46dc-8fdb-b5239386f903"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{area_construida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="362" y="0" width="31" height="70" uuid="ba339878-7dab-4f21-a768-b3bd5f1f4133"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{edad_inmueble}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0">
+				<reportElement mode="Opaque" x="393" y="0" width="45" height="70" uuid="d596914e-560a-4a45-8591-98c4f09b7138"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado_conservacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="436" y="0" width="61" height="70" uuid="22374f8a-81d3-4b75-9158-6c30a8bacd4d"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_reposicion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="497" y="0" width="80" height="70" uuid="4c39cdc9-e29b-4ee9-9d9a-6ec96b236584"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_mc_construccion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="577" y="0" width="80" height="70" uuid="2af848f1-14a7-49a9-9a11-e93ac7610081"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{construccion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="657" y="0" width="80" height="70" uuid="462cbcde-45f2-4b96-bf90-8b91b0968857"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_terreno}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="736" y="0" width="66" height="70" uuid="44979587-e8e0-4fba-9baf-b5efc575fc3c"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_mc_terreno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="335" y="0" width="27" height="70" uuid="5cfc4870-fb1b-43e4-bbbf-184332e288f4"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vida_util}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="253" splitType="Stretch">
+			<staticText>
+				<reportElement x="314" y="7" width="174" height="20" forecolor="#0099FF" uuid="17601487-b80b-434e-b254-6c2c06e433ee"/>
+				<box leftPadding="2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cálculos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="45" y="39" width="174" height="20" forecolor="#FFFFFF" backcolor="#0099FF" uuid="dd528892-ff09-41f4-933b-54250f8dda97"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Valores]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="219" y="39" width="174" height="20" forecolor="#FFFFFF" backcolor="#0099FF" uuid="d82df832-4cd3-442a-82f5-a9758a753853"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Terreno]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="567" y="39" width="174" height="20" forecolor="#FFFFFF" backcolor="#0099FF" uuid="e9738387-d856-4adf-8f99-2729a307311d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Integral]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="393" y="39" width="174" height="20" forecolor="#FFFFFF" backcolor="#0099FF" uuid="3f3ea9f5-8584-412e-9b9e-334fd38f61fd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="14" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Construcción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="45" y="59" width="174" height="20" uuid="1c2e8de8-6de3-483a-bcff-e0d84d21f49b"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Promedio m2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="45" y="79" width="174" height="20" uuid="57aad32e-bac5-4506-aed2-696e6b7a884f"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Desviación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="45" y="99" width="174" height="20" uuid="66fb8324-6043-4260-b575-fedf3d82632d"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Coeficiente Variación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="45" y="119" width="174" height="20" uuid="3a9d83cc-eb93-46c4-97c0-4243f1d344ad"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Número de Datos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="45" y="139" width="174" height="20" uuid="c5accfda-c876-497f-b881-7cea4d7a88f5"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Raíz]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="45" y="159" width="174" height="20" uuid="24a867b6-ad85-4c6b-9184-9921430b534b"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[T(N)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="45" y="179" width="174" height="20" uuid="edb87c15-cde3-40c4-a6d7-520ec01a5d90"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Límite Superior]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="45" y="199" width="174" height="20" uuid="35689758-e576-4b17-a74d-012fabc73de8"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Límite Inferior]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="219" y="59" width="174" height="20" uuid="256a2cd2-0205-49fa-abf9-28887af6db48"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{promedio_mc_terreno}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="219" y="79" width="174" height="20" uuid="d8b61c19-573b-41a3-9c40-6eb1f9cf9b3d"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{desviacion_terreno}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement mode="Opaque" x="219" y="99" width="174" height="20" uuid="19f7453d-9e55-4f4e-9578-14f638577140"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{coeficiente_variacion_terreno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="219" y="119" width="174" height="20" uuid="de886ed3-961b-4c43-9f35-c326f4989ee0"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero_datos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="219" y="139" width="174" height="20" uuid="62a32676-cffb-426d-96be-a7ba19d74149"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{raiz}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.000">
+				<reportElement mode="Opaque" x="219" y="159" width="174" height="20" uuid="55749b0d-27f5-4fed-882e-d641cca9d0a2"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tstudent}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="219" y="179" width="174" height="20" uuid="faa76df6-56de-4a2e-bf49-082aeda2be2e"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{limite_superior_terreno}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="219" y="199" width="174" height="20" uuid="3ff73027-2a2e-4059-a757-3effd2a91201"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{limite_inferior_terreno}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="567" y="59" width="174" height="20" uuid="50f08a06-f77d-45d2-841c-aeacfc53c3e9"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{promedio_mc_integral}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="567" y="79" width="174" height="20" uuid="a7b95f15-1de8-4897-9c05-bc0b3553d657"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{desviacion_integral}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement mode="Opaque" x="567" y="99" width="174" height="20" uuid="7c0b5baf-3729-48fa-9a48-b836a0468187"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{coeficiente_variacion_integral}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="567" y="119" width="174" height="20" uuid="adf151f6-932e-4ca5-bc49-75304f6047e8"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero_datos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="567" y="139" width="174" height="20" uuid="81c0ab35-4c6a-4ef2-a066-16522f94cbea"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{raiz}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.000">
+				<reportElement mode="Opaque" x="567" y="159" width="174" height="20" uuid="3a3c575d-d9ec-4896-87cd-94fca0426964"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tstudent}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="567" y="179" width="174" height="20" uuid="987bde7b-d418-4e7c-b0ae-64c1a1651271"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{limite_superior_integral}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="567" y="199" width="174" height="20" uuid="cd3de2d7-40d3-4378-b0bc-dfa80dcb5a64"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{limite_inferior_integral}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="393" y="79" width="174" height="20" uuid="7f678022-5da0-4175-a77d-4a3f68300962"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{desviacion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="393" y="59" width="174" height="20" uuid="b92588a9-40b9-401d-bca6-09d060704dee"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{promedio_mc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="393" y="99" width="174" height="20" uuid="2e8dd949-365c-499c-95ca-bfd598050dca"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{coeficiente_variacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="393" y="139" width="174" height="20" uuid="603f56ef-45cd-427a-8982-d143038b9a9c"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{raiz}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.000">
+				<reportElement mode="Opaque" x="393" y="159" width="174" height="20" uuid="cf212254-c0f3-458a-88bf-84316d45ad2f"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tstudent}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="393" y="179" width="174" height="20" uuid="fde84c7a-3bb2-48f7-b6de-dc0e73ccb526"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{limite_superior}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement mode="Opaque" x="393" y="199" width="174" height="20" uuid="d66c7053-c76a-4bc1-a040-837c4b465153"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{limite_inferior}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="393" y="119" width="174" height="20" uuid="d7cdba65-1f44-43d7-bd2a-996d954aaeae"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0995CE"/>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero_datos}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

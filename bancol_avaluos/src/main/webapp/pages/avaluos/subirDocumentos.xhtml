@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+		<ui:define name="content">
+			<h1 style="width: 90%; margin: 0px auto;">
+				Documentos de Avalúo <h:outputText value="#{listadoAvaluosBean.avaluo.codigoExterno}" />
+			</h1>
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+				<h:outputLabel value="Cargando documentos..." />
+				<p:graphicImage  name="images/ajax-loader.gif" />
+			</p:dialog>
+			<h:form enctype="multipart/form-data" id="form-upload"
+				rendered="#{listadoAvaluosBean.crearSolicitudes or listadoAvaluosBean.aceptarSolicitudes}">
+				<p:panel id="fileUploadGroup">
+					<p:growl id="messages" showDetail="true" />
+					<p>Seleccione los documentos que desea agregar al avalúo:</p> 
+					<p:separator style="margin-bottom:10px;" />
+					<p:fileUpload fileUploadListener="#{documentosBean.subir}"
+						mode="advanced" dragDropSupport="true" multiple="true" update=":form-documentos"
+						allowTypes="/(\.|\/)(pdf|doc|docx|gif|jpe?g|png|tif|tiff)$/" onstart="PF('statusDialog').show()" oncomplete="PF('statusDialog').hide()"
+						fileLimit="50" sizeLimit="10000000" auto="true"
+						invalidFileMessage="El archivo no es un documento valido"
+						invalidSizeMessage="El tamaño del documento debe ser maximo de 10Mb"
+						label="Agregar" uploadLabel="Subir" cancelLabel="Cancelar" />
+					<p:separator style="margin-bottom:10px;" />
+				</p:panel>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			</h:form>
+			<h:form id="form-documentos">
+				<p:panel id="documentosGroup"
+					style="border: 2px solid #E5EFED !important;">
+					<h:outputText rendered="#{empty documentosBean.documentos}"
+						value="El Avalúo no tiene documentos" />
+					<p:dataTable id="documentosTable" var="documento"
+						value="#{documentosBean.documentos}"
+						rendered="#{not empty documentosBean.documentos}"
+						rowIndexVar="index"
+						style="width:80%; margin: 0px auto; text-align:center;">
+						<f:facet name="header">Documentos para este avalúo</f:facet>
+						<p:column headerText="Documento" colspan="2">
+							<h:outputText value="#{documento.nombre}" />
+						</p:column>
+						<p:column rendered="#{listadoAvaluosBean.crearSolicitudes or listadoAvaluosBean.aceptarSolicitudes}"
+							headerText="Borrar">
+							<p:commandButton icon="ui-icon-trash" title="Borrar"
+								styleClass="button_red"
+								actionListener="#{documentosBean.borrarDocumento(index)}" />
+						</p:column>
+						<p:column>
+							<p:commandButton
+								actionListener="#{documentosBean.download(documento)}"
+								ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);"
+								title="Descargar" icon="ui-icon-arrowthick-1-s">
+								<p:fileDownload value="#{documentosBean.file}" />
+							</p:commandButton>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+					<p:commandButton value="Cerrar" icon="ui-icon-close"
+						action="#{documentosBean.cerrar()}" styleClass="button_red btnIzquierda"
+						style="margin-top: 20px !important;" />
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			</h:form>
+
+			<script type="text/javascript">
+					function start() {
+					    PF('statusDialog').show();
+					}
+					 
+					function stop() {
+					    PF('statusDialog').hide();
+					}
+					</script>
+
+		</ui:define>
+
+	</ui:composition>
+</h:body>
+</html>

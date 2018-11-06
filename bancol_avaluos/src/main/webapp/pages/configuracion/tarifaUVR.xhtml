@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+ 
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+	
+		<ui:define name="content">
+				
+				<p:outputPanel style="margin:20px;">
+				
+					<h:form  style="width: 90%; margin: 0px auto;"  enctype="multipart/form-data">
+						<h1>Tarifa UVR</h1>
+					 	<p:growl id="messages" showDetail="true" />
+						<p>Seleccione el archivo en formato csv que contiene la información de las UVR</p>
+						<p:separator  style="margin-bottom:10px;" />
+				
+					     <p:fileUpload fileUploadListener="#{tarifaUVRBean.subir}" mode="advanced" dragDropSupport="false"
+           					update=":datatableform:tabla_uvrs messages" allowTypes="/(\.|\/)(csv)$/" />
+           					
+					    <p:separator  style="margin-bottom:10px;" />
+					    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+					</h:form>
+				
+        		
+        			<h:form id="datatableform">
+        				<p:dataTable
+							id="tabla_uvrs"
+							var="uvr"
+							value="#{tarifaUVRBean.uvrs}"
+							paginator ="true"
+							rowKey="#{uvr.id}"
+							rows="10"
+							widgetVar="uvrsTable"
+							emptyMessage="No se han encontrado coincidencias" 
+							style="width:60%; margin-left: auto; margin-right: auto;"
+						>
+							<p:column headerText="Fecha"
+								filterBy="#{uvr.fechaUvr}"
+								filterMatchMode="contains"
+								style="text-align: center;"
+							>
+							    <h:outputText value="#{uvr.fechaUvr}"> 
+								  <f:convertDateTime type="date" pattern="yyyy-MM-dd"/>
+								</h:outputText>
+							</p:column>
+							
+							<p:column filterBy="#{uvr.valor}" 
+								filterMatchMode="contains" 
+								headerText="Valor"
+								style="text-align: center;"
+								>
+							    <h:outputText value="#{uvr.valor}" >
+							    	 <f:convertNumber currencySymbol="$" locale="es_CO" type="currency" minFractionDigits="4" />
+							    </h:outputText>
+							</p:column>
+							
+						</p:dataTable>
+						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        			</h:form>
+        		
+        	</p:outputPanel>
+			
+		</ui:define>
+	
+	</ui:composition>
+</h:body>
+</html>

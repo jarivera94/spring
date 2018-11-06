@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+ 
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+
+		<ui:define name="content">
+			<h1 style="width: 90%; margin: 0px auto;">Asignar Perito - Avalúo <h:outputLabel value="#{asignarPeritoBean.avaluo.codigoExterno}" /></h1>
+			
+			<p:ajaxStatus onstart="PF('statusDialog').show()" onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false" closable="false" resizable="false" showHeader="false">
+				<p:graphicImage  name="images/ajax-loader.gif" />
+			</p:dialog>
+			
+			<h:form id="form">
+				<p:growl id="growl" showDetail="true" sticky="true" autoUpdate="true" />
+				<p:fieldset id="buscarPerito" legend="Buscar perito" style="margin-bottom:10px; margin-top: 15px; width: 93%;">
+					<p:panelGrid style="width: 100%">
+						<p:row>
+							<p:column>
+								<p:outputLabel for="direccionInmueble" value="Dirección inmueble: " />
+							</p:column>
+							<p:column colspan="3">
+								<p:outputLabel id="direccionInmueble" value="#{empty asignarPeritoBean.avaluo.direccionInmueble ? asignarPeritoBean.avaluo.adicionalDireccion : asignarPeritoBean.avaluo.direccionInmueble }" style="width:99%" />
+							</p:column>
+						</p:row>
+						
+						<p:row>
+							<p:column>
+								<p:outputLabel  value="Departamento: " />
+							</p:column>
+							<p:column>
+								<p:outputLabel value="#{asignarPeritoBean.avaluo.divipola.departamento}" />
+							</p:column>
+							
+							<p:column>
+								<p:outputLabel for="ciudad" value="Ciudad: " />
+							</p:column>
+							<p:column>
+								<p:outputLabel value="#{asignarPeritoBean.avaluo.divipola.centroPoblado}" />
+							</p:column>
+						</p:row>
+						
+						<p:row rendered="#{empty asignarPeritoBean.opcionBusquedaPerito  or asignarPeritoBean.opcionBusquedaPerito eq 'Seleccione'}">
+							<p:column>
+								<p:outputLabel for="conCita" value="Con cita programada en los proximos: " />
+							</p:column>
+							<p:column>
+								<p:inputText id="conCita" value="#{asignarPeritoBean.diasProximaCita}" style="width:99%" />
+								<p:slider for="conCita" maxValue="10" minValue="0" >
+									<p:ajax event="slideEnd" process="@this,conCita" />
+								</p:slider>
+							</p:column>
+							<p:column>
+								<p:outputLabel for="cercaniaCuadras" value="Cuadras a la redonda:" />
+							</p:column>
+							<p:column>
+								<p:inputText id="cercaniaCuadras" value="#{asignarPeritoBean.cercaniaCuadrasRedonda}" style="width:99%" />
+								<p:slider for="cercaniaCuadras" maxValue="10" minValue="0" >
+									<p:ajax event="slideEnd" process="@this, cercaniaCuadras" />
+								</p:slider>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+						
+					<p:panelGrid id="opcionesBuesqueda" columns="4" style="width: 40%; margin: 20px auto;">
+						<p:outputLabel value="Filtrar por" style="margin-left: 10px;" />
+						<p:selectOneMenu value="#{asignarPeritoBean.opcionBusquedaPerito}" style="margin-left: 15px !important;">
+							<f:selectItems value="#{asignarPeritoBean.opcionesBusquedaPerito}" var="opcionBusqueda" itemLabel="#{opcionBusqueda}" itemValue="#{opcionBusqueda}" />
+							<p:ajax event="change"  update="filtrosBusquedaPerito buscarPerito" />
+						</p:selectOneMenu>
+					</p:panelGrid>
+
+					<center>
+						<p:panelGrid id="filtrosBusquedaPerito">
+						<p:row>
+						    <!--  DEPARTAMENTO -->
+						    <p:column>
+								<p:outputLabel value="Departamento" rendered="#{asignarPeritoBean.opcionBusquedaPerito eq 'Municipio' or  asignarPeritoBean.opcionBusquedaPerito eq 'Departamento'}" />
+							</p:column>
+							
+							<p:column>
+							<h:selectOneMenu  value="#{asignarPeritoBean.departamentoBusqueda}" 
+								rendered="#{asignarPeritoBean.opcionBusquedaPerito eq 'Municipio' or  asignarPeritoBean.opcionBusquedaPerito eq 'Departamento'}">
+										<p:ajax listener="#{asignarPeritoBean.onDepartamentoChanged}" update="ciudad" />
+										<f:selectItem itemLabel="Seleccione departamento" itemValue="" noSelectionOption="true" />
+										<f:selectItems value="#{asignarPeritoBean.departamentos}" />
+							</h:selectOneMenu>
+							</p:column>
+							<!-- MUNICIPIO  -->
+							<p:column>
+								<p:outputLabel value="Municipio" rendered="#{asignarPeritoBean.opcionBusquedaPerito eq 'Municipio' }"/>
+							</p:column>
+							<p:column>
+                                <h:selectOneMenu id="ciudad"
+                                        value="#{asignarPeritoBean.divipolaBusqueda}" 
+                                        converter="omnifaces.SelectItemsConverter"
+                                        rendered="#{asignarPeritoBean.opcionBusquedaPerito eq 'Municipio' }">
+                                    <f:selectItems
+                                        value="#{asignarPeritoBean.ciudades}"
+                                        var="ciudad"
+                                        itemLabel="#{ciudad.centroPoblado}"
+                                        itemValue="#{ciudad}" />
+                                </h:selectOneMenu>
+							</p:column>
+							<!-- PERITO   -->
+							
+							<p:column>
+								<p:outputLabel value="Perito" rendered="#{asignarPeritoBean.opcionBusquedaPerito eq 'Perito' }"/>
+							</p:column>
+							
+							<p:column>
+								<p:inputText   rendered="#{asignarPeritoBean.opcionBusquedaPerito eq 'Perito' }" value="#{asignarPeritoBean.peritoABuscar}" />
+							</p:column>
+						</p:row>	
+						</p:panelGrid>
+					</center>
+					<center>
+						<p:commandButton id="botonBuscarPerito"
+                            render="#{asignarPeritoBean.opcionBusquedaPerito ne 'Seleccione'}"
+							process=":form" update=":form"
+                            value="Buscar perito"
+                            action="#{asignarPeritoBean.buscarPeritos()}"
+                            icon="ui-icon-search" style="margin-top: 15px;" />
+					</center>
+				</p:fieldset>
+				
+				<p:panel id="peritosTabla" header="Peritos disponibles" 
+				 	render="#{not empty asignarPeritoBean.peritos and asignarPeritoBean.peritos.size() lt 0 }" 
+					style="margin-bottom:10px" styleClass="ui-fieldset-content" >
+					<p:dataTable var="perito" value="#{asignarPeritoBean.peritos}" 
+						rows="10"
+						paginator="true" 
+						paginatorPosition="top"
+						selection="#{asignarPeritoBean.perito}" 
+						selectionMode="single" rowKey="#{perito.numeroDocumento}" >
+						<f:facet name="Peritos disponibles"></f:facet>
+						<p:column headerText="Perito">
+							<h:outputText value="#{perito.nombres.concat(' ').concat(perito.apellidos)}" />
+						</p:column>
+						<p:column headerText="Calificación">
+							<h:outputText value="#{perito.calificacion}" />
+						</p:column>
+						<p:column headerText="Ubicación">
+							<h:outputText value="#{empty perito.direccion ? '' : perito.direccion }" />
+						</p:column>
+						<p:column headerText="No. solicitues abiertas">
+							<h:outputText value="#{asignarPeritoBean.casosAbiertos(perito)}" />
+						</p:column>
+						<p:column headerText="Asignados semana">
+							<h:outputText value="#{asignarPeritoBean.casosAsignadosSemana(perito)}" />
+						</p:column>
+						<p:column headerText="Asignados mes">
+							<h:outputText value="#{asignarPeritoBean.casosAsignadosMes(perito)}" />
+						</p:column>
+						
+					<!-- 	<p:column headerText="Departamento">
+							<h:outputText value="#{perito.departamento}" />
+						</p:column>
+						
+						<p:column headerText="Ciudad">
+                            <h:outputText value="#{perito.ciudad.centroPoblado}" />
+						</p:column> -->
+					</p:dataTable>
+				</p:panel>
+				
+				<div class="content_calendar">
+					<center>
+						<p:commandButton value="Asignar"
+                            action="#{asignarPeritoBean.asignarPerito()}"
+                            icon="ui-icon-check"
+                            styleClass="button_green"
+                            style="margin-top: 15px;" />
+					</center>
+					<p:spacer height="10" />
+					<p:schedule view="agendaWeek"  id="agendaPeritos" value="#{asignarPeritoBean.eventModel}" timeZone="GMT-5" style="width: 82%" timeFormat="hh:mm TT { - hh:mm TT}" />
+					
+					<input type="hidden"
+						name="${_csrf.parameterName}"
+						value="${_csrf.token}"/>
+				</div>
+				<p:outputPanel style="margin-left: 50px;">
+					<p:commandButton value="Cancelar" action="#{asignarPeritoBean.cancelar()}" icon="ui-icon-close" styleClass="button_red" style="margin-top: 45px;"/>
+				</p:outputPanel>
+			</h:form>
+		</ui:define>
+	
+	</ui:composition>
+</h:body>
+</html>

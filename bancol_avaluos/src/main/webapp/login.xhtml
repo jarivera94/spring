@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" 
+	>
+<h:head>
+	<h:outputStylesheet name="css/style_index.css" />
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+<h:body >
+	<div id="page" class="login">
+		<div id="logotipo">
+			<div style="text-align: center;">
+				<h:graphicImage id="logo" name="images/logo_gia_blanco_trans_smaller.png" />
+			</div>
+		</div>
+		<hr style="background-color: #f2f2f2;"/>
+		<div id="content">
+			<h:form id="login" prependId="false"
+				onsubmit="document.getElementById('login').action='login.do';">
+				<p>Bienvenido!   inicia tu sesión</p>
+				<p:panel id="iniciarSesion" >
+					<h:panelGrid style="width: 98%; margin: 0px auto;">
+						<p:row>
+							<p:column>
+								<h:outputText value="Usuario:"
+									style="font-size: 16px !important;font-weight: bold;/*color: #1B82A0 !important;*/color: white !important;" styleClass="outputText"/>
+								<p:inputText id="username" styleClass="inputText" type="text" required="true" label="Usuario">
+									<f:validateLength minimum="3" />
+								</p:inputText>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>
+								<h:outputText value="Contraseña:"
+									style="font-size: 16px !important;font-weight: bold;/*color: #1B82A0 !important;*/color: white !important;" styleClass="outputText" />
+								<p:password id="inlineContrasena" styleClass="inputText" required="true" />
+							</p:column>
+						</p:row>						
+					<p:messages id="errorMessages" showIcon="false" styleClass="message"/>
+						<center>
+							<p:commandButton id="loginButton" value="Entrar" type="submit"
+								ajax="false" styleClass="button_green" />
+						</center>
+					</h:panelGrid>
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+				</p:panel>
+			</h:form>
+			<br /> <br />
+			<center>
+				<p id="p2">Copyright
+					2015 Bancol  |  All Rights Reserved</p>
+			</center>
+		</div>
+		<div id="vector" class="image_vector"></div>
+		<div id="footer" class="image_down"></div>
+	</div>
+
+</h:body>
+</html>

@@ -1,0 +1,206 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<h:form id="formBtnAccion"
+		style="  position: absolute;bottom: 90%;left: 5%;z-index: 25;width: 85%; margin-bottom: 0px;">
+		<p:toolbar id="toolbar"
+			rendered="#{not empty listadoAvaluosBean.avaluo}">
+			<f:facet name="right">
+				<p:commandButton ajax="false" value="Asignar Perito"
+					action="#{listadoAvaluosBean.asignarPerito()}" icon="ui-icon-check"
+					rendered="#{(listadoAvaluosBean.avaluo.estado.estado.key() eq '1' and listadoAvaluosBean.asignarPerito)}"
+					update=":form:avaluoTabla" styleClass="button_green" />
+				<p:commandButton value="Aceptar"
+					action="#{listadoAvaluosBean.aceptarCaso()}" icon="ui-icon-check"
+					rendered="#{listadoAvaluosBean.avaluo.estado.estado eq 'Asignado' and listadoAvaluosBean.aceptarSolicitudes}"
+					update=":form:growl :form:avaluoTabla :avaluoSeleccionado formBtnAccion:toolbar"
+					styleClass="button_green" />
+				<p:commandButton value="Rechazar Caso" icon="ui-icon-closethick"
+					rendered="#{listadoAvaluosBean.avaluo.estado.estado eq 'Asignado' and listadoAvaluosBean.rechazarCaso and listadoAvaluosBean.avaluo.perito eq listadoAvaluosBean.usuarioActivo}"
+					oncomplete="PF('rechazoDialog').show()"
+					update="formBtnAccion:toolbar :form:avaluoTabla"
+					style="margin-right: 15px;" styleClass="button_red" />
+				<p:commandButton value="Programar Cita"
+					action="#{listadoAvaluosBean.programarCita()}"
+					icon="ui-icon-calendar"
+					rendered="#{listadoAvaluosBean.avaluo.estado.estado eq 'PorProgramarCita'
+								and listadoAvaluosBean.programarCita}" />
+				<p:commandButton value="Confirmar documentos"
+					action="#{listadoAvaluosBean.confirmarDocumentos()}"
+					icon="ui-icon-folder-open" styleClass="button_green"
+					rendered="#{listadoAvaluosBean.avaluo.estado.estado eq 'PendienteDocumentos'
+                                and listadoAvaluosBean.confirmarDocumentos}"
+					update=":form:growl :form:avaluoTabla, :formBtnAccion " />
+				<p:commandButton value="Ingresar Informe" icon="ui-icon-pencil"
+					styleClass="#{listadoAvaluosBean.avaluo.estado.estado eq 'PendienteDocumentos' ? '' : 'button_green'}"
+					action="#{listadoAvaluosBean.ingresarInforme()}"
+					rendered="#{(listadoAvaluosBean.avaluo.estado.estado.key() gt '3'
+                                and listadoAvaluosBean.avaluo.estado.estado.key() lt '7'
+                                and listadoAvaluosBean.ingresarInforme)
+                                or (listadoAvaluosBean.avaluo.estado.estado.key() eq '11' and listadoAvaluosBean.editarAvaluoDespuesDeAprobado)}"
+					update=":form:growl" />
+				<p:commandButton value="Confirmar pago"
+					action="#{listadoAvaluosBean.confirmarPago()}" icon="ui-icon-check"
+					rendered="#{listadoAvaluosBean.avaluo.estado.estado eq 'PendientePago'
+                                and listadoAvaluosBean.confirmarPago}"
+					update=":form:growl :form:avaluoTabla, :formBtnAccion"
+					styleClass="button_green" />
+				<p:commandButton value="Revisar avalúo"
+					action="#{listadoAvaluosBean.revisarAvaluo()}" icon="ui-icon-check"
+					styleClass="button_green"
+					rendered="#{(listadoAvaluosBean.avaluo.estado.estado.key() eq '8'
+								or listadoAvaluosBean.avaluo.estado.estado.key() eq '10')
+                                and listadoAvaluosBean.revisarAvaluos}"
+					update=":form:growl" />
+				<p:commandButton value="Corregir Informe"
+					action="#{listadoAvaluosBean.corregirInforme()}"
+					icon="ui-icon-check" styleClass="button_green"
+					rendered="#{listadoAvaluosBean.avaluo.estado.estado.key() eq '9'
+                                and listadoAvaluosBean.corregirInforme}" />
+				<p:commandButton value="Ver Fotos"
+					action="#{listadoAvaluosBean.subirFotos()}" icon="ui-icon-image"
+					rendered="#{(listadoAvaluosBean.avaluo.estado.estado.key() gt '7'
+								and listadoAvaluosBean.avaluo.estado.estado.key() lt '12')
+                                and listadoAvaluosBean.verFotos
+                                and listadoAvaluosBean.editarAvaluoDespuesDeAprobado}" />
+				<p:commandButton value="Ver Anexos"
+					action="#{listadoAvaluosBean.subirAnexos()}" icon="ui-icon-comment"
+					rendered="#{(listadoAvaluosBean.avaluo.estado.estado.key() gt '7'
+								and listadoAvaluosBean.avaluo.estado.estado.key() lt '12')
+                                and listadoAvaluosBean.verFotos
+                                and listadoAvaluosBean.editarAvaluoDespuesDeAprobado}" />
+				<p:commandButton value="Ver Croquis"
+					action="#{listadoAvaluosBean.subirCroquis()}"
+					icon="ui-icon-comment"
+					rendered="#{(listadoAvaluosBean.avaluo.estado.estado.key() gt '7'
+								and listadoAvaluosBean.avaluo.estado.estado.key() lt '12')
+                                and listadoAvaluosBean.verFotos
+                                and listadoAvaluosBean.editarAvaluoDespuesDeAprobado}" />
+				<p:commandButton value="Cargar Fotos"
+					action="#{listadoAvaluosBean.subirFotos()}" icon="ui-icon-image"
+					rendered="#{((listadoAvaluosBean.avaluo.estado.estado.key() gt '3'
+                                and listadoAvaluosBean.avaluo.estado.estado.key() lt '7')
+                                or listadoAvaluosBean.avaluo.estado.estado.key() eq '9')
+                                and listadoAvaluosBean.cargarFotos}" />
+				<p:commandButton value="Cargar Anexos"
+					action="#{listadoAvaluosBean.subirAnexos()}" icon="ui-icon-comment"
+					rendered="#{((listadoAvaluosBean.avaluo.estado.estado.key() gt '3'
+                                and listadoAvaluosBean.avaluo.estado.estado.key() lt '7')
+                                or listadoAvaluosBean.avaluo.estado.estado.key() eq '9')
+                                and listadoAvaluosBean.cargarFotos}" />
+				<p:commandButton value="Cargar Croquis"
+					action="#{listadoAvaluosBean.subirCroquis()}"
+					icon="ui-icon-comment"
+					rendered="#{((listadoAvaluosBean.avaluo.estado.estado.key() gt '3'
+                                and listadoAvaluosBean.avaluo.estado.estado.key() lt '7')
+                                or listadoAvaluosBean.avaluo.estado.estado.key() eq '9')
+                                and listadoAvaluosBean.cargarFotos}" />
+				<p:commandButton value="Aceptar Devolución"
+					action="#{listadoAvaluosBean.devolver()}"
+					rendered="#{listadoAvaluosBean.avaluo.estado.estado.key() eq '12'
+								and listadoAvaluosBean.devolverCaso}"
+					icon="ui-icon-arrowreturnthick-1-w" styleClass="button_green"
+					oncomplete="PF('avaluoDialog').hide();"
+					update=":form:avaluoTabla :formBtnAccion :avaluoSeleccionado" />
+				<p:commandButton value="Rechazar devolución"
+					action="#{listadoAvaluosBean.reactivar()}"
+					update=":form:avaluoTabla :formBtnAccion :avaluoSeleccionado"
+					rendered="#{listadoAvaluosBean.avaluo.estado.estado == 'PendienteDevolucion'
+                                and listadoAvaluosBean.rechazarDevolucion}"
+					icon="ui-icon-arrowrefresh-1-n" styleClass="button_red" />
+				<p:commandButton value="Reactivar"
+					action="#{listadoAvaluosBean.reactivar()}"
+					rendered="#{listadoAvaluosBean.avaluo.estado.estado == 'Devuelto'
+                                and listadoAvaluosBean.reactivarCaso}"
+					update=":form:avaluoTabla :formBtnAccion"
+					icon="ui-icon-arrowrefresh-1-n" styleClass="button_green" />
+				<p:commandButton value="Editar"
+					action="#{listadoAvaluosBean.editarSolicitud()}"
+					icon="ui-icon-check"
+					rendered="#{listadoAvaluosBean.editarSolicitud 
+                                and listadoAvaluosBean.avaluo.estado.estado.key() ne '14'}" />
+				<p:menuButton value="Más">
+					<p:menuitem value="Reasignar Solicitud"
+						rendered="#{listadoAvaluosBean.reasignarSolicitud
+									and listadoAvaluosBean.avaluo.estado.estado.key() ne '1'
+									and listadoAvaluosBean.avaluo.estado.estado.key() ne '11'
+									and listadoAvaluosBean.avaluo.estado.estado.key() ne '14'}"
+						action="#{listadoAvaluosBean.asignarPerito()}"
+						icon="ui-icon-check" update=":form:avaluoTabla" />
+					<p:menuitem value="Devolver Solicitud"
+						rendered="#{listadoAvaluosBean.devolverCaso 
+									and (listadoAvaluosBean.avaluo.estado.estado.key() ne '1'
+									and listadoAvaluosBean.avaluo.estado.estado.key() ne '11'
+									and listadoAvaluosBean.avaluo.estado.estado.key() ne '12'
+									and listadoAvaluosBean.avaluo.estado.estado.key() ne '13'
+									and listadoAvaluosBean.avaluo.estado.estado.key() ne '14')}"
+						action="#{listadoAvaluosBean.devolver()}"
+						icon="ui-icon-arrowreturnthick-1-w"
+						oncomplete="PF('avaluoDialog').hide();"
+						update=":form:avaluoTabla :formBtnAccion :avaluoSeleccionado" />
+					<p:menuitem value="Solicitar Devolución"
+						rendered="#{listadoAvaluosBean.avaluo.estado.estado.key() gt '2'
+									and listadoAvaluosBean.avaluo.estado.estado.key() lt '8'
+									and listadoAvaluosBean.avaluo.estado.estado.key() ne '13'
+									and listadoAvaluosBean.solicitarDevolucion}"
+						oncomplete="PF('solicitarDevolucion').show();"
+						icon="ui-icon-alert" />
+					<p:menuitem value="Reprogramar Cita"
+						action="#{listadoAvaluosBean.reprogramarCita()}"
+						icon="ui-icon-calendar"
+						rendered="#{listadoAvaluosBean.avaluo.estado.estado == 'CitaProgramada'
+									and listadoAvaluosBean.reProgramarCita}" />
+					<p:menuitem value="Estados"
+						action="#{listadoAvaluosBean.verEstados()}" icon="ui-icon-clock" />
+					<p:menuitem value="Bitacora"
+						action="#{listadoAvaluosBean.verBitacora()}" icon="ui-icon-clock" />
+					<p:menuitem value="PDF sin Firma" ajax="false"
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						rendered="#{(listadoAvaluosBean.avaluo.estado.estado.key() gt '7'
+									and listadoAvaluosBean.avaluo.estado.estado.key() lt '11')
+									and listadoAvaluosBean.descargarPDFSinFirmas}"
+						icon="ui-icon-arrowthick-1-s">
+						<p:fileDownload value="#{listadoAvaluosBean.file}" />
+					</p:menuitem>
+					<p:menuitem value="PDF con Firma" ajax="false"
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						rendered="#{listadoAvaluosBean.avaluo.estado.estado.key() eq '11'
+									and listadoAvaluosBean.descargarPDFConFirmas}"
+						icon="ui-icon-arrowthick-1-s">
+						<p:fileDownload value="#{listadoAvaluosBean.file}" />
+					</p:menuitem>
+					<p:menuitem value="PDF Metodologias" icon="ui-icon-arrowthick-1-s"
+						rendered="#{listadoAvaluosBean.avaluo.estado.estado.key() eq '11' and listadoAvaluosBean.descargarPDFAnexoMetodologias}"
+						onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false">
+						<p:fileDownload
+							value="#{listadoAvaluosBean.fileAnexoMetodologias}" />
+					</p:menuitem>
+					<p:menuitem value="Documentos"
+						action="#{listadoAvaluosBean.subirDocumentos()}"
+						rendered="#{listadoAvaluosBean.crearSolicitudes or listadoAvaluosBean.aceptarSolicitudes}"
+						icon="ui-icon-circle-plus" />
+					<p:menuitem value="Ver honorarios"
+						oncomplete="PF('informacionHonorarios').show();"
+						action="#{listadoAvaluosBean.calcularValorHonorarios()}"
+						update=":informacion-honorarios" icon="ui-icon-print"
+						rendered="#{listadoAvaluosBean.avaluo.estado.estado eq 'PendientePago'
+									and not listadoAvaluosBean.esCobradoPorBancol(listadoAvaluosBean.avaluo)
+									and  listadoAvaluosBean.verInformacionDePerito}" />
+					<p:menuitem value="Cancelar avalúo"
+						rendered="#{listadoAvaluosBean.avaluo.estado.estado ne 'Aprobado' and listadoAvaluosBean.avaluo.estado.estado ne 'Cancelado'
+									and listadoAvaluosBean.cancelarAvaluo}"
+						onclick="PF('confirmacionCancelar').show();"
+						icon="ui-icon-closethick" />
+
+				</p:menuButton>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+			</f:facet>
+		</p:toolbar>
+	</h:form>
+
+</ui:composition>

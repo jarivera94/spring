@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet name="grid/grid.css" library="primefaces" />
+</h:head>
+<body>
+	<ui:composition template="/template/bancol_avaluos_template.xhtml">
+
+		<ui:define name="content">
+			<!--  
+            <script async="true" defer="true" src="http://maps.google.com/maps/api/js?client=AIzaSyBk_T1aF3u4MVbKcP_OKsGnqK1YDO2K5t8&amp;v=3.21&amp;callback=initMap" type="text/javascript"></script>
+			-->
+
+			<script src="http://maps.google.com/maps/api/js?sensor=false"
+				type="text/javascript"></script>
+			<h1 style="width: 90%; margin: 0px auto;">
+				Informe de avalúo
+				<h:outputLabel
+					value="#{informeHipotecarioBean.avaluoHipotecarioDTO.tipoAvaluo.nombre} #{informeHipotecarioBean.avaluoHipotecarioDTO.entidad.prefijo}-#{informeHipotecarioBean.avaluoHipotecarioDTO.codigoExterno}" />
+			</h1>
+
+
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false">
+				<p:graphicImage name="images/ajax-loader.gif" />
+			</p:dialog>
+
+
+			<o:form id="informeHipotecario">
+				<p:growl id="growl" showDetail="true" sticky="true" />
+				<p:accordionPanel id="accordionPanel" activeIndex="0">
+					<p:ajax onevent="tabChange"
+						listener="#{informeHipotecarioBean.cambioDeTab}" global="false" />
+
+					<ui:include
+						src="#{'/pages/informes/informe_hipotecario_componentes/informacion_basica/tab_informacion_basica.xhtml'}" />
+
+					<ui:include
+						src="#{'/pages/informes/informe_hipotecario_componentes/titulacion/tab_titulacion.xhtml'}" />
+
+					<ui:include
+						src="#{'/pages/informes/informe_hipotecario_componentes/informacion_barrio/tab_informacion_barrio.xhtml'}" />
+
+					<ui:include
+						src="#{'/pages/informes/informe_hipotecario_componentes/informacion_inmueble/tab_informacion_inmueble.xhtml'}" />
+
+					<ui:include
+						src="#{'/pages/informes/informe_hipotecario_componentes/informacion_construccion/tab_informacion_construccion.xhtml'}" />
+
+					<ui:include
+						src="#{'/pages/informes/informe_hipotecario_componentes/informacion_valor/tab_informacion_valor.xhtml'}" />
+				</p:accordionPanel>
+
+				<ui:include
+					src="#{'/pages/informes/informe_hipotecario_componentes/componentes/contenedor_botones.xhtml'}" />
+
+
+				<h:inputHidden id="lat" value="#{informeHipotecarioBean.lat}" />
+				<h:inputHidden id="lng" value="#{informeHipotecarioBean.lng}" />
+				<p:remoteCommand name="agregarMarcadorBean"
+					actionListener="#{informeHipotecarioBean.agregarMarcador()}"
+					update=":informeHipotecario:accordionPanel:coordenadasDeGeorreferenciacion"
+					oncomplete="agregarmarcadorcompleto()" />
+
+				<script type="text/javascript">
+					var currentMarker = null;
+
+					function agregarMarcador(event) {
+					    if(currentMarker === null) {
+					        document.getElementById('informeHipotecario:lat').value = event.latLng.lat();
+					        document.getElementById('informeHipotecario:lng').value = event.latLng.lng();
+
+					        currentMarker = new google.maps.Marker({
+					            position:new google.maps.LatLng(event.latLng.lat(), event.latLng.lng())
+					        });
+
+					        PF('map').addOverlay(currentMarker);
+					        agregarMarcadorBean();
+					    }   
+					}
+                    function agregarmarcadorcompleto() {
+                        currentMarker = null;
+                    }
+				</script>
+				<input type="hidden" name="${_csrf.parameterName}"
+					value="${_csrf.token}" />
+
+			</o:form>
+
+			<ui:include
+				src="#{'/pages/componentes/dialogs/avaluos_anteriores.xhtml'}" />
+
+			<ui:include
+				src="#{'/pages/componentes/dialogs/eliminar_metodo_valuacion.xhtml'}" />
+
+			<ui:include
+				src="#{'/pages/componentes/dialogs/correcciones_informe.xhtml'}" />
+
+
+			<ui:include src="/WEB-INF/template/dialogo_subsidio.xhtml" />
+			
+			
+			<script type="application/javascript">
+				$('.nofireenter').keypress(function(event){
+					console.log(event);
+					if( event.keyCode == 13 ){
+						event.stopImmediatePropagation();
+						event.preventDefault();
+						return false;
+					}
+				});		
+  				
+				$('.nofireenter').blur(function(event){
+					console.log( event );
+					if( event.keyCode == 13 ){
+						event.stopImmediatePropagation();
+						event.preventDefault();
+						return false;
+					}
+				});	
+
+				function stopFireEnter(event){
+					console.log(event);
+				}
+				
+                function saveDraft() {
+                   document.getElementById('informeHipotecario:autoGuardar').onclick();
+                   window.setTimeout(saveDraft,120000);
+                }
+                function initSaveTimer(e) {
+                    window.setTimeout(saveDraft,120000);
+                }
+                this.addEventListener("load",initSaveTimer,true);
+            
+                /*<![CDATA[*/
+                $(function() {
+                    //datatableAreas es el widget establecido para la tabla de areas.
+      			    $.extend(PF("datatableAreas"), {
+      			         onKeyDown : function(e) {
+      			            var key = e.which,
+      			                keyCode = $.ui.keyCode;
+      			            if((key === keyCode.ENTER||key === keyCode.NUMPAD_ENTER)) {
+      			                e.preventDefault();
+      			            }
+      			         }
+      			    });
+
+      			});       
+      			/*]]>*/
+            </script>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

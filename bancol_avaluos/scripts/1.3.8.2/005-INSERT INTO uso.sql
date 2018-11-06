@@ -1,0 +1,16 @@
+INSERT INTO avaluos.uso (id, nombre) VALUES (51,'Sin uso - Eriazo');
+INSERT INTO avaluos.uso (id, nombre) VALUES (52,'Sin uso - Vivienda');
+INSERT INTO avaluos.uso (id, nombre) VALUES (53,'2a. Vivienda');
+INSERT INTO avaluos.uso (id, nombre) VALUES (54,'Turismo');
+INSERT INTO avaluos.uso (id, nombre) VALUES (55,'Ind. Alimentos');
+INSERT INTO avaluos.uso (id, nombre) VALUES (56,'Ind. Energía y Sanitarias');
+INSERT INTO avaluos.uso (id, nombre) VALUES (57,'Ind. Madera y Muebles');
+INSERT INTO avaluos.uso (id, nombre) VALUES (58,'Ind. Metalmecánica');
+INSERT INTO avaluos.uso (id, nombre) VALUES (59,'Ind. Papel e Imprenta');
+INSERT INTO avaluos.uso (id, nombre) VALUES (60,'Ind. Química');
+INSERT INTO avaluos.uso (id, nombre) VALUES (61,'Ind. Textil y Cuero');
+INSERT INTO avaluos.uso (id, nombre) VALUES (62,'Ind. Otras');
+INSERT INTO avaluos.uso (id, nombre) VALUES (63,'Transporte');
+INSERT INTO avaluos.uso (id, nombre) VALUES (64,'Comunicaciones');
+INSERT INTO avaluos.uso (id, nombre) VALUES (65,'Construcción Viviendas');
+INSERT INTO avaluos.uso (id, nombre) VALUES (66,'Construcción Otras Obras');

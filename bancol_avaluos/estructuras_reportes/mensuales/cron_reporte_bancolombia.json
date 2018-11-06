@@ -1,0 +1,482 @@
+{
+    "nombre":"reporte_bancolombia",
+    "cabecera":"tipo_documento_identificacion;cliente_numero_documento;primer_nombre_solicitante;segundo_nombre_solicitante;primer_apellido_solicitante;segundo_apellido_solicitante;celular_solicitante;telefono_solicitante;correo_electronico_solicitante;direccion_de_contacto_solicitante;departamento;municipio;entidad;segmento;codigo_externo;fecha_aprobación;objeto;motivo;proposito;tipo_avaluo;tipo_credito;tipo_subsidio;propietario;departamento_inmueble;municipio_inmueble;barrio;nombre_del_conjunto;sector;direccion_inmueble_informe;numero_de_escritura;departamento_2;municipio_2;numero_notaria_de_escritura;fecha_de_escritura;cedula_catastral;chip;longitud;latitud;alcantarillado_en_el_sector;acueducto_en_el_sector;gas_en_el_sector;energia_en_el_sector;telefono_en_el_sector;vias_pavimentadas;sardineles_en_las_vias;andenes_en_las_vias;estrato;barrio_legal;topografia_sector;condiciones_salubridad;transporte;uso_predominante_inmueble;demanda_interes;paradero;alumbrado;arborizacion;alamedas;ciclo_rutas;nivel_equipamiento_comercial;distancia_aproximada_comercial;nivel_equipamiento_escolar;distancia_aproximada_escolar;nivel_equipamiento_asistencial;distancia_aproximada_asistencial;nivel_equipamiento_estacionamiento;distancia_aproximada_estacionamiento;nivel_equipamiento_areas_verdes;distancia_aproximada_areas_verdes;nivel_equipamiento_zonas_recreativas;distancia_aproximada_zonas_recreativas;impacto_ambiental_aire;explicacion_impacto_ambiental_aire;impacto_ambiental_basura;explicacion_impacto_ambiental_basura;impacto_ambiental_inseguridad;explicacion_impacto_ambiental_inseguridad;impacto_ambiental_ruido;explicacion_impacto_ambiental_ruido;impacto_ambiental_aguas_servidas;explicacion_impacto_ambiental_aguas_servidas;impacto_ambiental_otro;explicacion_i_a_otro;descripcion_general_sector;perspectivas_de_valorizacion;actualidad_edificadora;comportamiento_oferta_demanda;alcantarillado_en_el_predio;acueducto_en_el_predio;gas_en_el_predio;energia_en_el_predio;telefono_en_el_predio;tipo_inmueble;descripcion_tipo_inmueble;uso_actual;descripcion_uso_inmueble;clase_inmueble;descripcion_clase_inmueble;ocupante;sometido_a_propiedad_horizontal;decreto_acuerdo;altura_permitida;observaciones_altura_permitida;aislamiento_posterior;observaciones_aislamiento_posterior;aislamiento_lateral;observaciones_aislamiento_lateral;antejardin;observaciones_antejardin;indice_ocupacion;observaciones_indice_ocupacion;indice_construccion;observaciones_indice_construccion;predio_subdividido_fisicamente;unidades;contadores_agua;contadores_luz;accesorios;area_lote;frente;fondo;relacion;area_medida_inspeccion;area_susceptible_legalizar;area_catastral;area_licencia_construccion;area_valorada;observaciones_generales_inmueble;condicion_ph;numero_piso;conjunto_cerrado;numero_de_edificios;unidades_por_piso;ubicacion;total_unidades;coeficiente;area_actividad;uso_principal_ph;rph;porteria;citofono;bicicletero;piscina;tanque_de_agua;club_house;garaje_visitantes;teatrino;sauna;vigilancia_privada;tipo_vigilancia;administracion;valor_administracion;juegos_ninos;cancha_multiple;bomba_eyectora;aire_acondicionado_central;cancha_squash;zonas_verdes_comunales;gimnasio;calefacion;terraza_comunal;golfito;salon_comunal;shut_basuras;equipo_de_presion_constante;planta_electrica;ascensor;numero_de_ascensores;turco;bbq;jardin_infantil;otros;area_privada;area_construida;area_libre;uso_area_libre;estado_de_construccion;remodelado;fecha_remodelacion;estado_conservacion;porcentaje_avance;tipo_licencia;numero_licencia;en_obra;licencia_construccion;numero_de_pisos;numero_sotanos;ano_de_construccion;vetustez;pisos_bodega;estructura;ajustes_sismoresistentes;cubierta;fachada;tipo_fachada;estructura_reforzada;danos_previos;material_de_construccion;detalle_material;iluminacion;ventilacion;irregularidad_planta;irregularidad_altura;observaciones_estructura;habitaciones;estar_habitacion;cuarto_servicio;closet;sala;comedor;bano_privado;bano_social;bano_servicio;cocina;estudio;balcon;terraza;patio_interior;jardin;zona_de_ropas;zona_verde_privada;local;oficina;bodega;observaciones_dependencias;estado_acabados_pisos;calidad_acabados_pisos;estado_acabados_muros;calidad_acabados_muros;estado_acabados_techos;calidad_acabados_techos;estado_acabados_madera;calidad_acabados_madera;estado_acabados_metal;calidad_acabados_metal;estado_acabados_banos;calidad_acabados_banos;estado_acabados_cocina;calidad_acabados_cocina;tipo_garaje;numero_total_de_garajes;total_cupos_parquedaro;numero_garaje_1;matricula_garaje_1;garaje_cubierto_1;garaje_doble_1;garaje_paralelo_1;garaje_servidumbre_1;numero_garaje_2;matricula_garaje_2;garaje_cubierto_2;garaje_doble_2;garaje_paralelo_2;garaje_servidumbre_2;numero_garaje_3;matricula_garaje_3;garaje_cubierto_3;garaje_doble_3;garaje_paralelo_3;garaje_servidumbre_3;numero_garaje_4;matricula_garaje_4;garaje_cubierto_4;garaje_doble_4;garaje_paralelo_4;garaje_servidumbre_4;numero_garaje_5;matricula_garaje_5;garaje_cubierto_5;garaje_doble_5;garaje_paralelo_5;garaje_servidumbre_5;tipo_deposito;numero_total_depositos;numero_deposito_1;matricula_inmobiliaria_deposito_1;numero_deposito_2;matricula_inmobiliaria_deposito_2;numero_deposito_3;matricula_inmobiliaria_deposito_3;numero_deposito_4;matricula_inmobiliaria_deposito_4;numero_deposito_5;matricula_inmobiliaria_deposito_5;observaciones_generales_construccion;metodo_valuacion_1;concepto_del_metodo_1;metodo_valuacion_2;concepto_del_metodo_2;metodo_valuacion_3;concepto_del_metodo_3;metodo_valuacion_4;concepto_del_metodo_4;metodo_valuacion_5;concepto_del_metodo_5;metodo_valuacion_6;concepto_del_metodo_6;metodo_valuacion_7;concepto_del_metodo_7;metodo_valuacion_8;concepto_del_metodo_8;metodo_valuacion_9;concepto_del_metodo_9;tiempo_esperado_de_comercializacion;total_area_privada;valor_area_privada;area_garaje;valor_area_garaje;area_deposito;valor_area_deposito;area_terreno;valor_area_terreno;area_construccion;valor_area_construccion;area_otros;valor_area_otros;total_area_libre;valor_area_libre;tamano_area_1;descripcion_area_1;valor_unitario_area_1;valor_total_area_1;tamano_area_2;descripcion_area_2;valor_unitario_area_2;valor_total_area_2;tamano_area_3;descripcion_area_3;valor_unitario_area_3;valor_total_area_3;tamano_area_4;descripcion_area_4;valor_unitario_area_4;valor_total_area_4;tamano_area_5;descripcion_area_5;valor_unitario_area_5;valor_total_area_5;tamano_area_6;descripcion_area_6;valor_unitario_area_6;valor_total_area_6;tamano_area_7;descripcion_area_7;valor_unitario_area_7;valor_total_area_7;tamano_area_8;descripcion_area_8;valor_unitario_area_8;valor_total_area_8;tamano_area_9;descripcion_area_9;valor_unitario_area_9;valor_total_area_9;valor_total_avaluo;valor_uvr;valor_avaluo_en_uvr;valor_asegurable;porcentaje_terreno;valor_proporcional_terreno;valor_proporcional_construccion;valor_integral_construccion;valor_integral_terreno;calificacion_garantia;credito_hipotecario_vivienda;retanqueo_vivienda;reforma_o_remodelacion_vivienda;constructor_individual;leasing_habitacional_persona_natural;leasing_inmobiliario_vivienda_persona_juridica;credito_hipotecario_diferente_de_vivienda;retanqueo_diferente_de_vivienda;leasing_diferente_de_vivienda_persona_natural;leasing_inmobiliario_diferente_de_vivienda_persona_juridica;observaciones;direccion_anexos;otras_direcciones;descripcion_general",
+    "consulta":"SELECT 
+    coalesce(td.nombre,'') || ';' || 
+    coalesce(a.cliente_numero_documento,0) || ';' ||
+    coalesce(c.primer_nombre_solicitante,'') || ';' || 
+    coalesce(c.segundo_nombre_solicitante,'') || ';' || 
+    coalesce(c.primer_apellido_solicitante,'') || ';' || 
+    coalesce(c.segundo_apellido_solicitante,'') || ';' || 
+    coalesce(c.celular_solicitante,'') || ';' ||
+    coalesce(c.telefono_solicitante,'') || ';' || 
+    coalesce(c.correo_electronico_solicitante,'') || ';' || 
+    coalesce(c.direccion_de_contacto_solicitante,'') || ';' || 
+    coalesce(d.departamento,'') || ';' ||
+    coalesce(d.municipio,'') || ';' ||
+    coalesce(e.nombre,'') || ';' ||
+    coalesce(s.nombre,'') || ';' ||
+    coalesce(a.codigo_externo,'') || ';' || 
+    coalesce(ea.fecha_estado\\:\\:text,'') || ';' || 
+    coalesce(o.nombre,'') || ';' || 
+    coalesce(m.nombre,'') || ';' || 
+    coalesce(a.proposito,'') || ';' ||
+    coalesce(ta.nombre,'') || ';' ||
+    coalesce(a.tipo_credito,'') || ';' ||
+    coalesce(quote_ident(sb.nombre),'') || ';' ||
+    coalesce(quote_ident(a.propietario),'') || ';' ||
+    coalesce(quote_ident(di.departamento),'') || ';' ||
+    coalesce(quote_ident(di.municipio),'') || ';' ||
+    coalesce(quote_ident(a.barrio),'') || ';' ||
+    coalesce(quote_ident(a.nombre_del_conjunto),'') || ';' ||
+    coalesce(quote_ident(st.nombre),'') || ';' ||
+    coalesce(quote_ident(a.direccion_inmueble_informe),'') || ';' ||
+    coalesce(h.numero_de_escritura,'') || ';' ||
+    coalesce(dn.departamento,'') || ';' ||
+    coalesce(dn.municipio,'') || ';' ||
+    coalesce(h.numero_notaria_de_escritura,'') || ';' ||
+    coalesce(h.fecha_de_escritura\\:\\:timestamp\\:\\:date\\:\\:text,'') || ';' ||
+    coalesce(a.cedula_catastral,'') || ';' ||
+    coalesce(h.chip,'') || ';' ||
+	REPLACE(a.longitud\\:\\:text,'.',',') || ';' ||
+	REPLACE(a.latitud\\:\\:text,'.',',') || ';' ||
+	CASE WHEN h.alcantarillado_en_el_sector = TRUE THEN 'Si' WHEN h.alcantarillado_en_el_sector = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.acueducto_en_el_sector = TRUE THEN 'Si' WHEN h.acueducto_en_el_sector = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.gas_en_el_sector = TRUE THEN 'Si' WHEN h.gas_en_el_sector = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.energia_en_el_sector = TRUE THEN 'Si' WHEN h.energia_en_el_sector = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.telefono_en_el_sector = TRUE THEN 'Si' WHEN h.telefono_en_el_sector = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.vias_pavimentadas = TRUE THEN 'Si' WHEN h.vias_pavimentadas = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.sardineles_en_las_vias = TRUE THEN 'Si' WHEN h.sardineles_en_las_vias = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.andenes_en_las_vias = TRUE THEN 'Si' WHEN h.andenes_en_las_vias = FALSE THEN 'No' ELSE '' END || ';' ||
+    coalesce(et.nombre,'') || ';' ||
+    CASE WHEN h.barrio_legal = TRUE THEN 'Si' WHEN h.barrio_legal = FALSE THEN 'No' ELSE '' END || ';' ||
+    coalesce(tf.nombre,'') || ';' ||
+    coalesce(cs.nombre,'') || ';' ||
+    coalesce(tp.nombre,'') || ';' ||
+    coalesce(up.nombre,'') || ';' ||
+    coalesce(h.demanda_interes,'') || ';' ||
+    CASE WHEN h.paradero = TRUE THEN 'Si' WHEN h.paradero = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.alumbrado = TRUE THEN 'Si' WHEN h.alumbrado = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.arborizacion = TRUE THEN 'Si' WHEN h.arborizacion = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.alamedas = TRUE THEN 'Si' WHEN h.alamedas = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.ciclo_rutas = TRUE THEN 'Si' WHEN h.ciclo_rutas = FALSE THEN 'No' ELSE '' END || ';' ||
+    coalesce(h.nivel_equipamiento_comercial,'') || ';' ||
+    coalesce(h.distancia_aproximada_comercial,'') || ';' ||
+    coalesce(h.nivel_equipamiento_escolar,'') || ';' ||
+    coalesce(h.distancia_aproximada_escolar,'') || ';' ||
+    coalesce(h.nivel_equipamiento_asistencial,'') || ';' ||
+    coalesce(h.distancia_aproximada_asistencial,'') || ';' ||
+    coalesce(h.nivel_equipamiento_estacionamiento,'') || ';' ||
+    coalesce(h.distancia_aproximada_estacionamiento,'') || ';' ||
+    coalesce(h.nivel_equipamiento_areas_verdes,'') || ';' ||
+    coalesce(h.distancia_aproximada_areas_verdes,'') || ';' ||
+    coalesce(h.nivel_equipamiento_zonas_recreativas,'') || ';' ||
+    coalesce(h.distancia_aproximada_zonas_recreativas,'') || ';' ||
+    CASE WHEN h.impacto_ambiental_aire = TRUE THEN 'Si' WHEN h.impacto_ambiental_aire = FALSE THEN 'No' ELSE '' END || ';' ||
+    coalesce(h.explicacion_impacto_ambiental_aire,'') || ';' ||
+    CASE WHEN h.impacto_ambiental_basura = TRUE THEN 'Si' WHEN h.impacto_ambiental_basura = FALSE THEN 'No' ELSE '' END || ';' ||
+    coalesce(h.explicacion_impacto_ambiental_basura,'') || ';' ||
+    CASE WHEN h.impacto_ambiental_inseguridad = TRUE THEN 'Si' WHEN h.impacto_ambiental_inseguridad = FALSE THEN 'No' ELSE '' END || ';' ||
+    coalesce(h.explicacion_impacto_ambiental_inseguridad,'') || ';' ||
+    CASE WHEN h.impacto_ambiental_ruido = TRUE THEN 'Si' WHEN h.impacto_ambiental_ruido = FALSE THEN 'No' ELSE '' END || ';' ||
+    coalesce(h.explicacion_impacto_ambiental_ruido,'') || ';' ||
+    CASE WHEN h.impacto_ambiental_aguas_servidas = TRUE THEN 'Si' WHEN h.impacto_ambiental_aguas_servidas = FALSE THEN 'No' ELSE '' END  || ';' ||
+    coalesce(h.explicacion_impacto_ambiental_aguas_servidas,'') || ';' ||
+    CASE WHEN h.impacto_ambiental_otro = TRUE THEN 'Si' WHEN h.impacto_ambiental_otro = FALSE THEN 'No' ELSE '' END || ';' ||
+    coalesce(quote_ident(h.explicacion_i_a_otro),'') || ';' ||
+    coalesce(quote_ident(h.descripcion_general_sector),'') || ';' ||
+    coalesce(quote_ident(h.perspectivas_de_valorizacion),'') || ';' ||
+    
+    coalesce(quote_ident(replace(h.actualidad_edificadora,'\r\n',' ')),'') || ';' ||
+    coalesce(quote_ident(replace(h.comportamiento_oferta_demanda,'\r\n',' ')),'') || ';' ||
+    CASE WHEN h.alcantarillado_en_el_predio = TRUE THEN 'Si' WHEN h.alcantarillado_en_el_predio = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.acueducto_en_el_predio = TRUE THEN 'Si' WHEN h.acueducto_en_el_predio = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.gas_en_el_predio = TRUE THEN 'Si' WHEN h.gas_en_el_predio = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.energia_en_el_predio = TRUE THEN 'Si' WHEN h.energia_en_el_predio = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.telefono_en_el_predio = TRUE THEN 'Si' WHEN h.telefono_en_el_predio = FALSE THEN 'No' ELSE '' END || ';' ||
+    coalesce(ti.nombre,'') || ';' ||
+    coalesce(h.descripcion_otros_tipo_inmueble,'') || ';' ||
+    coalesce(ua.nombre,'') || ';' ||
+    coalesce(h.descripcion_otros_uso_inmueble,'') || ';' ||
+    coalesce(ci.nombre,'') || ';' ||
+    coalesce(h.descripcion_otros_tipo_inmueble,'')|| ';' ||
+    coalesce(h.ocupante,'')|| ';' ||
+    CASE WHEN h.sometido_a_propiedad_horizontal = TRUE THEN 'Si' WHEN h.sometido_a_propiedad_horizontal = FALSE THEN 'No' ELSE '' END || ';' ||
+    coalesce(h.decreto_acuerdo,'') || ';' ||
+    coalesce(h.altura_permitida,'') || ';' ||
+    coalesce(REPLACE(h.observaciones_altura_permitida,'.',','),'') || ';' || 
+    coalesce(h.aislamiento_posterior,'') || ';' ||
+    coalesce(REPLACE(h.observaciones_aislamiento_posterior,'.',','),'') || ';' ||
+    coalesce(h.aislamiento_lateral,'') || ';' ||
+    coalesce(REPLACE(h.observaciones_aislamiento_lateral,'.',','),'') || ';' ||
+    coalesce(h.antejardin,'') || ';' ||
+    coalesce(REPLACE(h.observaciones_antejardin,'.',','),'') || ';' ||
+    coalesce(h.indice_ocupacion,'') || ';' ||
+    coalesce(REPLACE(h.observaciones_indice_ocupacion,'.',','),'')  || ';' ||
+    coalesce(h.indice_construccion,'') || ';' ||
+    coalesce(REPLACE(h.observaciones_indice_construccion,'.',','),'') || ';' ||
+    CASE WHEN h.mostrar_predio_subdividido_fisicamente = TRUE THEN 'Si' WHEN h.mostrar_predio_subdividido_fisicamente = FALSE THEN 'No' ELSE '' END || ';' ||
+    coalesce( h.unidades\\:\\:text ,'') || ';' ||
+    coalesce( h.contadores_agua\\:\\:text,'') || ';' ||
+    coalesce( h.contadores_luz\\:\\:text,'') || ';' ||
+    coalesce( h.accesorios\\:\\:text,'') || ';' ||
+    coalesce( REPLACE(al.area\\:\\:text,'.',','),'') || ';' ||
+    coalesce( REPLACE(al.frente\\:\\:text,'.',','),'') || ';' ||
+    coalesce( REPLACE(al.fondo\\:\\:text,'.',','),'') || ';' ||
+    coalesce( al.relacion\\:\\:text,'') || ';' ||
+    coalesce( REPLACE(ac.area_medida_inspeccion\\:\\:text,'.',','),'') || ';' ||
+    coalesce( REPLACE(ac.area_susceptible_legalizar\\:\\:text,'.',','),'') || ';' ||
+    coalesce( REPLACE(ac.area_catastral\\:\\:text,'.',','),'') || ';' ||
+    coalesce( REPLACE(ac.area_licencia_construccion\\:\\:text,'.',','),'') || ';' ||
+    coalesce( REPLACE(ac.area_valorada\\:\\:text,'.',','),'') || ';' ||
+    coalesce( quote_ident(replace(h.observaciones_generales_inmueble, '\r\n',' ')),'') || ';' ||
+    coalesce( h.condicion_ph,'') || ';' ||
+    coalesce( h.numero_piso\\:\\:text,'') || ';' ||
+    CASE WHEN h.conjunto_cerrado = TRUE THEN 'Si' WHEN h.conjunto_cerrado = FALSE THEN 'No' END || ';' ||
+    coalesce( h.numero_de_edificios\\:\\:text,'') || ';' ||
+    coalesce( h.unidades_por_piso\\:\\:text,'') || ';' ||
+    coalesce( ub.nombre,'') || ';' ||
+    coalesce( h.total_unidades\\:\\:text,'') || ';' ||
+    coalesce( REPLACE(h.coeficiente\\:\\:text,'.',','),'') || ';' ||
+    coalesce( h.area_actividad,'') || ';' ||
+    coalesce( h.uso_principal_ph,'') || ';' ||
+    CASE WHEN h.rph = TRUE THEN 'Si' WHEN h.rph = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.porteria = TRUE THEN 'Si' WHEN h.porteria = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.citofono = TRUE THEN 'Si' WHEN h.citofono = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.bicicletero = TRUE THEN 'Si' WHEN h.bicicletero = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.piscina = TRUE THEN 'Si' WHEN h.piscina = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.tanque_de_agua = TRUE THEN 'Si' WHEN h.tanque_de_agua = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.club_house = TRUE THEN 'Si' WHEN h.club_house = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.garaje_visitantes = TRUE THEN 'Si' WHEN h.garaje_visitantes = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.teatrino = TRUE THEN 'Si' WHEN h.teatrino = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.sauna = TRUE THEN 'Si' WHEN h.sauna = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.vigilancia_privada = 'VEINTICUATRO_HORAS' OR h.vigilancia_privada = 'DOCE_HORAS' THEN 'Si' ELSE 'No'  END || ';' ||
+    CASE WHEN h.vigilancia_privada = 'DOCE_HORAS' THEN '12 Horas' WHEN h.vigilancia_privada = 'VEINTICUATRO_HORAS' THEN '24 Horas' ELSE ''  END || ';' ||
+    CASE WHEN h.administracion = TRUE THEN 'Si' WHEN h.administracion = FALSE THEN 'No' ELSE ''  END || ';' ||
+    coalesce( REPLACE(h.valor_administracion\\:\\:text,'.',','),'') || ';' ||
+    CASE WHEN h.juegos_ninos = TRUE THEN 'Si' WHEN h.juegos_ninos = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.cancha_multiple = TRUE THEN 'Si' WHEN h.cancha_multiple = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.bomba_eyectora = TRUE THEN 'Si' WHEN h.bomba_eyectora = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.aire_acondicionado_central = TRUE THEN 'Si' WHEN h.aire_acondicionado_central = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.cancha_squash = TRUE THEN 'Si' WHEN h.cancha_squash = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.zonas_verdes_comunales = TRUE THEN 'Si' WHEN h.zonas_verdes_comunales = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.gimnasio = TRUE THEN 'Si' WHEN h.gimnasio = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.calefacion = TRUE THEN 'Si' WHEN h.calefacion = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.terraza_comunal = TRUE THEN 'Si' WHEN h.terraza_comunal = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.golfito = TRUE THEN 'Si' WHEN h.golfito = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.salon_comunal = TRUE THEN 'Si' WHEN h.salon_comunal = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.shut_basuras = TRUE THEN 'Si' WHEN h.shut_basuras = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.equipo_de_presion_constante = TRUE THEN 'Si' WHEN h.equipo_de_presion_constante = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.planta_electrica = TRUE THEN 'Si' WHEN h.planta_electrica = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.ascensor = TRUE THEN 'Si' WHEN h.ascensor = FALSE THEN 'No' ELSE ''  END || ';' ||
+    coalesce(h.numero_de_ascensores\\:\\:text, '') || ';' ||
+    CASE WHEN h.turco = TRUE THEN 'Si' WHEN h.turco = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.bbq = TRUE THEN 'Si' WHEN h.bbq = FALSE THEN 'No' ELSE ''  END || ';' ||
+    CASE WHEN h.jardin_infantil = TRUE THEN 'Si' WHEN h.jardin_infantil = FALSE THEN 'No' ELSE ''  END || ';' ||
+    coalesce(h.otros, '') || ';' ||
+    coalesce(REPLACE(h.area_privada\\:\\:text,'.',','), '')  || ';' ||
+    coalesce(REPLACE(h.area_construida\\:\\:text,'.',','), '') || ';' ||
+    CASE WHEN ac.area_libre = TRUE THEN 'Si' WHEN ac.area_libre = FALSE THEN 'No' ELSE ''  END || ';' ||
+    coalesce(ac.uso_area_libre, '') || ';' ||
+    coalesce(es.nombre, '') || ';' ||
+    CASE WHEN h.remodelado = TRUE THEN 'Si' WHEN h.remodelado = FALSE THEN 'No' ELSE ''  END || ';' ||
+    coalesce(h.fecha_remodelacion\\:\\:timestamp\\:\\:date\\:\\:text, '') || ';' ||
+    coalesce(ec.nombre, '')  || ';' ||
+    coalesce(h.porcentaje_avance\\:\\:text, '') || ';' || 
+    coalesce(tl.nombre, '')  || ';' ||
+    coalesce(quote_ident(h.numero_licencia), '') || ';' ||
+    CASE WHEN h.estado_de_obra = 1 THEN 'Si' WHEN h.estado_de_obra = 0 THEN 'No' ELSE '' END || ';' ||
+    coalesce(h.licencia_construccion, '') || ';' ||
+    coalesce(h.numero_de_pisos\\:\\:text, '') || ';' ||
+    coalesce(h.numero_sotanos\\:\\:text, '') || ';' ||
+    coalesce(h.ano_de_construccion\\:\\:text, '') || ';' ||
+    coalesce(h.vetustez\\:\\:text, '') || ';' ||
+    coalesce(h.pisos_bodega\\:\\:text, '') || ';' ||
+    coalesce(est.nombre, '') || ';' ||
+    coalesce(rp.nombre, '') || ';' ||
+    coalesce(cb.nombre, '') || ';' ||
+    coalesce(fc.nombre, '') || ';' ||
+    coalesce(tfc.nombre, '') || ';' ||
+    coalesce(er.nombre, '') || ';' ||
+    coalesce(dp.nombre, '') || ';' ||
+    coalesce(mc.nombre, '') || ';' ||
+    coalesce(ed.nombre, '') || ';' || 
+    coalesce(il.nombre, '') || ';' ||
+    coalesce(vt.nombre, '') || ';' ||
+    coalesce(ip.nombre, '') || ';' ||
+    coalesce(ia.nombre, '') || ';' ||
+    
+    coalesce(quote_ident(replace(h.observaciones_estructura,'\r\n',' ')), '') || ';' ||
+    coalesce(h.habitaciones\\:\\:text, '') || ';' ||
+    coalesce(h.estar_habitacion\\:\\:text, '') || ';' ||
+    coalesce(h.cuarto_servicio\\:\\:text, '') || ';' ||
+    coalesce(h.closet\\:\\:text, '') || ';' || 
+    coalesce(h.sala\\:\\:text, '') || ';' || 
+    coalesce(h.comedor\\:\\:text, '') || ';' ||
+    coalesce(h.bano_privado\\:\\:text, '') || ';' ||
+    coalesce(h.bano_social\\:\\:text, '') || ';' ||
+    coalesce(h.bano_servicio\\:\\:text, '') || ';' ||
+    coalesce(h.cocina\\:\\:text, '')|| ';' ||
+    coalesce(h.estudio\\:\\:text, '')|| ';' ||
+    coalesce(h.balcon\\:\\:text, '')|| ';' ||
+    coalesce(h.terraza\\:\\:text, '')|| ';' ||
+    coalesce(h.patio_interior\\:\\:text, '')|| ';' ||
+    coalesce(h.jardin\\:\\:text, '')|| ';' ||
+    coalesce(h.zona_de_ropas\\:\\:text, '')|| ';' ||
+    coalesce(h.zona_verde_privada\\:\\:text, '')|| ';' ||
+    coalesce(h.local\\:\\:text, '')|| ';' || 
+    coalesce(h.oficina\\:\\:text, '')|| ';' ||
+    coalesce(h.bodega\\:\\:text, '')|| ';' ||
+    coalesce(quote_ident(replace(h.observaciones_dependencias,'\r\n',' ')), '')|| ';' ||
+    coalesce(eap.nombre, '')|| ';' ||
+    coalesce(cap.nombre, '')|| ';' ||
+    coalesce(eam.nombre, '')|| ';' ||
+    coalesce(cam.nombre, '')|| ';' ||
+    coalesce(eat.nombre, '')|| ';' ||
+    coalesce(cat.nombre, '')|| ';' ||
+    coalesce(eaa.nombre, '') || ';' ||
+    coalesce(caa.nombre, '') || ';' ||
+    coalesce(eal.nombre, '') || ';' ||
+    coalesce(cal.nombre, '') || ';' ||
+    coalesce(eab.nombre, '') || ';' ||
+    coalesce(cab.nombre, '') || ';' ||
+    coalesce(eac.nombre, '') || ';' ||
+    coalesce(cac.nombre, '') || ';' ||
+    CASE
+    WHEN (SELECT g.tipo FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id GROUP BY g.tipo) = 0 THEN 'No Tiene' 
+    WHEN (SELECT g.tipo FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id GROUP BY g.tipo) = 1 THEN 'Privado'
+    WHEN (SELECT g.tipo FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id GROUP BY g.tipo) = 2 THEN 'Exclusivo'
+    WHEN (SELECT g.tipo FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id GROUP BY g.tipo) = 3 THEN 'Comunal'
+    ELSE 'No Tiene'
+    END || ';' ||
+    coalesce(h.numero_total_de_garajes\\:\\:text ,'') || ';' || 
+    coalesce(h.total_cupos_parquedaro\\:\\:text ,'') || ';' ||
+    coalesce( (SELECT t.numero_garaje FROM (SELECT g.numero_garaje, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 1) , '') || ';' ||
+    coalesce( (SELECT t.matricula_inmobiliaria FROM (SELECT g.matricula_inmobiliaria, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 1) , '') || ';' ||
+    coalesce( (SELECT CASE WHEN t.cubierto = TRUE THEN 'Si' WHEN t.cubierto = FALSE THEN 'No' END FROM (SELECT g.cubierto, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 1), '') || ';' ||
+    coalesce( (SELECT CASE WHEN t.doble = TRUE THEN 'Si' WHEN t.doble = FALSE THEN 'No' END FROM (SELECT g.doble, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 1), '') || ';' ||
+    coalesce( (SELECT CASE WHEN t.paralelo = TRUE THEN 'Si' WHEN t.paralelo = FALSE THEN 'No' END FROM (SELECT g.paralelo, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 1), '') || ';' ||
+    coalesce( (SELECT CASE WHEN t.servidumbre = TRUE THEN 'Si' WHEN t.servidumbre = FALSE THEN 'No' END FROM (SELECT g.servidumbre, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 1), '') || ';' ||
+    
+    coalesce((SELECT t.numero_garaje FROM (SELECT g.numero_garaje, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 2) ,'') || ';' ||
+    coalesce((SELECT t.matricula_inmobiliaria FROM (SELECT g.matricula_inmobiliaria, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 2) ,'') || ';' ||
+    coalesce((SELECT CASE WHEN t.cubierto = TRUE THEN 'Si' WHEN t.cubierto = FALSE THEN 'No' END FROM (SELECT g.cubierto, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 2) ,'') || ';' ||
+    coalesce((SELECT CASE WHEN t.doble = TRUE THEN 'Si' WHEN t.doble = FALSE THEN 'No' END FROM (SELECT g.doble, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 2) ,'') || ';' ||
+    coalesce((SELECT CASE WHEN t.paralelo = TRUE THEN 'Si' WHEN t.paralelo = FALSE THEN 'No' END FROM (SELECT g.paralelo, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 2) ,'') || ';' ||
+    coalesce((SELECT CASE WHEN t.servidumbre = TRUE THEN 'Si' WHEN t.servidumbre = FALSE THEN 'No' END FROM (SELECT g.servidumbre, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 2) ,'') || ';' ||
+    
+    coalesce( (SELECT t.numero_garaje FROM (SELECT g.numero_garaje, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 3) ,'') || ';' ||
+    coalesce( (SELECT t.matricula_inmobiliaria FROM (SELECT g.matricula_inmobiliaria, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 3) ,'') || ';' ||
+    coalesce( (SELECT CASE WHEN t.cubierto = TRUE THEN 'Si' WHEN t.cubierto = FALSE THEN 'No' END FROM (SELECT g.cubierto, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 3) ,'') || ';' ||
+    coalesce( (SELECT CASE WHEN t.doble = TRUE THEN 'Si' WHEN t.doble = FALSE THEN 'No' END FROM (SELECT g.doble, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 3) ,'') || ';' ||
+    coalesce( (SELECT CASE WHEN t.paralelo = TRUE THEN 'Si' WHEN t.paralelo = FALSE THEN 'No' END FROM (SELECT g.paralelo, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 3) ,'') || ';' ||
+    coalesce( (SELECT CASE WHEN t.servidumbre = TRUE THEN 'Si' WHEN t.servidumbre = FALSE THEN 'No' END FROM (SELECT g.servidumbre, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 3) ,'') || ';' ||
+    
+    coalesce((SELECT t.numero_garaje FROM (SELECT g.numero_garaje, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 4) ,'') || ';' ||
+    coalesce((SELECT t.matricula_inmobiliaria FROM (SELECT g.matricula_inmobiliaria, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 4) ,'') || ';' ||
+    coalesce((SELECT CASE WHEN t.cubierto = TRUE THEN 'Si' WHEN t.cubierto = FALSE THEN 'No' END FROM (SELECT g.cubierto, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 4) ,'') || ';' ||
+    coalesce((SELECT CASE WHEN t.doble = TRUE THEN 'Si' WHEN t.doble = FALSE THEN 'No' END FROM (SELECT g.doble, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 4) ,'') || ';' ||
+    coalesce((SELECT CASE WHEN t.paralelo = TRUE THEN 'Si' WHEN t.paralelo = FALSE THEN 'No' END FROM (SELECT g.paralelo, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 4) ,'') || ';' ||
+    coalesce((SELECT CASE WHEN t.servidumbre = TRUE THEN 'Si' WHEN t.servidumbre = FALSE THEN 'No' END FROM (SELECT g.servidumbre, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 4) ,'') || ';' ||
+    
+    coalesce((SELECT t.numero_garaje FROM (SELECT g.numero_garaje, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 5) ,'') || ';' ||
+    coalesce((SELECT t.matricula_inmobiliaria FROM (SELECT g.matricula_inmobiliaria, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 5) ,'') || ';' ||
+    coalesce((SELECT CASE WHEN t.cubierto = TRUE THEN 'Si' WHEN t.cubierto = FALSE THEN 'No' END FROM (SELECT g.cubierto, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 5) ,'') || ';' ||
+    coalesce((SELECT CASE WHEN t.doble = TRUE THEN 'Si' WHEN t.doble = FALSE THEN 'No' END FROM (SELECT g.doble, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 5) ,'') || ';' ||
+    coalesce((SELECT CASE WHEN t.paralelo = TRUE THEN 'Si' WHEN t.paralelo = FALSE THEN 'No' END FROM (SELECT g.paralelo, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 5) ,'') || ';' ||
+    coalesce((SELECT CASE WHEN t.servidumbre = TRUE THEN 'Si' WHEN t.servidumbre = FALSE THEN 'No' END FROM (SELECT g.servidumbre, row_number() OVER () as rnum FROM avaluos.garaje g WHERE g.avaluo_id = a.avaluo_id) t WHERE t.rnum = 5) ,'') || ';' ||
+    CASE WHEN h.depositos_privados > 0 THEN 'Privado' WHEN h.depositos_exclusivos > 0 THEN 'Exclusivo' ELSE '' END || ';' ||
+    coalesce(h.numero_total_depositos\\:\\:text,'') || ';' || 
+    coalesce(h.numero_deposito_1,'') || ';' || 
+    coalesce(h.matricula_inmobiliaria_deposito_1,'')|| ';' ||
+    coalesce(h.numero_deposito_2,'')|| ';' ||
+    coalesce(h.matricula_inmobiliaria_deposito_2,'')|| ';' ||
+    coalesce(h.numero_deposito_3,'')|| ';' ||
+    coalesce(h.matricula_inmobiliaria_deposito_3,'')|| ';' ||
+    coalesce(h.numero_deposito_4,'')|| ';' ||
+    coalesce(h.matricula_inmobiliaria_deposito_4,'')|| ';' ||
+    coalesce(h.numero_deposito_5,'')|| ';' ||
+    coalesce(h.matricula_inmobiliaria_deposito_5,'')|| ';' ||
+    coalesce(quote_ident(replace(h.observaciones_generales_construccion,'\r\n',' ')),'') || ';' ||
+    
+    coalesce(mt1.nombre,'') || ';' || coalesce(quote_ident(replace(mv1.concepto_del_metodo,'\r\n',' ')),'') || ';' ||
+    coalesce(mt2.nombre,'') || ';' || coalesce(quote_ident(replace(mv2.concepto_del_metodo,'\r\n',' ')),'') || ';' ||
+    coalesce(mt3.nombre,'') || ';' || coalesce(quote_ident(replace(mv3.concepto_del_metodo,'\r\n',' ')),'') || ';' ||
+    coalesce(mt4.nombre,'') || ';' || coalesce(quote_ident(replace(mv4.concepto_del_metodo,'\r\n',' ')),'') || ';' ||
+    coalesce(mt5.nombre,'') || ';' || coalesce(quote_ident(replace(mv5.concepto_del_metodo,'\r\n',' ')),'') || ';' ||
+    coalesce(mt6.nombre,'') || ';' || coalesce(quote_ident(replace(mv6.concepto_del_metodo,'\r\n',' ')),'') || ';' ||
+    coalesce(mt7.nombre,'') || ';' || coalesce(quote_ident(replace(mv7.concepto_del_metodo,'\r\n',' ')),'') || ';' ||
+    coalesce(mt8.nombre,'') || ';' || coalesce(quote_ident(replace(mv8.concepto_del_metodo,'\r\n',' ')),'') || ';' ||
+    coalesce(mt9.nombre,'') || ';' || coalesce(quote_ident(replace(mv9.concepto_del_metodo,'\r\n',' ')),'') || ';' ||
+    coalesce(REPLACE(h.tiempo_esperado_de_comercializacion\\:\\:text,'.',','),'') || ';' ||
+    
+    coalesce((SELECT REPLACE(SUM(ar.tamano_area)\\:\\:text,'.',',') FROM avaluos.area ar WHERE a.avaluo_id = ar.avaluo_id AND ar.descripcion_numerica = 1) ,'')|| ';' ||
+    coalesce((SELECT REPLACE(SUM(ar.valor_total)\\:\\:text,'.',',') FROM avaluos.area ar WHERE a.avaluo_id = ar.avaluo_id AND ar.descripcion_numerica = 1) ,'')|| ';' ||
+    coalesce((SELECT REPLACE(SUM(ar.tamano_area)\\:\\:text,'.',',') FROM avaluos.area ar WHERE a.avaluo_id = ar.avaluo_id AND ar.descripcion_numerica = 3) ,'')|| ';' ||
+    coalesce((SELECT REPLACE(SUM(ar.valor_total)\\:\\:text,'.',',') FROM avaluos.area ar WHERE a.avaluo_id = ar.avaluo_id AND ar.descripcion_numerica = 3) ,'')|| ';' ||
+    coalesce((SELECT REPLACE(SUM(ar.tamano_area)\\:\\:text,'.',',') FROM avaluos.area ar WHERE a.avaluo_id = ar.avaluo_id AND ar.descripcion_numerica = 4) ,'')|| ';' ||
+    coalesce((SELECT REPLACE(SUM(ar.valor_total)\\:\\:text,'.',',') FROM avaluos.area ar WHERE a.avaluo_id = ar.avaluo_id AND ar.descripcion_numerica = 4) ,'')|| ';' ||
+    coalesce((SELECT REPLACE(SUM(ar.tamano_area)\\:\\:text,'.',',') FROM avaluos.area ar WHERE a.avaluo_id = ar.avaluo_id AND ar.descripcion_numerica = 21),'') || ';' ||
+    coalesce((SELECT REPLACE(SUM(ar.valor_total)\\:\\:text,'.',',') FROM avaluos.area ar WHERE a.avaluo_id = ar.avaluo_id AND ar.descripcion_numerica = 21),'') || ';' ||
+    coalesce((SELECT REPLACE(SUM(ar.tamano_area)\\:\\:text,'.',',') FROM avaluos.area ar WHERE a.avaluo_id = ar.avaluo_id AND ar.descripcion_numerica = 22),'') || ';' ||
+    coalesce((SELECT REPLACE(SUM(ar.valor_total)\\:\\:text,'.',',') FROM avaluos.area ar WHERE a.avaluo_id = ar.avaluo_id AND ar.descripcion_numerica = 22),'') || ';' ||
+    coalesce((SELECT REPLACE(SUM(ar.tamano_area)\\:\\:text,'.',',') FROM avaluos.area ar WHERE a.avaluo_id = ar.avaluo_id AND ar.descripcion_numerica IN (5,7)),'') || ';' ||
+    coalesce((SELECT REPLACE(SUM(ar.valor_total)\\:\\:text,'.',',') FROM avaluos.area ar WHERE a.avaluo_id = ar.avaluo_id AND ar.descripcion_numerica IN (5,7)),'') || ';' ||
+    coalesce((SELECT REPLACE(SUM(ar.tamano_area)\\:\\:text,'.',',') FROM avaluos.area ar WHERE a.avaluo_id = ar.avaluo_id AND ar.descripcion_numerica = 2),'') || ';' ||
+    coalesce((SELECT REPLACE(SUM(ar.valor_total)\\:\\:text,'.',',') FROM avaluos.area ar WHERE a.avaluo_id = ar.avaluo_id AND ar.descripcion_numerica = 2),'') || ';' ||
+    
+    coalesce((SELECT REPLACE(t.tamano_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 1),'') || ';' ||
+    coalesce((SELECT REPLACE(t.descripcion_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 1),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_unitario\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 1),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_total_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 1),'') || ';' ||
+    
+    coalesce((SELECT REPLACE(t.tamano_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 2),'') || ';' ||
+    coalesce((SELECT REPLACE(t.descripcion_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 2),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_unitario\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 2),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_total_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 3),'') || ';' ||
+    
+    coalesce((SELECT REPLACE(t.tamano_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 4),'') || ';' ||
+    coalesce((SELECT REPLACE(t.descripcion_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 4),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_unitario\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 4),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_total_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 4),'') || ';' ||
+    
+    coalesce((SELECT REPLACE(t.tamano_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 5),'') || ';' ||
+    coalesce((SELECT REPLACE(t.descripcion_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 5),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_unitario\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 5),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_total_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 5),'') || ';' ||
+    
+    coalesce((SELECT REPLACE(t.tamano_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 6),'') || ';' ||
+    coalesce((SELECT REPLACE(t.descripcion_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 6),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_unitario\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 6),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_total_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 6),'') || ';' ||
+    
+    coalesce((SELECT REPLACE(t.tamano_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 7),'') || ';' ||
+    coalesce((SELECT REPLACE(t.descripcion_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 7),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_unitario\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 7),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_total_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 7),'') || ';' ||
+    
+    coalesce((SELECT REPLACE(t.tamano_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 8),'') || ';' ||
+    coalesce((SELECT REPLACE(t.descripcion_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 8),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_unitario\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 8),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_total_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 8),'') || ';' ||
+    
+    coalesce((SELECT REPLACE(t.tamano_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 9),'') || ';' ||
+    coalesce((SELECT REPLACE(t.descripcion_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 9),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_unitario\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 9),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_total_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 9),'') || ';' ||
+    
+    coalesce((SELECT REPLACE(t.tamano_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 10),'') || ';' ||
+    coalesce((SELECT REPLACE(t.descripcion_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 10),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_unitario\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 10),'') || ';' ||
+    coalesce((SELECT REPLACE(t.valor_total_area\\:\\:text,'.',',') FROM (SELECT ar.tamano_area, da.nombre descripcion_area, ar.valor_unitario, ar.tamano_area*ar.valor_unitario valor_total_area, row_number() OVER () as rnum FROM avaluos.area ar, avaluos.descripcion_area da WHERE ar.descripcion_numerica = da.id AND ar.avaluo_id = a.avaluo_id) t WHERE t.rnum = 10),'') || ';' ||
+    
+    coalesce(REPLACE(a.valor_total_avaluo\\:\\:text,'.',','),'') || ';' ||
+    coalesce(REPLACE(a.valor_uvr\\:\\:text,'.',','),'') || ';' ||
+    coalesce(REPLACE(a.valor_avaluo_en_uvr\\:\\:text,'.',','),'') || ';' || 
+    coalesce(REPLACE(a.valor_asegurable\\:\\:text,'.',','),'') || ';' ||
+    coalesce(REPLACE(h.porcentaje_terreno\\:\\:text,'.',','),'') || ';' ||
+    coalesce(REPLACE(h.valor_proporcional_terreno\\:\\:text,'.',','),'') || ';' ||
+    coalesce(REPLACE(h.valor_proporcional_construccion\\:\\:text,'.',','),'')  || ';' ||
+    coalesce(REPLACE(h.valor_integral_construccion\\:\\:text,'.',','),'')  || ';' ||
+    coalesce(REPLACE(h.valor_integral_terreno\\:\\:text,'.',','),'') || ';' ||
+    coalesce(cg.nombre,'') || ';' ||
+    
+    CASE WHEN h.tfc1 = TRUE THEN 'Si' WHEN h.tfc1 = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.tfc2 = TRUE THEN 'Si' WHEN h.tfc2 = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.tfc3 = TRUE THEN 'Si' WHEN h.tfc3 = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.tfc4 = TRUE THEN 'Si' WHEN h.tfc4 = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.tfc5 = TRUE THEN 'Si' WHEN h.tfc5 = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.tfc6 = TRUE THEN 'Si' WHEN h.tfc6 = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.tfc7 = TRUE THEN 'Si' WHEN h.tfc7 = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.tfc8 = TRUE THEN 'Si' WHEN h.tfc8 = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.tfc9 = TRUE THEN 'Si' WHEN h.tfc9 = FALSE THEN 'No' ELSE '' END || ';' ||
+    CASE WHEN h.tfc10 = TRUE THEN 'Si' WHEN h.tfc10 = FALSE THEN 'No' ELSE ''  END || ';' ||
+    
+    coalesce( quote_ident(replace(h.observaciones,'\r\n',' ')),'') || ';' ||
+    coalesce( h.direccion_anexos,'') || ';' ||
+    coalesce( h.otras_direcciones,'') || ';' ||
+    coalesce(quote_ident( replace(h.descripcion_general,'\r\n',' ')) ,'')
+        
+      FROM avaluos.avaluo a
+    LEFT JOIN avaluos.estado_avaluo ea ON (a.avaluo_id = ea.avaluo_id AND ea.estado = 11)
+    LEFT JOIN avaluos.formato_informe fi ON (a.avaluo_id = fi.avaluo_id)
+    LEFT JOIN avaluos.formato_informe_hipotecario h ON (fi.formato_informe_id = h.formato_informe_id)
+    LEFT JOIN avaluos.tipo_identificacion td ON (a.cliente_tipo_documento = td.id)
+    LEFT JOIN avaluos.cliente c ON (a.cliente_tipo_documento = c.tipo_documento_identificacion AND a.cliente_numero_documento = c.numero_documento)
+    LEFT JOIN avaluos.divipola d ON (c.divipola = d.divipola_id)
+    LEFT JOIN avaluos.entidad e ON (a.entidad_id = e.entidad_id)
+    LEFT JOIN avaluos.segmento s ON (c.segmento = s.segmento_id)
+    LEFT JOIN avaluos.objeto o ON (a.objeto_del_avaluo = o.id)
+    LEFT JOIN avaluos.motivo m ON (a.motivo_id = m.codigo)
+    LEFT JOIN avaluos.tipo_avaluo ta ON (a.tipo_avaluo = ta.tipo_avaluo_id)
+    LEFT JOIN avaluos.subsidio sb ON (a.subsidio_id = sb.id)
+    LEFT JOIN avaluos.divipola di ON (a.divipola_informe = di.divipola_id)
+    LEFT JOIN avaluos.sector st ON (a.sector = st.id)
+    LEFT JOIN avaluos.divipola dn ON (h.ciudad_notaria = dn.divipola_id)
+    LEFT JOIN avaluos.estrato et ON (h.estrato = et.id)
+    LEFT JOIN avaluos.topografia tf ON (h.topografia_sector = tf.id)
+    LEFT JOIN avaluos.condiciones cs ON (h.condiciones_de_salubridad = cs.id)
+    LEFT JOIN avaluos.mbr tp ON (h.transporte = tp.id)
+    LEFT JOIN avaluos.tipo_inmueble ti ON (a.tipo_de_inmueble = ti.id)
+    LEFT JOIN avaluos.uso ua ON (h.uso_actual = ua.id)
+    LEFT JOIN avaluos.uso up ON (h.uso_predominante_inmueble = up.id)
+    LEFT JOIN avaluos.clase_inmueble ci ON (h.clase_inmueble = ci.id)
+    LEFT JOIN avaluos.area_lote_avaluo al ON (a.avaluo_id = al.avaluo_id)
+    LEFT JOIN avaluos.area_construccion_avaluo ac ON (a.avaluo_id = ac.avaluo_id)
+    LEFT JOIN avaluos.ubicacion ub ON (h.ubicacion_del_inmueble = ub.id)
+    LEFT JOIN avaluos.estado_construccion es ON (h.estado_de_construccion = es.id)
+    LEFT JOIN avaluos.estado_conservacion ec ON (h.estado_de_conservacion = ec.id)
+    LEFT JOIN avaluos.tipo_licencia tl ON (h.tipo_licencia = tl.id)
+    LEFT JOIN avaluos.estructura est ON (h.estructura = est.id)
+    LEFT JOIN avaluos.reparados rp ON (h.reparados = rp.id)
+    LEFT JOIN avaluos.cubierta cb ON (h.cubierta = cb.id)
+    LEFT JOIN avaluos.fachada fc ON (h.fachada = fc.id)
+    LEFT JOIN avaluos.tipo_de_fachada tfc ON (h.tipo_fachada = tfc.id)
+    LEFT JOIN avaluos.estructura_reforzada er ON (h.estructura_reforzada = er.id)
+    LEFT JOIN avaluos.danos_previos dp ON (h.danos_previos = dp.id)
+    LEFT JOIN avaluos.material_de_construccion mc ON (h.material_constructor = mc.id)
+    LEFT JOIN avaluos.estructura_detalle ed ON (h.detalle_material = ed.id)
+    LEFT JOIN avaluos.mbr il ON (h.iluminacion = il.id)
+    LEFT JOIN avaluos.mbr vt on (h.ventilacion = vt.id)
+    LEFT JOIN avaluos.irregularidad ip ON (h.irregularidad_planta = ip.id)
+    LEFT JOIN avaluos.irregularidad ia ON (h.irregularidad_altura = ia.id)
+    LEFT JOIN avaluos.estado_acabados eap ON (h.estado_acabados_pisos = eap.id)
+    LEFT JOIN avaluos.estado_acabados eam ON (h.estado_acabados_muros = eam.id)
+    LEFT JOIN avaluos.estado_acabados eat ON (h.estado_acabados_techos = eat.id)
+    LEFT JOIN avaluos.estado_acabados eaa ON (h.estado_acabados_madera = eaa.id)
+    LEFT JOIN avaluos.estado_acabados eal ON (h.estado_acabados_metal = eal.id)
+    LEFT JOIN avaluos.estado_acabados eab ON (h.estado_acabados_banos = eab.id)
+    LEFT JOIN avaluos.estado_acabados eac ON (h.estado_acabados_cocina = eac.id)
+    LEFT JOIN avaluos.calidad cap ON (h.calidad_acabados_pisos = cap.id)
+    LEFT JOIN avaluos.calidad cam ON (h.calidad_acabados_muros = cam.id)
+    LEFT JOIN avaluos.calidad cat ON (h.calidad_acabados_techos = cat.id)
+    LEFT JOIN avaluos.calidad caa ON (h.calidad_acabados_madera = caa.id)
+    LEFT JOIN avaluos.calidad cal ON (h.calidad_acabados_metal = cal.id)
+    LEFT JOIN avaluos.calidad cab ON (h.calidad_acabados_banos = cab.id)
+    LEFT JOIN avaluos.calidad_acabados_cocina cac ON (h.calidad_acabados_cocina = cac.id)
+    LEFT JOIN avaluos.metodo_valuacion mv1 ON (mv1.avaluo_id = a.avaluo_id AND mv1.metodo_usado = 21)
+    LEFT JOIN avaluos.metodologia mt1 ON (mv1.metodo_usado = mt1.id)
+    LEFT JOIN avaluos.metodo_valuacion mv2 ON (mv2.avaluo_id = a.avaluo_id AND mv2.metodo_usado = 22)
+    LEFT JOIN avaluos.metodologia mt2 ON (mv2.metodo_usado = mt2.id)
+    LEFT JOIN avaluos.metodo_valuacion mv3 ON (mv3.avaluo_id = a.avaluo_id AND mv3.metodo_usado = 23)
+    LEFT JOIN avaluos.metodologia mt3 ON (mv3.metodo_usado = mt3.id)
+    LEFT JOIN avaluos.metodo_valuacion mv4 ON (mv4.avaluo_id = a.avaluo_id AND mv4.metodo_usado = 24)
+    LEFT JOIN avaluos.metodologia mt4 ON (mv4.metodo_usado = mt4.id)
+    LEFT JOIN avaluos.metodo_valuacion mv5 ON (mv5.avaluo_id = a.avaluo_id AND mv5.metodo_usado = 25)
+    LEFT JOIN avaluos.metodologia mt5 ON (mv5.metodo_usado = mt5.id) 
+    LEFT JOIN avaluos.metodo_valuacion mv6 ON (mv6.avaluo_id = a.avaluo_id AND mv6.metodo_usado = 26) 
+    LEFT JOIN avaluos.metodologia mt6 ON (mv6.metodo_usado = mt6.id) 
+    LEFT JOIN avaluos.metodo_valuacion mv7 ON (mv7.avaluo_id = a.avaluo_id AND mv7.metodo_usado = 27) 
+    LEFT JOIN avaluos.metodologia mt7 ON (mv7.metodo_usado = mt7.id) 
+    LEFT JOIN avaluos.metodo_valuacion mv8 ON (mv8.avaluo_id = a.avaluo_id AND mv8.metodo_usado = 28) 
+    LEFT JOIN avaluos.metodologia mt8 ON (mv8.metodo_usado = mt8.id) 
+    LEFT JOIN avaluos.metodo_valuacion mv9 ON (mv9.avaluo_id = a.avaluo_id AND mv9.metodo_usado = 29) 
+    LEFT JOIN avaluos.metodologia mt9 ON (mv9.metodo_usado = mt9.id) 
+    LEFT JOIN avaluos.calificacion_garantia cg ON (a.calificacion_garantia = cg.id) 
+    WHERE ea.fecha_estado BETWEEN TO_DATE( :fechaInicialInforme ,'yyyy/mm/dd') AND TO_DATE( :fechaFinalInforme ,'yyyy/mm/dd') 
+    ORDER BY ea.fecha_estado 
+",
+    "extension":"csv",
+    "mapeo":[],
+    "procesadoresCsv":[]
+}

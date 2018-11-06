@@ -1,0 +1,1027 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:o="http://omnifaces.org/ui">
+
+
+	<p:tab id="informacionValor" title="Valor comercial">
+		<!--  METODOLOGIAS DE VALUACION -->
+		<p:row>
+			<p:column styleClass="ui-widget-header" colspan="9" width="100%">
+				<p:panel id="metodosDeValuacion" header="Métodos de valuación">
+					<p:dataTable var="metodoDeValuacion"
+						value="#{informeHipotecarioBean.avaluoHipotecarioDTO.metodosValuacion}"
+						editable="true" style="margin-bottom:20px">
+						<f:facet name="header">
+						</f:facet>
+						<p:ajax event="rowEdit"
+							listener="#{informeHipotecarioBean.editarMetodoDeValuacion}" />
+						<p:ajax event="rowEditCancel"
+							listener="#{informeHipotecarioBean.cancelarMetodoDeValuacion}" />
+						<p:column headerText="Método">
+							<p:outputLabel value="#{metodoDeValuacion.metodoUsado.value}" />
+						</p:column>
+						<p:column headerText="Concepto">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{metodoDeValuacion.conceptoDelMetodo}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{metodoDeValuacion.conceptoDelMetodo}"
+										required="true" style="width:100%" maxlength="500" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Editar" style="width:32px">
+							<p:rowEditor />
+						</p:column>
+						<p:column headerText="Borrar">
+							<p:commandButton icon="ui-icon-trash"
+								title="Borrar Método de valuación"
+								actionListener="#{informeHipotecarioBean.abrirMensajeBorrarMetodo(metodoDeValuacion)}"
+								oncomplete="actualizarComparacionMercado(); actualizarFitoCorvini(); PF('eliminarMetodoValuacionDialog').show(); " />
+						</p:column>
+					</p:dataTable>
+					<p:panelGrid style="width: 99%"
+						rendered="#{informeHipotecarioBean.nuevoMetodoValuacion}">
+						<p:row>
+							<p:column styleClass="ui-widget-header">
+								<h:outputLabel for="metodoUsadoNuevo" value="Método usado" />
+							</p:column>
+							<p:column styleClass="ui-widget-header">
+								<h:selectOneMenu id="metodoUsadoNuevo"
+									value="#{informeHipotecarioBean.metodoValuacion.metodoUsado}"
+									style="width:100%">
+									<f:selectItems
+										value="#{informeHipotecarioBean.metodoValuacionDisponibles}"
+										var="metodoUsadoEnum" itemValue="#{metodoUsadoEnum}"
+										itemLabel="#{metodoUsadoEnum.value}" />
+								</h:selectOneMenu>
+							</p:column>
+							<p:column styleClass="ui-widget-header">
+								<h:outputLabel for="conceptoDelMetodoNuevo"
+									value="Concepto del método" />
+							</p:column>
+							<p:column styleClass="ui-widget-header">
+								<p:inputTextarea id="conceptoDelMetodoNuevo" rows="2" cols="30"
+									required="informeHipotecarioBean.nuevoMetodoValuacion ? false: true"
+									requiredMessage="Es necesario ingresar el concepto del método."
+									value="#{informeHipotecarioBean.metodoValuacion.conceptoDelMetodo}"
+									maxlength="500" counter="conceptoDelMetodoNuevoFaltantes"
+									counterTemplate="{0} caracteres faltantes." />
+								<h:outputText id="conceptoDelMetodoNuevoFaltantes" />
+							</p:column>
+							<p:column styleClass="ui-widget-header">
+								<p:commandButton icon="ui-icon-disk"
+									actionListener="#{informeHipotecarioBean.agregarMetodoValuacion}"
+									update=":informeHipotecario:accordionPanel:metodosDeValuacion,
+												:informeHipotecario:accordionPanel:fitoCorvini-panel, :informeHipotecario:accordionPanel:comparacion-mercado-panel,
+												:informeHipotecario:accordionPanel:accordionPanelMetodologias"
+									oncomplete="actualizarFitoCorvini(); actualizarComparacionMercado();" />
+							</p:column>
+						</p:row>
+						<p:row
+							rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:conceptoDelMetodoNuevo')}">
+							<p:column styleClass="ui-widget-header" colspan="3">
+								<p:spacer height="0" />
+							</p:column>
+							<p:column styleClass="ui-widget-header">
+								<p:message id="conceptoDelMetodoNuevoMessage"
+									for="conceptoDelMetodoNuevo" />
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<p:commandButton icon="ui-icon-plusthick"
+						value="Agregar nuevo método de valuación"
+						actionListener="#{informeHipotecarioBean.agregarMetodoValuacion}"
+						rendered="#{not informeHipotecarioBean.nuevoMetodoValuacion and not empty informeHipotecarioBean.metodosValuacionDisponibles}"
+						update="metodosDeValuacion ,:informeHipotecario:accordionPanel:fitoCorvini-panel , :informeHipotecario:accordionPanel:comparacion-mercado-panel"
+						oncomplete="actualizarFitoCorvini(); actualizarComparacionMercado();"
+						global="false" />
+
+					<p:commandButton icon="ui-icon-plusthick"
+						value="Cancelar método de valuación"
+						actionListener="#{informeHipotecarioBean.cancelarMetodoValuacion()}"
+						styleClass="button_red"
+						rendered="#{informeHipotecarioBean.nuevoMetodoValuacion}"
+						update=":informeHipotecario:accordionPanel:metodosDeValuacion :informeHipotecario:accordionPanel:fitoCorvini-panel , :informeHipotecario:accordionPanel:comparacion-mercado-panel"
+						oncomplete="actualizarFitoCorvini(); actualizarComparacionMercado();"
+						global="false" />
+				</p:panel>
+			</p:column>
+
+
+		</p:row>
+		<!-- END METODOS VALUACION  -->
+
+		<!--FITO Y CORVINI  -->
+
+		<!-- este actualiza el panel despues de editar un valor en alguna fila.-->
+		<p:remoteCommand name="actualizarFitoCorvini"
+			update=":informeHipotecario:accordionPanel:fitoCorvini-panel, :informeHipotecario:accordionPanel:fitoCorvini-resultado" />
+
+
+		<p:panel id="fitoCorvini-panel" style="margin-bottom:10px">
+
+
+			<p:row rendered="#{informeHipotecarioBean.mostrarMetodoReposicion}">
+				<p:column styleClass="ui-widget-header" colspan="8">
+
+					<p:dataTable id="fitoCorviniTable" var="area"
+						styleClass="fitoCorviniCSS"
+						value="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal
+														 ? informeHipotecarioBean.areasPrivadas : informeHipotecarioBean.areasConstruidasNoPH}"
+						editable="true" widgetVar="tableFito">
+						<!--  
+											<p:ajax event="cellEdit" listener="#{informeHipotecarioBean.onCellEditFC}" oncomplete="actualizarFitoCorvini();" />
+											-->
+						<p:ajax event="rowEdit"
+							listener="#{informeHipotecarioBean.editarFC}"
+							oncomplete="actualizarFitoCorvini();" />
+						<p:ajax event="rowEditCancel"
+							listener="#{informeHipotecarioBean.cancelFC}"
+							oncomplete="actualizarFitoCorvini();" />
+
+						<f:facet name="header"> Método de Reposición</f:facet>
+
+						<p:column headerText="Construcción"
+							sortBy="#{area.descripcionNumerica}"
+							sortFunction="#{informeHipotecarioBean.ordenarTablaAreas}"
+							style="text-align: center !important; ">
+							<h:outputText style="text-align:center;" value="#{area.nombre}" />
+						</p:column>
+
+						<p:column style="text-align: center !important; ">
+							<f:facet name="header">
+								<h:outputText value="Valor Reposición" />
+												m<sup>2</sup>
+							</f:facet>
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{area.valorReposicion}"
+										styleClass="nofireenter" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText styleClass="nofireenter" id="modelInput"
+										value="#{area.valorReposicion}" style="width:96%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Calificación"
+							style="text-align: center !important; ">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText style="float:left;" value="#{area.calificacion}" />
+								</f:facet>
+								<f:facet name="input">
+									<h:selectOneMenu value="#{area.calificacion}"
+										style="width:100%" styleClass="nofireenter">
+										<f:selectItems
+											value="#{informeHipotecarioBean.calificaciones}"
+											var="calificacion" itemValue="#{calificacion}"
+											itemLabel="#{calificacion}" />
+										<o:validator validatorId="listaDesplegableValidator"
+											disabled="#{empty param[enviarHonorarios.clientId] ? true : (empty param[enviar.clientId]  ? true: (empty param[enviarCorrecciones.clientId] ? true: (empty param[aprobar.clientId] ? true : (empty param[correciones.clientId] ? true : (empty param[enviarComite.clientId] ? true: false)))))}" />
+
+									</h:selectOneMenu>
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+
+						<p:column headerText="Edad en % de Vida"
+							style="text-align: center !important;">
+							<h:outputText value="#{empty area.edad ? 0 : area.edad}">
+								<f:convertNumber type="percent" locale="en_US" pattern="#0.00" />
+							</h:outputText>%
+
+											</p:column>
+
+						<p:column headerText="Depreciacion"
+							style="text-align: center !important;">
+							<h:outputText value="#{area.depreciacion}">
+								<f:convertNumber type="percent" locale="en_US"
+									minFractionDigits="2" />
+							</h:outputText>
+						</p:column>
+
+
+						<p:column headerText="Valor Depreciacion"
+							style="text-align: center !important;">
+							<h:outputText value="#{area.valorDepreciacion}">
+								<f:convertNumber type="currency" locale="en_US" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Valor Final"
+							style="text-align: center !important;">
+							<h:outputText value="#{area.valorFinal}">
+								<f:convertNumber type="currency" locale="en_US" />
+							</h:outputText>
+						</p:column>
+
+						<p:column headerText="Valor Adoptado"
+							style="text-align: center !important;">
+							<h:outputText value="#{area.valorAdoptado}">
+								<f:convertNumber type="currency" locale="en_US" />
+							</h:outputText>
+						</p:column>
+						<p:column style="width:32px">
+							<p:rowEditor />
+						</p:column>
+					</p:dataTable>
+				</p:column>
+			</p:row>
+
+		</p:panel>
+
+		<!-- END FITO Y CORVINI -->
+
+		<!--  METODO DE COMPARACION DE MERCADO  -->
+		<ui:include
+			src="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal ?   '/pages/informes/metodosvaluacion/comparacionMercado.xhtml' :   '/pages/informes/metodosvaluacion/comparacionMercadoNOPH.xhtml'}" />
+
+		<p:accordionPanel id="accordionPanelMetodologias">
+			<ui:include
+				src="#{'/pages/informes/metodosvaluacion/comparacionMercadoPHVenta.xhtml'}" />
+			<ui:include
+				src="#{'/pages/informes/metodosvaluacion/comparacionMercadoPHRenta.xhtml'}" />
+			<ui:include
+				src="#{'/pages/informes/metodosvaluacion/comparacionMercadoLoteVentaSinContruccion.xhtml'}" />
+			<ui:include
+				src="#{'/pages/informes/metodosvaluacion/comparacionMercadoLoteVentaConContruccion.xhtml'}" />
+			<ui:include
+				src="#{'/pages/informes/metodosvaluacion/comparacionMercadoLoteRentaConContruccion.xhtml'}" />
+		</p:accordionPanel>
+
+
+
+
+
+		<!-- END COMPARACION DE MERCADO  -->
+		<p:remoteCommand name="actualizarValorAvaluo"
+			update=":informeHipotecario:accordionPanel:valorComercial @([id$=mensajeSubsidio])" />
+
+		<!-- Valor comercial  -->
+		<p:panel id="valorComercial" header="Valor comercial"
+			style="margin-bottom:10px">
+			<p:panelGrid id="panelGridValorAvaluo" style="width: 99%">
+				<p:blockUI block="panelGridValorAvaluo"
+					widgetVar="valorComercialCargando">
+					<p:graphicImage name="images/ajax-loader2.gif" />
+				</p:blockUI>
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<h:outputLabel for="tiempoEsperadoDeComercializacion"
+							value="Tiempo esperado de comercialización (en meses): " />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<p:inputNumber id="tiempoEsperadoDeComercializacion"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.tiempoEsperadoDeComercializacion}"
+							label="Tiempo esperado de comercialización" decimalSeparator=","
+							thousandSeparator="." decimalPlaces="1" maxValue="120"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}">
+						</p:inputNumber>
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:tiempoEsperadoDeComercializacion')}">
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<p:message for="tiempoEsperadoDeComercializacion" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<p:remoteCommand name="actualizarvalorComercial"
+							update=":informeHipotecario:accordionPanel:areasPanel" />
+						<p:outputPanel id="areasPanel">
+							<p:dataTable id="areas" var="area"
+								value="#{informeHipotecarioBean.listaAreas}" editable="true"
+								style="margin-bottom:20px" sortBy="#{area.descripcionNumerica}"
+								sortFunction="#{informeHipotecarioBean.ordenarTablaAreas}"
+								varStatus="loop" widgetVar="datatableAreas">
+								<f:facet name="header">
+													Valor Comercial
+												</f:facet>
+								<p:ajax event="rowEdit"
+									listener="#{informeHipotecarioBean.editarArea}" global="false"
+									process=":informeHipotecario:accordionPanel:panelGridValorAvaluo"
+									oncomplete="actualizarValorAvaluo(); actualizarFitoCorvini();" />
+								<p:ajax event="rowEditCancel"
+									listener="#{informeHipotecarioBean.cancelarArea}"
+									oncomplete="actualizarValorAvaluo();" global="false" />
+								<p:column headerText="Descripción"
+									sortBy="#{area.descripcionNumerica}"
+									sortFunction="#{informeHipotecarioBean.ordenarTablaAreas}">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{area.descripcionNumerica.value}" />
+										</f:facet>
+										<f:facet name="input">
+											<h:selectOneMenu value="#{area.descripcionNumerica}"
+												disabled="#{not empty area.descripcion}" style="width:100%"
+												converter="omnifaces.SelectItemsConverter">
+												<f:selectItems
+													value="#{informeHipotecarioBean.descripcionAreas}"
+													var="descripcion" itemValue="#{descripcion}"
+													itemLabel="#{descripcion.value}" />
+											</h:selectOneMenu>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Nombre">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{area.nombre}" />
+										</f:facet>
+										<f:facet name="input">
+											<p:inputText value="#{area.nombre}"
+												readonly="#{area.nombre eq 'Area de terreno'}"
+												style="width:100%" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Unidad de medida">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{area.unidadDeMedida}" />
+										</f:facet>
+										<f:facet name="input">
+											<h:selectOneMenu value="#{area.unidadDeMedida}"
+												style="width:100%">
+												<f:selectItems
+													value="#{informeHipotecarioBean.unidadesDeMedida}"
+													var="unidadDeMedida" itemValue="#{unidadDeMedida}"
+													itemLabel="#{unidadDeMedida.value}" />
+											</h:selectOneMenu>
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Área">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText styleClass="nofireenter" value="#{area.area}">
+												<f:convertNumber type="number" locale="en_US" />
+											</h:outputText>
+										</f:facet>
+										<f:facet name="input">
+											<p:inputNumber value="#{area.area}" decimalSeparator=","
+												thousandSeparator="." decimalPlaces="3"
+												onkeydown="PF('datatableAreas').onKeyDown(event)"
+												styleClass="nofireenter" />
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Valor unitario">
+									<p:cellEditor>
+										<f:facet name="output">
+											<h:outputText value="#{area.valorUnitario}"
+												styleClass="nofireenter" style="text-align:right;">
+												<f:convertNumber type="currency" currencySymbol="$"
+													locale="en_US" />
+											</h:outputText>
+										</f:facet>
+										<f:facet name="input">
+											<p:inputNumber decimalSeparator="," thousandSeparator="."
+												symbol="$" symbolPosition="p" value="#{area.valorUnitario}"
+												onkeydown="PF('datatableAreas').onKeyDown(event)"
+												styleClass="nofireenter" style="width:100%"
+												decimalPlaces="2"
+												required="#{area.descripcionNumerica ne null and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}" />
+											<!--<p:inputMask value="#{area.valorUnitario}" onkeydown="PF('datatableAreas').onKeyDown(event)"  styleClass="nofireenter" style="width:100%" mask="9?999999999999" -->
+											<!--required="#{area.descripcionNumerica ne null and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}" />-->
+										</f:facet>
+									</p:cellEditor>
+								</p:column>
+								<p:column headerText="Valor total">
+									<h:outputText value="#{area.valorTotal}"
+										style="text-align:right;">
+										<f:convertNumber type="currency" currencySymbol="$"
+											locale="en_US" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Porcentaje">
+									<h:outputText styleClass="nofireenter"
+										value="#{area.porcentaje}">
+										<f:convertNumber type="percent" locale="en_US"
+											minFractionDigits="2" />
+									</h:outputText>
+								</p:column>
+								<p:column headerText="Editar" style="width:32px">
+									<p:rowEditor />
+								</p:column>
+								<p:column headerText="Borrar">
+									<p:commandButton icon="ui-icon-trash" title="Borrar area"
+										styleClass="button_red" rendered="#{empty area.descripcion}"
+										actionListener="#{informeHipotecarioBean.borrarArea(area)}"
+										process=":informeHipotecario:accordionPanel:areasPanel"
+										update=":informeHipotecario:accordionPanel:valorComercial, :informeHipotecario:growl :informeHipotecario:accordionPanel:grid-fitoCorvini-resultado"
+										global="false" />
+								</p:column>
+								<p:columnGroup type="footer">
+									<p:row>
+										<p:column>
+											<f:facet name="footer">
+												<p:commandButton id="addAreaButton" icon="ui-icon-plusthick"
+													value="Nueva"
+													update=":informeHipotecario:accordionPanel:areasPanel"
+													actionListener="#{informeHipotecarioBean.agregarArea}"
+													rendered="#{not informeHipotecarioBean.nuevaArea}"
+													global="false" />
+											</f:facet>
+										</p:column>
+										<p:column colspan="4" style="text-align:right"
+											footerText="Valor comercial:" />
+										<p:column>
+											<f:facet name="footer">
+												<h:outputText
+													value="#{informeHipotecarioBean.avaluoHipotecarioDTO.valorTotalAvaluo}">
+													<f:convertNumber type="currency" currencySymbol="$"
+														locale="en_US" maxFractionDigits="0" />
+												</h:outputText>
+											</f:facet>
+										</p:column>
+										<p:column colspan="3">
+											<f:facet name="footer">
+											</f:facet>
+										</p:column>
+									</p:row>
+								</p:columnGroup>
+							</p:dataTable>
+							<p:panelGrid
+								style="width: 1100px;background-color: #f2f2f2 !important; border: 1px solid "
+								rendered="#{informeHipotecarioBean.nuevaArea}" columns="7"
+								layout="grid"
+								columnClasses="ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-2,ui-grid-col-1,ui-grid-col-1">
+								<h:outputLabel for="nuevaAreaDescripcion" value="Descripción"
+									styleClass="colLabel" />
+								<h:outputLabel for="nuevaAreaNombre" value="Nombre"
+									styleClass="colLabel" />
+								<h:outputLabel for="nuevaAreaUnidadDeMedida"
+									value="Unidad de medida" styleClass="colLabel" />
+								<h:outputLabel for="valorArea" value="Area"
+									styleClass="colLabel" />
+								<h:outputLabel for="valorUnitario" value="Valor unitario"
+									styleClass="colLabel" />
+								<p:spacer />
+								<p:spacer />
+								<h:selectOneMenu id="nuevaAreaDescripcion"
+									value="#{informeHipotecarioBean.areaDTO.descripcionNumerica}"
+									converter="omnifaces.SelectItemsConverter"
+									style="width: 160px !important; margin: 5px;" required="true"
+									requiredMessage="Descripción es requerido">
+									<f:selectItems
+										value="#{informeHipotecarioBean.descripcionNuevasAreas}"
+										var="descripcion" itemValue="#{descripcion}"
+										itemLabel="#{descripcion.value}" />
+								</h:selectOneMenu>
+								<p:inputText id="nuevaAreaNombre"
+									value="#{informeHipotecarioBean.areaDTO.nombre}"
+									style="margin: 5px;" required="true"
+									requiredMessage="Nombre es requerido" />
+								<h:selectOneMenu id="nuevaAreaUnidadDeMedida"
+									value="#{informeHipotecarioBean.areaDTO.unidadDeMedida}"
+									required="true" label="Unidad de medida"
+									style="width: 160px !important; margin: 5px;"
+									requiredMessage="Unidad de medida es requerido">
+									<f:selectItems
+										value="#{informeHipotecarioBean.unidadesDeMedida}"
+										var="unidadDeMedida" itemValue="#{unidadDeMedida}"
+										itemLabel="#{unidadDeMedida.value}" />
+									<o:validator validatorId="listaDesplegableValidator"
+										message="Es necesario elegir una unidad de medida"
+										disabled="false" />
+								</h:selectOneMenu>
+								<p:inputNumber id="valorArea"
+									value="#{informeHipotecarioBean.areaDTO.area}"
+									decimalSeparator="," thousandSeparator="."
+									converter="javax.faces.BigDecimal" decimalPlaces="3"
+									required="true" requiredMessage="Area es requerido"
+									label="Area" style="margin: 5px;" />
+								<p:inputNumber id="valorUnitario"
+									value="#{informeHipotecarioBean.areaDTO.valorUnitario}"
+									symbol="$" symbolPosition="p" decimalSeparator=","
+									thousandSeparator="." converter="javax.faces.BigDecimal"
+									decimalPlaces="2" required="true"
+									requiredMessage="Valor unitario es requerido"
+									label="Valor unitario" style="margin: 5px;" />
+								<p:commandButton id="guardarArea" icon="ui-icon-disk"
+									actionListener="#{informeHipotecarioBean.agregarArea}"
+									update=":informeHipotecario:accordionPanel:valorComercial"
+									process="areasPanel" styleClass="button_green"
+									style="margin-left: 20px;" global="false" title="Guardar Area" />
+								<p:commandButton id="cancelarArea" icon="ui-icon-close"
+									actionListener="#{informeHipotecarioBean.cancelarNuevaArea}"
+									update=":informeHipotecario:accordionPanel:valorComercial"
+									process="@this" styleClass="button_red" global="false"
+									title="Borrar Area" />
+								<p:message for="nuevaAreaDescripcion"
+									rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:nuevaAreaDescripcion') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:nuevaAreaNombre') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:nuevaAreaUnidadDeMedida') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:valorArea') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:valorUnitario'))}" />
+								<p:message for="nuevaAreaNombre"
+									rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:nuevaAreaNombre')}" />
+								<p:message for="nuevaAreaUnidadDeMedida"
+									rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:nuevaAreaUnidadDeMedida')}" />
+								<p:message for="valorArea"
+									rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:valorArea')}" />
+								<p:message for="valorUnitario"
+									rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:valorUnitario')}" />
+							</p:panelGrid>
+						</p:outputPanel>
+					</p:column>
+				</p:row>
+				<p:row id="valores">
+					<p:column colspan="6">
+						<p:panelGrid style="width: 99%">
+							<p:row>
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="valorUvr" value="Valor UVR" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<p:inputNumber id="valorUvr" readonly="true"
+										decimalSeparator="," thousandSeparator="."
+										value="#{informeHipotecarioBean.avaluoHipotecarioDTO.valorUvr}"
+										required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+										style="width: 99%;text-align:right;" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="valorAvaluoEnUvr"
+										value="Valor avalúo en UVR" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<p:inputNumber id="valorAvaluoEnUvr" readonly="true"
+										decimalSeparator="," thousandSeparator="."
+										value="#{informeHipotecarioBean.avaluoHipotecarioDTO.valorAvaluoEnUvr}"
+										required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+										style="width: 99%;text-align:right;" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="valorAsegurable" value="Valor asegurable" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<p:inputText id="valorAsegurable" readonly="true"
+										value="#{informeHipotecarioBean.avaluoHipotecarioDTO.valorAsegurable}"
+										required="#{(informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote' and informeHipotecarioBean.avaluoHipotecarioDTO.tipoDeInmueble.nombre ne 'Lote Urbano') and (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId])}"
+										style="width: 99%;text-align:right;">
+										<f:convertNumber type="currency" currencySymbol="$"
+											locale="en_US" />
+									</p:inputText>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column styleClass="ui-widget-header"
+									rendered="#{not informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}"
+									colspan="2">
+									<p:spacer height="0" />
+								</p:column>
+								<p:column styleClass="ui-widget-header"
+									rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+									<h:outputLabel for="porcentajeTerreno"
+										value="Porcentaje de terreno" />
+								</p:column>
+								<p:column styleClass="ui-widget-header"
+									rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+									<p:inputNumber id="porcentajeTerreno"
+										value="#{informeHipotecarioBean.informeHipotecarioDTO.porcentajeTerreno}"
+										symbol="%" symbolPosition="s" decimalSeparator=","
+										thousandSeparator="." maxValue="100"
+										label="Porcentaje de terreno"
+										required="#{(not empty informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal and informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal) ? (not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId]) : false}"
+										style="width: 99%;text-align:right;">
+										<p:ajax event="change"
+											listener="#{informeHipotecarioBean.calcularValores()}"
+											process="porcentajeTerreno, gastosTranslado" global="false"
+											onstart="$( '#informeHipotecario\\:accordionPanel\\:porcentajeTerreno' ).addClass('loadinggif');"
+											oncomplete="$( '#informeHipotecario\\:accordionPanel\\:porcentajeTerreno' ).removeClass('loadinggif');actualizarValorAvaluo();" />
+									</p:inputNumber>
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="valorProporcionalTerreno"
+										value="Valor proporcional del terreno" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<p:inputNumber id="valorProporcionalTerreno" readonly="true"
+										decimalSeparator="," thousandSeparator="." symbol="$"
+										symbolPosition="p"
+										value="#{informeHipotecarioBean.informeHipotecarioDTO.valorProporcionalTerreno}"
+										required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+										style="width: 99%;text-align:right;" />
+								</p:column>
+								<p:column styleClass="ui-widget-header"
+									rendered="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}"
+									colspan="2">
+									<p:spacer height="0" />
+								</p:column>
+								<p:column styleClass="ui-widget-header"
+									rendered="#{not informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+									<h:outputLabel for="valorIntegralTerreno"
+										value="Valor integral del terreno" />
+								</p:column>
+								<p:column styleClass="ui-widget-header"
+									rendered="#{not informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal}">
+									<p:inputNumber id="valorIntegralTerreno" readonly="true"
+										decimalSeparator="," thousandSeparator="." symbol="$"
+										symbolPosition="p"
+										value="#{informeHipotecarioBean.informeHipotecarioDTO.valorIntegralTerreno}"
+										required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+										style="width: 99%;text-align:right;" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column styleClass="ui-widget-header" colspan="2">
+									<p:spacer height="0" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="valorProporcionalConstruccion"
+										value="Valor proporcional de la construcción" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<p:inputNumber id="valorProporcionalConstruccion"
+										readonly="true" decimalSeparator="," thousandSeparator="."
+										symbol="$" symbolPosition="p"
+										value="#{informeHipotecarioBean.informeHipotecarioDTO.valorProporcionalConstruccion}"
+										required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+										style="width: 99%;text-align:right;" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="valorIntegralConstruccion"
+										value="Valor integral de la construcción" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<p:inputNumber id="valorIntegralConstruccion" readonly="true"
+										decimalSeparator="," thousandSeparator="." symbol="$"
+										symbolPosition="p"
+										value="#{informeHipotecarioBean.informeHipotecarioDTO.valorIntegralConstruccion}"
+										required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+										style="width: 99%;text-align:right;" />
+								</p:column>
+							</p:row>
+							<p:row
+								rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:valorAsegurable') and jsfHelper.hasMessages('informeHipotecario:accordionPanel:porcentajeTerreno')}">
+								<p:column styleClass="ui-widget-header" colspan="6">
+									<p:spacer height="0" />
+								</p:column>
+								<p:column styleClass="ui-widget-header" colspan="2">
+									<p:message for="valorAsegurable" />
+								</p:column>
+
+								<p:column styleClass="ui-widget-header" colspan="2">
+									<p:message for="porcentajeTerreno" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:column>
+					<p:column colspan="2"
+						rendered="#{not informeHipotecarioBean.cobradoPorBancol}">
+						<p:panelGrid style="width: 99%">
+							<p:row>
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="valorHonorarios" value="Valor honorarios" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<p:inputText id="valorHonorarios" readonly="true"
+										value="#{informeHipotecarioBean.avaluoHipotecarioDTO.valorHonorarios}"
+										style="width: 99%;text-align:right;">
+										<f:convertNumber type="currency" currencySymbol="$"
+											locale="en_US" />
+									</p:inputText>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="gastosTranslado" value="Gastos de traslado" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<p:inputNumber id="gastosTranslado"
+										value="#{informeHipotecarioBean.avaluoHipotecarioDTO.gastosTranslado}"
+										decimalSeparator="," thousandSeparator="." symbol="$"
+										symbolPosition="p" style="width: 99%;text-align:right;">
+										<p:ajax listener="#{informeHipotecarioBean.calcularValores()}"
+											process="gastosTranslado, porcentajeTerreno" global="false"
+											onstart="$( '#informeHipotecario\\:accordionPanel\\:gastosTranslado' ).addClass('loadinggif');"
+											oncomplete="$( '#informeHipotecario\\:accordionPanel\\:gastosTranslado' ).removeClass('loadinggif');actualizarValorAvaluo();" />
+									</p:inputNumber>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="subTotalHonorarios"
+										value="Sub-total honorarios" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<p:inputText id="subTotalHonorarios" readonly="true"
+										value="#{informeHipotecarioBean.subTotalHonorarios}"
+										style="width: 99%;text-align:right;">
+										<f:convertNumber type="currency" currencySymbol="$"
+											locale="en_US" />
+									</p:inputText>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="ivaHonorarios" value="Iva honorarios" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<p:inputText id="ivaHonorarios" readonly="true"
+										value="#{informeHipotecarioBean.avaluoHipotecarioDTO.iva}"
+										style="width: 99%;text-align:right;">
+										<f:convertNumber type="currency" currencySymbol="$"
+											locale="en_US" />
+									</p:inputText>
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column styleClass="ui-widget-header">
+									<h:outputLabel for="totalHonorarios" value="Total honorarios" />
+								</p:column>
+								<p:column styleClass="ui-widget-header">
+									<p:inputText id="totalHonorarios" readonly="true"
+										value="#{informeHipotecarioBean.totalHonorarios}"
+										style="width: 99%;text-align:right;">
+										<f:convertNumber type="currency" currencySymbol="$"
+											locale="en_US" />
+									</p:inputText>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{informeHipotecarioBean.valorTotalExcedeSubsidio()}">
+					<p:column />
+					<p:column colspan="6">
+						<p:panelGrid id="mensajeSubsidio" columns="2"
+							columnClasses="ui-grid-col-3,ui-grid-col-9" layout="grid"
+							styleClass="ui-panelgrid-blank"
+							style="text-align: center;  background-color: #fcf8e3; border: 2px solid #faebcc;">
+							<p:graphicImage name="images/warning-icon.png" height="70px" />
+							<h:outputText id="valorTotalFueraSubsidio"
+								style="font-size: 20px;"
+								value="#{informeHipotecarioBean.mensajeValorTotalFueraRango}" />
+						</p:panelGrid>
+					</p:column>
+					<p:column />
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h:outputLabel for="calificacionGarantia"
+							value="Calificación garantía" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h:selectOneMenu id="calificacionGarantia"
+							value="#{informeHipotecarioBean.avaluoHipotecarioDTO.calificacionGarantia}"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							label="Calificación Garantía" style="width: 99%">
+							<f:selectItems
+								value="#{informeHipotecarioBean.calificacionesGarantia}"
+								var="calificacion" itemValue="#{calificacion}"
+								itemLabel="#{calificacion.value}" />
+							<o:validator validatorId="listaDesplegableValidator"
+								disabled="#{empty param[enviar.clientId] and empty param[enviarHonorarios.clientId] and empty param[enviarCorrecciones.clientId] and empty param[aprobar.clientId] and empty param[correciones.clientId] and empty param[enviarComite.clientId]}" />
+
+						</h:selectOneMenu>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8">
+
+						<p:panel id="panelFavorabilidadCrediticia"
+							header="Tipo favorabilidad crediticia:"
+							style="margin-bottom:10px; width:100%;">
+							<p:panelGrid style=" width:100%; text-align: justify;">
+								<p:row>
+									<p:column style="width:2%;">
+										<p:selectBooleanCheckbox
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.tfc1}" />
+									</p:column>
+									<p:column style="width:45%;">
+										<h:outputLabel value="Crédito Hipotecario Vivienda" />
+									</p:column>
+									<p:column style="width:2%;">
+										<p:selectBooleanCheckbox
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.tfc2}" />
+									</p:column>
+									<p:column style="width:45%;">
+										<h:outputLabel value="Retanqueo Vivienda" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="width:2%;">
+										<p:selectBooleanCheckbox
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.tfc3}" />
+									</p:column>
+									<p:column style="width:45%;">
+										<h:outputLabel value="Reforma o Remodelación Vivienda" />
+									</p:column>
+									<p:column style="width:2%;">
+										<p:selectBooleanCheckbox
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.tfc4}" />
+									</p:column>
+									<p:column style="width:45%;">
+										<h:outputLabel value="Constructor Individual" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="width:2%;">
+										<p:selectBooleanCheckbox
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.tfc5}" />
+									</p:column>
+									<p:column style="width:45%;">
+										<h:outputLabel value="Leasing Habitacional Persona Natural" />
+									</p:column>
+									<p:column style="width:2%;">
+										<p:selectBooleanCheckbox
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.tfc6}" />
+									</p:column>
+									<p:column style="width:45%;">
+										<h:outputLabel
+											value="Leasing Inmobiliario Vivienda persona Jurídica" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="width:2%;">
+										<p:selectBooleanCheckbox
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.tfc7}" />
+									</p:column>
+									<p:column style="width:45%;">
+										<h:outputLabel
+											value="Crédito Hipotecario  Diferente de Vivienda" />
+									</p:column>
+									<p:column style="width:2%;">
+										<p:selectBooleanCheckbox
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.tfc8}" />
+									</p:column>
+									<p:column style="width:45%;">
+										<h:outputLabel value="Retanqueo  Diferente de Vivienda" />
+									</p:column>
+								</p:row>
+
+								<p:row>
+									<p:column style="width:2%;">
+										<p:selectBooleanCheckbox
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.tfc9}" />
+									</p:column>
+									<p:column style="width:45%;">
+										<h:outputLabel
+											value="Leasing Diferente de Vivienda Persona Natural" />
+									</p:column>
+									<p:column style="width:2%;">
+										<p:selectBooleanCheckbox
+											value="#{informeHipotecarioBean.informeHipotecarioDTO.tfc10}" />
+									</p:column>
+									<p:column style="width:45%;">
+										<h:outputLabel
+											value="Leasing Inmobiliario Diferente de  Vivienda persona Jurídica" />
+									</p:column>
+								</p:row>
+
+							</p:panelGrid>
+						</p:panel>
+
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{(jsfHelper.hasMessages('informeHipotecario:accordionPanel:calificacionGarantia') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:valorUvr') or jsfHelper.hasMessages('informeHipotecario:accordionPanel:valorAvaluoEnUvr'))}">
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="calificacionGarantia" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="valorUvr" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:message for="valorAvaluoEnUvr" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<h:outputLabel for="observaciones" value="Observaciones: " />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<p:inputTextarea rows="5" cols="30" id="observaciones"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.observaciones}"
+							label="Observaciones"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}"
+							style="width: 99%;text-align:left;" maxlength="500"
+							counter="observacionesFaltantes"
+							counterTemplate="{0} caracteres faltantes." />
+						<h:outputText id="observacionesFaltantes" />
+					</p:column>
+				</p:row>
+				<p:row
+					rendered="#{jsfHelper.hasMessages('informeHipotecario:accordionPanel:observaciones')}">
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<p:message for="observaciones" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h:outputLabel for="direccionAnexos" value="Dirección anexos: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:inputText id="direccionAnexos"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.direccionAnexos}"
+							maxlength="100" style="width: 99%" />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<h:outputLabel for="otrasDirecciones" value="Otras direcciones: " />
+					</p:column>
+					<p:column styleClass="ui-widget-header" colspan="2">
+						<p:inputText id="otrasDirecciones" maxlength="255"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.otrasDirecciones}"
+							style="width: 99%" />
+					</p:column>
+				</p:row>
+
+			</p:panelGrid>
+
+		</p:panel>
+		<p:panel id="paneldescripcionGeneral" header="Descripción general:"
+			style="margin-bottom:10px">
+			<p:panelGrid style="width: 99%">
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<p:inputTextarea rows="5" cols="30" id="descripcionGeneral"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.descripcionGeneral}"
+							style="width: 99%;text-align:left;" maxlength="1500"
+							counter="descripcionGeneralCaracteresFaltantes"
+							counterTemplate="{0} caracteres faltantes"
+							label="Descripción general"
+							required="#{not empty param[enviar.clientId] or not empty param[enviarHonorarios.clientId] or not empty param[enviarCorrecciones.clientId] or not empty param[aprobar.clientId] or not empty param[correciones.clientId] or not empty param[enviarComite.clientId]}" />
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="8">
+						<h:outputText id="descripcionGeneralCaracteresFaltantes" />
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:message for="descripcionGeneral" />
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+		<!-- END Valor comercial -->
+		<!-- RESULTADO FITO Y CORVINI -->
+		<p:panel id="fitoCorvini-resultado">
+			<p:panelGrid id="grid-fitoCorvini-resultado" style="width:80%;"
+				rendered="#{informeHipotecarioBean.mostrarMetodoReposicion}">
+				<p:row>
+					<p:column styleClass="ui-widget-header" colspan="4">
+						<p:dataTable id="fitoCorvini-resultado-table" var="area"
+							value="#{informeHipotecarioBean.informeHipotecarioDTO.sometidoAPropiedadHorizontal
+														? informeHipotecarioBean.areasPrivadas : informeHipotecarioBean.areasConstruidasNoPH}">
+							<f:facet name="header"> Valor Reposición </f:facet>
+
+							<p:column headerText="Descripción"
+								style="text-align: center !important;">
+								<h:outputText style="text-align:center;" value="#{area.nombre}" />
+							</p:column>
+							<p:column headerText="Area"
+								style="text-align: center !important;">
+								<h:outputText style="text-align:center;" value="#{area.area}" />
+							</p:column>
+							<p:column headerText="Valor Reposición"
+								style="text-align: center !important;">
+								<h:outputText style="text-align:center;"
+									value="#{area.valorReposicionFinal}">
+									<f:convertNumber type="currency" currencySymbol="$"
+										locale="en_US" />
+								</h:outputText>
+							</p:column>
+
+
+							<p:columnGroup type="footer">
+								<p:row>
+									<p:column colspan="2" style="text-align:right"
+										footerText="Valor reposición total:" />
+									<p:column>
+										<f:facet name="footer">
+											<h:outputText value="#{informeHipotecarioBean.sumatoria}">
+												<f:convertNumber type="currency" currencySymbol="$"
+													locale="en_US" />
+											</h:outputText>
+										</f:facet>
+									</p:column>
+								</p:row>
+							</p:columnGroup>
+
+						</p:dataTable>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:panel>
+		<!--  FIN RESULTADO FITO Y CORVINI-->
+	</p:tab>
+
+</ui:composition>

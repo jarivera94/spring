@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Metodologias" pageWidth="571" pageHeight="802" columnWidth="571" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="9309426e-2dc7-444c-8c1d-0c7b432bdfd8">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="334"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="IDAVALUO" class="java.lang.Long">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT actualidad_edificadora, comportamiento_oferta_demanda, tiempo_esperado_de_comercializacion, tm.nombre, m.concepto_del_metodo, tm.justificacion
+FROM avaluos.avaluo a, avaluos.formato_informe f,
+avaluos.formato_informe_hipotecario h,
+avaluos.metodo_valuacion m, avaluos.tipo_metodo_valuacion tm
+WHERE
+a.avaluo_id = f.avaluo_id
+AND f.formato_informe_id = h.formato_informe_id
+AND a.avaluo_id = m.avaluo_id
+AND m.metodo_usado = tm.id
+AND a.avaluo_id = $P{IDAVALUO}]]>
+	</queryString>
+	<field name="actualidad_edificadora" class="java.lang.String"/>
+	<field name="comportamiento_oferta_demanda" class="java.lang.String"/>
+	<field name="tiempo_esperado_de_comercializacion" class="java.lang.Integer"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="concepto_del_metodo" class="java.lang.String"/>
+	<field name="justificacion" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="294" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="14" y="93" width="545" height="20" forecolor="#FFFFFF" backcolor="#0995CE" uuid="88bc5ebb-5169-4d50-84ae-535f61b0024b"/>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<leftPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<bottomPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<rightPen lineWidth="0.25" lineColor="#0DB3C8"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Actualidad Edificadora]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="14" y="166" width="545" height="20" forecolor="#FFFFFF" backcolor="#0995CE" uuid="6b99d3d2-cb24-4cf6-8187-a196d916ece6"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<leftPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<bottomPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<rightPen lineWidth="0.25" lineColor="#0DB3C8"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Comportamiento de Oferta y Demanda]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="14" y="113" width="545" height="49" forecolor="#666666" uuid="86b45180-c5d0-4dcc-8d1e-a91898fae4ba"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement>
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{actualidad_edificadora}!= null ? $F{actualidad_edificadora}.replaceAll("\n", " ").replaceAll("\t", " ").replaceAll(" ", " "): null]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="14" y="186" width="545" height="45" forecolor="#666666" uuid="8fa86a05-b637-4b9f-aab2-982fe3e30dcb"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement>
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{comportamiento_oferta_demanda}!= null ? $F{comportamiento_oferta_demanda}.replaceAll("\n", " ").replaceAll("\t", " ").replaceAll(" ", " "): null]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="14" y="235" width="545" height="20" forecolor="#FFFFFF" backcolor="#0995CE" uuid="478535e8-7f72-465e-a875-4917016439e3"/>
+				<box>
+					<pen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<topPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<leftPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<bottomPen lineWidth="0.25" lineColor="#0DB3C8"/>
+					<rightPen lineWidth="0.25" lineColor="#0DB3C8"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tiempo Esperado de Comercialización]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="14" y="255" width="545" height="16" forecolor="#666666" uuid="6b22ba6f-df81-4a00-8623-62a99fb5ac37"/>
+				<box leftPadding="2">
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement>
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tiempo_esperado_de_comercializacion}+ " Meses"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="14" y="274" width="545" height="20" forecolor="#FFFFFF" backcolor="#0995CE" uuid="eb09bbb5-94d8-4cce-be09-5f6449eba8d5"/>
+				<textElement textAlignment="Center">
+					<font fontName="Calibri" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Metodología de Valuación]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="93">
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="14" y="0" width="53" height="93" forecolor="#666666" uuid="f66f4166-942a-4781-adf2-457d81e5f230"/>
+				<box>
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Calibri" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="67" y="0" width="492" height="93" forecolor="#666666" uuid="ddd194f3-39aa-4a8c-aa05-ef0dbc0af9c5"/>
+				<box leftPadding="2" rightPadding="2">
+					<topPen lineWidth="0.25" lineColor="#0995CE"/>
+					<leftPen lineWidth="0.25" lineColor="#0995CE"/>
+					<bottomPen lineWidth="0.25" lineColor="#0995CE"/>
+					<rightPen lineWidth="0.25" lineColor="#0995CE"/>
+				</box>
+				<textElement>
+					<font fontName="Calibri" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{concepto_del_metodo}!= null ? "Justificación: "+ $F{justificacion}+", Concepto: "+$F{concepto_del_metodo}.replaceAll("\n", " ").replaceAll("\t", " ").replaceAll(" ", " "): "Justificación: "+ $F{justificacion}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="77" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="15" width="200" height="54" uuid="eff50c3f-648e-400f-9e2b-5c2a049ba434"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="IDAVALUO">
+					<subreportParameterExpression><![CDATA[$P{IDAVALUO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "areas_hipotecario.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="4" width="100" height="1" uuid="55291397-9520-4c59-9a30-e3cdaad6aa71"/>
+			</break>
+		</band>
+	</summary>
+</jasperReport>
